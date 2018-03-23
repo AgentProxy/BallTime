@@ -1,0 +1,8 @@
+{
+  "name": "BallTime",
+  "app_id": "50089db8",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}

@@ -1,0 +1,37 @@
+page-register {
+    ion-content {
+        background-image: url('/assets/imgs/RegisterBackground.jpg');
+        
+    }
+    .scroll-content {
+        overflow-y: hidden;
+    }
+
+    #arrow_proceed{
+        position: relative;
+        left:100px;
+    }
+
+    ion-item{
+        border-radius: 30px !important;
+        padding-left: 30px !important;
+        font-size: 0.9em;
+        // border-bottom: 0px !important;
+        border-bottom-color: transparent
+    }
+
+    .item.item-input{
+        background-color: rgba(10, 10, 10, 0.555);
+        margin-bottom: 20px;
+    }
+
+    
+    
+    .text-input{
+    color: white;
+    }
+
+
+
+
+}

@@ -1,0 +1,12 @@
+<!-- Generated template for the LoginComponent component -->
+<ion-list inset id="login_items">
+  <ion-item>
+    <ion-label><ion-icon name="contact"></ion-icon></ion-label>
+    <ion-input [(ngModel)]="account.email" name="email" placeholder="Email" type="email" ></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label><ion-icon name="lock"></ion-icon></ion-label>
+    <ion-input [(ngModel)]="account.password" name="password" placeholder="Password" type="password" ></ion-input>
+  </ion-item>
+</ion-list>
+<button block color="ball" ion-button round (click)="login()">Login</button>

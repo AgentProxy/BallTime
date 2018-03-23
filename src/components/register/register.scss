@@ -1,0 +1,17 @@
+register {
+    .content{
+        background-color: rgb(51, 51, 51);
+    }
+    .scroll-content {
+        overflow-y: hidden;
+    }
+
+    #RegisterForm{
+        margin-top: 20%;
+        //margin-bottom: auto;
+    }
+
+    #or{
+        color: white;
+    }
+}
