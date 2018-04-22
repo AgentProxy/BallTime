@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { UserService } from '../../services/user.services';
 import { User } from '../../models/user/user.model';
+import { UserProvider } from '../../providers/user/user';
 
 /**
  * Generated class for the RegisterPage page.
@@ -29,7 +29,7 @@ export class RegisterPage {
     registered: true,
   };
   
-  constructor(public navCtrl: NavController, public navParams: NavParams, private userService: UserService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider) {
   }
 
   ionViewDidLoad() {
@@ -38,7 +38,7 @@ export class RegisterPage {
 
   addUser(userInfo: User){
     userInfo.registered = true;
-    this.userService.addUserInfo(userInfo);
+    this.userProvider.addUserInfo(userInfo);
     this.navCtrl.setRoot('HomePage');               //should put try catch for errors
     
   }

@@ -4,6 +4,8 @@ import { LocationServiceProvider } from '../../providers/location-service/locati
 import { CourtProvider } from '../../providers/court/court';
 import { AlertController } from 'ionic-angular';
 import { CourtModalPage } from '../court-modal/court-modal';
+import { Court } from '../../models/court/court.model';
+
 
 declare var google: any;
 /**
@@ -28,19 +30,20 @@ export class HomePage {
   map: any;
   currentLocation : any;
   platform: any;
+  showLoading: boolean = true;
 
   constructor(platform: Platform,  public navCtrl: NavController, public navParams: NavParams,
       private locationProvider: LocationServiceProvider, private courtProvider: CourtProvider,
       private alertCtrl: AlertController, private modalCtrl: ModalController ){
-          // this.location = this.locationProvider;
           this.currentLocation = this.locationProvider.getUpdatedLocation();
           this.platform = platform;
     }
 
   ionViewDidLoad() {
-    this.showMapAndLocation();
     google.maps.event.trigger(this.map, 'resize');
     this.locationProvider.getLocation();            //I DON'T KNOW WHY
+    this.showMapAndLocation();
+    
   }
 
   // ionViewDidEnter(){
@@ -52,9 +55,9 @@ export class HomePage {
   // }
 
   showMapAndLocation() {
-    
     this.currentLocation.filter((postion) => postion.coords !== undefined) //Filter Out Errors
     .subscribe((position) => {
+      this.showLoading = false;
       let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
  
       let mapOptions = {
@@ -82,7 +85,13 @@ export class HomePage {
         position: latLng
       });
 
-      let courts = this.courtProvider.retrieveCourts();
+      let courts = this.courtProvider.retrieveCourts().snapshotChanges().map(actions => {
+        return actions.map(a => {
+          const data = a.payload.doc.data() as Court;
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        }); 
+      });
 
       courts.subscribe(snapshots=>{
           snapshots.forEach(court => {
@@ -99,7 +108,6 @@ export class HomePage {
   }
 
   courtClicked(court){
-
     let distance = this.courtProvider.retrieveCourtDistance(court);
     var data = { 
                   Court : court,

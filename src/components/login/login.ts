@@ -3,6 +3,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { Account } from '../../models/account/account.model';
 import { NavController } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
+import * as firebase from 'firebase/app';
 
 
 /**
@@ -24,8 +25,10 @@ export class LoginComponent {
   }
 
   async login(){
+    
     try{
       const result = await this.afAuth.auth.signInWithEmailAndPassword(this.account.email, this.account.password);
+      this.afAuth.auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
       this.navCtrl.setRoot('HomePage');
     }
     catch(e){

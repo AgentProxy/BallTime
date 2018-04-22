@@ -5,6 +5,8 @@ import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection 
 import { Observable } from 'rxjs/Observable';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { LocationServiceProvider } from '../location-service/location-service';
+import { UserProvider } from '../user/user';
+import { User } from '../../models/user/user.model';
 
 declare var google: any;
 /*
@@ -16,49 +18,97 @@ declare var google: any;
 @Injectable()
 export class CourtProvider {
 
-  courtsCollection: AngularFirestoreCollection<Court>;
-  courts: Observable<Court[]>;
+  courts: AngularFirestoreCollection<Court>;
+  courtCol = this.db.collection<Court>('courts');
   userLocation: any;
   distance: any;
   nearestCourts = [];
- 
+  player:any;
   
-  constructor(private http: HttpClient, private db: AngularFirestore, private location: LocationServiceProvider) {
+  constructor(private http: HttpClient, private db: AngularFirestore, private location: LocationServiceProvider, private userProvider: UserProvider) {
     this.location.getLocation();        //I DON'T KNOW WHY
   }
 
 
   retrieveCourts(){
-    this.courtsCollection = this.db.collection('courts');
-    this.courts = this.courtsCollection.valueChanges();
+    this.courts = this.courtCol;
     return this.courts;
   }
 
-  //Special thanks to: Dmozzy for calculating distance code https://gist.github.com/dmozzy/2398636 
-  retrieveClosestCourts(preferredDistance){
-    this.userLocation = this.location.getLocation();
-    this.courts = this.retrieveCourts();
-    this.nearestCourts = [];
-    this.courts.subscribe(snapshots=>{
-      snapshots.forEach(court => {
+  retrieveCourtLive(courtId){
+    //GET LIVE DATA FROM COURT
+    let courtInfo = this.courtCol.doc(courtId).valueChanges();
+    return courtInfo;
+  }
 
-          this.distance = google.maps.geometry.spherical.computeDistanceBetween(
-          new google.maps.LatLng(this.userLocation.latitude,this.userLocation.longitude),new google.maps.LatLng(court.latitude, court.longitude)
-        )/1000;
+  // retrieveCourtInfo(courtId){
+  //   let courtDoc = this.courtCol.doc(courtId);
+  //   let courtInfo = courtDoc.snapshotChanges();
+  // }
 
-        if(this.distance<=preferredDistance){
-          let courtObj = {
-            name: court.name,
-            distance: this.distance,
-            category: court.category,
-            status: court.status,
-          }
-          this.nearestCourts.push(courtObj);
-        }
-      });
+  async addUserToCourt(user, courtId){
+    let userObj = await user;
+    let playersCol = this.courtCol.doc(courtId).collection('players');
+    let newUser = {
+      role: 'player',
+      user: userObj,
+    }
     
+    let id = playersCol.add(newUser).then(player => {
+      console.log('The auto-generated ID is', player.id);
+      let playerId: any;
+      playerId = player.id;
+      return playerId;
     });
-    return this.nearestCourts;
+    let playerId = await id;
+    return playerId;
+
+  }
+
+  addUserToCourt2(user, courtId, playersCount){
+    playersCount++;
+    let playersCol = this.courtCol.doc(courtId).collection('players');
+    user.subscribe(action => {
+      const id = action.payload.id;
+      const data = action.payload.data();
+      this.db.doc('courts/' + courtId + '/players/' + id ).set({role:'player', user: data}).then(result => {
+        
+        this.db.doc('courts/' + courtId ).set({players_count: playersCount}, {merge: true});
+      });
+      // playersCol.add({newUser});
+      // let playerid = playersCol.doc(id).add(newUser).then(player => {
+      //   console.log('The auto-generated ID is', player.id);
+      //   player.id;
+      //   // return playerId;
+      // });
+      return { id, ...data };
+    });
+    // let newUser = user;
+    // alert(newUser.username);
+  }
+
+  // retrievePlayer(user){
+  //   this.player = user;
+  //   // alert(this.player.username);
+  //   return this.player;
+  // }
+
+
+
+
+
+  retrievePlayers(courtId){
+    let players = this.courtCol.doc(courtId).collection('players').valueChanges();
+    return players;
+  };
+
+
+  removePlayer(playerId, courtId, playersCount){
+    playersCount = playersCount--;
+    let courtDoc = this.courtCol.doc(courtId).collection('players').doc(playerId).delete().then(result => {
+      
+      this.db.doc('courts/' + courtId ).set({players_count: playersCount}, {merge: true});
+    });    
   }
 
   retrieveCourtDistance(court){

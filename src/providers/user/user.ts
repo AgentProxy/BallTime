@@ -1,15 +1,16 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User } from '../models/user/user.model';
+import { User } from '../../models/user/user.model';
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
 import { AngularFireAuth } from 'angularfire2/auth';
 
 @Injectable()
-export class UserService {
+export class UserProvider {
     private userCol = this.db.collection<User>('users');
     private userDoc: AngularFirestoreDocument<User>;
     private userCollection: AngularFirestoreCollection<User>;
-    userInfo: Observable<User>;
+    userInfo: any;
     users: Observable<User>;
 
     constructor(private db: AngularFirestore, private afAuth: AngularFireAuth,){
@@ -47,14 +48,31 @@ export class UserService {
 
     retrieveUserInfo(){
         this.userDoc = this.db.doc<User>('users/' + this.retrieveUserId());
-        this.userInfo = this.userDoc.valueChanges();
+        this.userInfo = this.userDoc.snapshotChanges();
         return this.userInfo;
+    }
+
+    retrieveUserInfoLive(userId){
+        this.userDoc = this.db.doc<User>('users/' + userId);
+        this.userInfo = this.userDoc.snapshotChanges();
+        return this.userInfo;
+    }
+
+    // retrieveUserInfoStatic(userId){
+    //     let docRef = this.db.collection("users").doc(userId);
+
+    // }
+
+    async retrieveUserObject(){
+        this.userDoc = this.db.doc<User>('users/' + this.retrieveUserId());
+        let userObj:any;
+        userObj = await this.userDoc.ref.get();
+        return userObj.data();
     }
 
     retrieveUsers(){
         this.userCollection = this.userCol;
         return this.userCollection;
-        
     }
 
 }

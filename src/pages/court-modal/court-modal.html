@@ -15,7 +15,6 @@
   </ion-toolbar>
 </ion-header>
 
-
 <ion-content id="modal" padding>
   <div id="modal_content">
     <h1 text-center> {{court.name}} </h1>
@@ -24,35 +23,13 @@
         <img id="court_pic" src="../assets/imgs/RegisterBackground4.jpg" />
     </div>
     <div text-center>
-      <h2> Players: 0/10 </h2>
-      <button ion-button color="ball">
+      <h2> Players: {{(courtInfo|async)?.players_count}}/10 </h2>
+      <button ion-button color="ball" (click)="joinCourt(court)">
         Join Court
       </button>
-      <button ion-button color="primary">
+      <button ion-button color="primary" (click)="showDirection(court)">
         Get Directions
     </button>
     </div>
   </div>
-
-  <!-- <div *ngIf="!home" id="modal_content">
-    <ion-slides pager>
-      <ion-slide *ngFor="let court of courts" >
-          <h1 text-center> {{court.name}} </h1>
-          <h2 text-center>Distance:  {{court.distance}} km </h2>
-        <div id="courtpic_div" text-center>
-          <img id="court_pic" src="../assets/imgs/RegisterBackground4.jpg" />
-        </div>
-        <div text-center>
-          <h2> Players: 0/10 </h2>
-          <button ion-button color="ball">
-            Join Court
-          </button>
-          <button ion-button color="primary">
-              Get Directions
-          </button>
-        </div>
-      </ion-slide>
-    </ion-slides>
-  </div> -->
-
 </ion-content>

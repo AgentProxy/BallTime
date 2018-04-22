@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { User } from '../../models/user/user.model';
-import { UserService } from '../../services/user.services';
 import { Observable } from '@firebase/util';
+import { IfObservable } from 'rxjs/observable/IfObservable';
+import { UserProvider } from '../../providers/user/user';
+import { ProfileViewerModalPage } from '../../pages/modals/profile-viewer-modal/profile-viewer-modal';
  
 /**
  * Generated class for the FriendsPage page.
@@ -18,30 +20,73 @@ import { Observable } from '@firebase/util';
 })
 export class FriendsPage {
   users: any;
-  filteredUsers: any;
-  sampleArray = [];
-  // private shirtCollection: AngularFirestoreCollection<Shirt>;
-  // shirts: Observable<ShirtId[]>;
+  filteredUsers = [];
+  allUsers = [];
+  showSpinner: boolean = true;
+  searchInput: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private userService: UserService) {
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider, private modalCtrl: ModalController) {
   
   }
 
   ionViewDidLoad() {
-    this.filteredUsers = this.userService.retrieveUsers();
-    console.log('ionViewDidLoad FriendsPage');
-    this.users = this.filteredUsers.snapshotChanges().map(actions => {
+    this.initializeUsers();
+  }
+
+  initializeUsers(){
+    this.users = this.userProvider.retrieveUsers().snapshotChanges().map(actions => {
       return actions.map(a => {
         const data = a.payload.doc.data() as User;
         const id = a.payload.doc.id;
-        this.sampleArray.push(data);
         return { id, ...data };
       }); 
     });
+
+    this.users.subscribe(snapshots=>{
+      snapshots.forEach(user => {
+        this.showSpinner = false;
+        this.allUsers.push(user);
+      });
+    });
+
+    this.filteredUsers = this.allUsers;
     
-    setTimeout(() => {
-      alert(this.sampleArray);
-    } ,3000)
+  }
+
+  searchUsers(ev: any){
+    this.showSpinner = true;
+
+    if (!this.searchInput) {
+      this.filteredUsers = this.allUsers;
+      this.showSpinner = false;
+      return;
+    }
+
+    if (this.searchInput && this.searchInput.trim() != '') {
+      this.filteredUsers = this.filteredUsers.filter((user) => {
+        this.showSpinner = false;
+        return (user.username.toLowerCase().indexOf(this.searchInput.toLowerCase()) > -1);
+      })
+    }
+
+    // this.users = this.users.filter((v) => {
+    //   if(v.name && this.searchInput) {
+    //     if (v.name.toLowerCase().indexOf(this.searchInput.toLowerCase()) > -1) {
+    //       return true;
+    //     }
+    //     return false;
+    //   }
+    // });
+  }
+
+  openProfile(user){
+    let data = {
+      Id: user.id,
+    }
+    
+    let modal = this.modalCtrl.create(ProfileViewerModalPage, data);
+    modal.present();
   }
 
 }

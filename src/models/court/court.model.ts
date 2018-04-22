@@ -6,4 +6,5 @@ export interface Court{
     longitude: string;
     name: string;
     status: string;
+    duration: any;
 }

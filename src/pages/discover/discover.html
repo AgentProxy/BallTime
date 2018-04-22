@@ -14,24 +14,43 @@
 
 
 <ion-content padding>
-<h1>Maximum Distance: {{preferredDistance}} km</h1>
+  <h1>Maximum Distance: {{preferredDistance}} km</h1>
 
-  <ion-range min="1" max="60" [(ngModel)]="preferredDistance">
-    <ion-label range-left>1</ion-label>
-    <ion-label range-right>60</ion-label>
-  </ion-range>
+    <ion-range min="1" max="60" [(ngModel)]="preferredDistance">
+      <ion-label range-left>1</ion-label>
+      <ion-label range-right>60</ion-label>
+    </ion-range>
 
-<!-- <court>
+  <!-- <ion-buttons>
+    <button value="WALKING"> Walk </button>
+    <button value="DRIVE"> Drive </button>
+    <button> Bike </button>
+  </ion-buttons> -->
 
-</court> -->
-<button ion-button (click)="discoverCourts()"> Find </button>
-  <h1 text-center> Results </h1>
-  <ion-list>
-    <ion-item *ngFor="let court of nearestCourts" (click)="openModal(court)">
-      <h1>{{ court.name }}</h1>
-      <h3>Distance: {{court.distance}}</h3>
-      <!-- <h3> Code: <strong>{{ country.code }}</strong> </h3> -->
-    </ion-item>
+  <ion-list radio-group [(ngModel)]="selectedMode" required>
+      <ion-item>
+        <ion-label>Walk</ion-label>
+        <ion-radio value="WALKING"></ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label>Drive</ion-label>
+        <ion-radio value="DRIVING"></ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label>Bike</ion-label>
+        <ion-radio value="BICYCLING"></ion-radio>
+      </ion-item>           
   </ion-list>
+
+  <button id="findButton" ion-button (click)="retrieveClosestCourts(preferredDistance)"> Find </button>
+    <h1 text-center> Results </h1>
+    <ion-spinner *ngIf="showSpinner"></ion-spinner>
+    <ion-list>
+      <ion-item *ngFor="let court of nearestCourts" (click)="openModal(court)">
+        <h1>{{ court.name }}</h1>
+        <h3>Distance: <span id={{court.name}}distance></span></h3>
+        <h3>Travel Time: <span id={{court.name}}time></span></h3>
+      </ion-item>
+    </ion-list>
 
 </ion-content>

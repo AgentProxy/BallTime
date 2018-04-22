@@ -54,7 +54,7 @@ export class LocationServiceProvider {
     let watchOptions: {
       enableHighAccuracy: true;
       maxAge: 0,
-      timeout: 30000
+      timeout: 1000,
     };
 
     return this.location.watchPosition(watchOptions)

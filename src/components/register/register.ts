@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Account } from '../../models/account/account.model';
-import { ToastController } from 'ionic-angular';
+import { ToastController, ViewController } from 'ionic-angular';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { UserService } from '../../services/user.services';
+import { UserProvider } from '../../providers/user/user';
 
 /**
  * Generated class for the RegisterComponent component.
@@ -21,7 +21,7 @@ export class RegisterComponent {
 
   account = {} as Account;
 
-  constructor(private toast: ToastController, private afAuth: AngularFireAuth, private navCtrl: NavController, private userService: UserService) {
+  constructor(private toast: ToastController, private afAuth: AngularFireAuth, private navCtrl: NavController, private userProvider: UserProvider, private viewCtrl: ViewController,) {
   }
 
   userId : string;
@@ -35,7 +35,7 @@ export class RegisterComponent {
           duration: 3000
         }).present();
         this.userId = this.afAuth.auth.currentUser.uid;
-        this.userService.createUser(this.userId);
+        this.userProvider.createUser(this.userId);
         this.navCtrl.push('RegisterPage');        
       }
       catch(e){
@@ -53,6 +53,10 @@ export class RegisterComponent {
       }).present();
     }
   // this.navCtrl.push('RegisterPage');
+  }
+
+  closeRegister(){
+    this.viewCtrl.dismiss();
   }
   
 }

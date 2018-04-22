@@ -1,0 +1,57 @@
+<ion-header >
+  <ion-toolbar color="nav">
+      <ion-buttons>
+        <button ion-button (click)="dismiss()">
+            <span ion-text>Back</span>
+        </button>
+      </ion-buttons>
+      <ion-title>
+        {{court.name}}
+      </ion-title>
+      <!-- <ion-segment [(ngModel)]="choice">
+        <ion-segment-button value="map">
+          Map
+        </ion-segment-button>
+        <ion-segment-button value="directions">
+          Directions
+        </ion-segment-button>
+      </ion-segment> -->
+      <ion-buttons end>
+          <button ion-button icon-only >
+            <ion-icon name="more"></ion-icon>
+          </button>
+        </ion-buttons>
+  </ion-toolbar>
+    
+</ion-header>
+
+<ion-content>
+
+    <ion-fab id="ion-fab" #fab top right>
+      <button ion-fab mini color="nav"><ion-icon [name]="icon"></ion-icon></button>
+      <ion-fab-list>
+        <button ion-fab color="ball" (click)="changeMode('WALKING', 'walk', fab)"><ion-icon name="walk"></ion-icon></button>
+        <button ion-fab color="ball" (click)="changeMode('BICYCLING', 'bike', fab)"><ion-icon name="bicycle"></ion-icon></button>
+        <button ion-fab color="ball" (click)="changeMode('DRIVING', 'car', fab)"><ion-icon name="car"></ion-icon></button>  
+      </ion-fab-list>
+    </ion-fab>
+
+    <button id="joinButton" ion-button color="ball">
+      Join Court
+    </button>
+
+    <div #map id="map">
+    </div>
+
+    <ion-pullup (onExpand)="footerExpanded()" (onCollapse)="footerCollapsed()" [(state)]="footerState">
+        <ion-pullup-tab id="pullup-tab" (tap)="toggleFooter()">
+          <ion-icon name="arrow-up" *ngIf="footerState == 0"></ion-icon><ion-icon name="arrow-down" *ngIf="footerState == 1"></ion-icon>
+        </ion-pullup-tab>
+        <ion-toolbar color="nav" (tap)="toggleFooter()">
+          <ion-title>Directions</ion-title>
+        </ion-toolbar>
+        <ion-content id="mapPanel">
+        </ion-content>
+    </ion-pullup>
+    
+</ion-content>

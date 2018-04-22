@@ -1,0 +1,22 @@
+page-map-modal {
+    #map{
+        height: 100%;
+    }
+
+    #mapPanel{
+        font-size: 18px;
+        overflow: scroll;
+        padding-bottom: 5%; 
+    }
+
+    #joinButton{
+        position: absolute;
+        z-index: 1;
+        margin-left: 40%;
+        margin-top: 2%;
+        box-shadow: 2px 5px black;
+    }
+    #pullup-tab{
+        background-color: rgb(51, 51, 51);
+    }
+}

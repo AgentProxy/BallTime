@@ -1,0 +1,35 @@
+<!--
+  Generated template for the JoinCourtModalPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="nav">
+    <ion-buttons start>
+        <button ion-button (click)="leaveCourt()">
+          Leave Court
+        </button>
+    </ion-buttons>
+    <ion-title>{{court.name}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+  
+<ion-content padding>
+    <h1>Players in this court ({{(courtInfo|async)?.players_count}}/10): </h1>
+    <ion-list>
+      <ion-item *ngFor="let player of players | async">
+          <ion-avatar item-start>
+              <img src="../assets/imgs/prof_pic/default_profpic.png">
+            </ion-avatar>
+        {{ player.user.username}}
+      </ion-item>
+    </ion-list>
+    <!-- <h2>{{(userInfo|async)?.firstname}}</h2> -->
+    <h3>Chatbox</h3>
+    <div id="chatbox">
+    </div>
+    <ion-input type="text" placeholder="Enter your message"></ion-input>
+</ion-content>

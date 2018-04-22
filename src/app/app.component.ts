@@ -12,6 +12,7 @@ import { DiscoverPage } from '../pages/discover/discover';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import { MessagesPage } from '../pages/messages/messages';
 
+
 @Component({
   templateUrl: 'app.html'
 })

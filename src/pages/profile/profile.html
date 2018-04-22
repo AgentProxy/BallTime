@@ -15,19 +15,17 @@
 
 
 <ion-content id="profile_info">
-  
-    
-    
-
+    <loading *ngIf="showLoading"></loading>
     <ion-icon name="menu" id="menu_button" float-start menuToggle></ion-icon>
     <header id="profile_header">
       <img src="../assets/imgs/RegisterBackground4.jpg" id="cover_pic" alt="cover_photo">
       <img id="prof_pic" src="../assets/imgs/RegisterBackground2.jpg" />
       <h1> {{(userInfo|async)?.firstname}} {{(userInfo|async)?.lastname}} </h1>
       <h3>@{{(userInfo|async)?.username}}</h3>
+      <button ion-button> Edit Profile </button>
     </header>
     <div padding >
-      <p> {{(userInfo|async)?.height}}</p>
+      <h1>Height: {{(userInfo|async)?.height}}</h1>
       <p> {{(userInfo|async)?.weight}}</p>            
     </div>
 </ion-content>
