@@ -29,8 +29,9 @@ export class FriendsPage {
   friends: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private friendProvider: FriendsProvider, private userProvider: UserProvider, private modalCtrl: ModalController) {
+    this.userId = this.userProvider.retrieveUserId();
     this.initializeUsers();
-    this.userId = this.userProvider.retrieveUserId()
+    
   }
 
   ionViewDidLoad() {
@@ -38,25 +39,26 @@ export class FriendsPage {
   }
 
   initializeUsers(){
-    this.friends = this.userProvider.retrieveUsers().snapshotChanges().map(actions => {
+    this.friends = this.friendProvider.getFriends(this.userId).map(actions => {
       return actions.map(a => {
-        const data = a.payload.doc.data() as User;
+        const data = a.payload.doc.data();
         const id = a.payload.doc.id;
         return { id, ...data };
       }); 
     });
-
     this.friends.subscribe(snapshots=>{
-      snapshots.forEach(user => {
+      snapshots.forEach(async friend => {
         this.showSpinner = false;
-        // user.payload.data().
-        alert(user.username)
+        let userObj = await this.userProvider.retrieveUserObject(friend.user_id);
+        let user = {
+          id: friend.user_id,
+          username: userObj.username,
+        }
         this.allUsers.push(user);
       });
     });
 
     this.filteredUsers = this.allUsers;
-    
   }
 
   searchUsers(ev: any){

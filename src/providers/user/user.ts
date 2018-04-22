@@ -58,13 +58,8 @@ export class UserProvider {
         return this.userInfo;
     }
 
-    // retrieveUserInfoStatic(userId){
-    //     let docRef = this.db.collection("users").doc(userId);
-
-    // }
-
-    async retrieveUserObject(){
-        this.userDoc = this.db.doc<User>('users/' + this.retrieveUserId());
+    async retrieveUserObject(userId){
+        this.userDoc = this.db.doc<User>('users/' + userId);
         let userObj:any;
         userObj = await this.userDoc.ref.get();
         return userObj.data();

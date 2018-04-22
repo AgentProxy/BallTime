@@ -17,18 +17,18 @@ export class FriendsProvider {
     this.friendsCollection = this.db.collection('friends');
   }
 
-  retrieveFriends(userId){
-    let friends = this.db.collection('users/' + userId + '/friends').snapshotChanges();
-    return friends;
-  }
+  // retrieveFriends(userId){
+  //   let friends = this.db.collection('users').doc(userId).collection('friends').snapshotChanges();
+  //   return friends;
+  // }
 
   addFriend(userId1,userId2){
     let senderData = {
-      receiver: userId2,
+      user_id: userId2,
       status: 'Pending',
     }
     let receiverData = {
-      sender: userId1,
+      user_id: userId1,
       status: 'Accept Request'
     }
     this.db.doc('users/' + userId1 + '/friends/' + userId2).set(senderData);
@@ -62,7 +62,7 @@ export class FriendsProvider {
   }
 
   getFriends(userId){
-    let friends = this.db.collection('users/' + userId + '/friends/').snapshotChanges();
+    let friends = this.db.collection('users/' + userId + '/friends').snapshotChanges();
     return friends;
   }
 
