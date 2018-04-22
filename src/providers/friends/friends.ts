@@ -17,6 +17,11 @@ export class FriendsProvider {
     this.friendsCollection = this.db.collection('friends');
   }
 
+  retrieveFriends(userId){
+    let friends = this.db.collection('users/' + userId + '/friends').snapshotChanges();
+    return friends;
+  }
+
   addFriend(userId1,userId2){
     let senderData = {
       receiver: userId2,
@@ -37,12 +42,10 @@ export class FriendsProvider {
     return true;
   }
 
-  // this.db.collect('friends', ref => ref.where(this.userProvider.retrieveUserId(), '==', 'user')
-
   getStatus(userId1,userId2){
     let status = '';
     let userId = '';
-    
+
     let query = this.db.doc('users/' + userId1 + '/friends/' + userId2).ref.get().then((docSnapshot) => {
       if (docSnapshot.exists){
         status = docSnapshot.data().status;
@@ -52,6 +55,15 @@ export class FriendsProvider {
       return {status, userId};
     });
     return query;
+  }
+
+  friendStatusChanges(userId1,userId2){
+      return this.db.doc('users/' + userId1 + '/friends/' + userId2).snapshotChanges();
+  }
+
+  getFriends(userId){
+    let friends = this.db.collection('users/' + userId + '/friends/').snapshotChanges();
+    return friends;
   }
 
   unfriend(userId1,userId2){

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, AlertController } from 'ionic-angular';
 import { UserProvider } from '../../../providers/user/user';
 import { FriendsProvider } from '../../../providers/friends/friends';
+import { AngularFirestore } from 'angularfire2/firestore';
 
 /**
  * Generated class for the ProfileViewerModalPage page.
@@ -25,8 +26,12 @@ export class ProfileViewerModalPage {
   status: String = '';
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider, private viewCtrl: ViewController, 
-    private friendsProvider: FriendsProvider, private alertCtrl: AlertController) {
+    private friendsProvider: FriendsProvider, private alertCtrl: AlertController, private db: AngularFirestore) {
     this.userId = this.navParams.get('Id');
+    this.friendsProvider.friendStatusChanges(this.userProvider.retrieveUserId(),this.navParams.get('Id')).subscribe(() => {
+      this.checkStatus();
+      }
+    );
   }
 
   ionViewDidLoad() {
@@ -57,23 +62,16 @@ export class ProfileViewerModalPage {
   }
 
   async checkStatus(){
-    let friendRequest = await this.friendsProvider.getStatus(this.userProvider.retrieveUserId(),this.userId);
+    let friendRequest = await this.friendsProvider.getStatus(this.userProvider.retrieveUserId(),this.navParams.get('Id'));
     this.status = friendRequest.status;
-    // this.userId = friendRequest.userId;
-    alert(this.status);
   }
 
   addFriend(){
-    // alert(this.navParams.get('Id'));
-    let sent = this.friendsProvider.addFriend(this.userProvider.retrieveUserId(),this.navParams.get('Id'));
-    if(sent==true){
-      this.checkStatus();
-    }
+    let sent = this.friendsProvider.addFriend(this.userProvider.retrieveUserId(),this.userId);
   }
 
   confirmFriend(){
-    this.friendsProvider.confirmFriend(this.userProvider.retrieveUserId(),this.navParams.get('Id'));
-    this.checkStatus();
+    this.friendsProvider.confirmFriend(this.userProvider.retrieveUserId(),this.userId);
   }
 
   async cancelRequest(){
@@ -87,7 +85,6 @@ export class ProfileViewerModalPage {
             text: 'Yes',
             handler: () => {    
               this.friendsProvider.unfriend(this.userProvider.retrieveUserId(), this.userId);
-              this.checkStatus();
             }
           },
           {
@@ -108,7 +105,6 @@ export class ProfileViewerModalPage {
             text: 'Yes',
             handler: () => {    
               this.friendsProvider.unfriend(this.userProvider.retrieveUserId(), this.userId);
-              this.checkStatus();
             }
           },
           {

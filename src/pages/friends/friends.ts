@@ -5,6 +5,7 @@ import { Observable } from '@firebase/util';
 import { IfObservable } from 'rxjs/observable/IfObservable';
 import { UserProvider } from '../../providers/user/user';
 import { ProfileViewerModalPage } from '../../pages/modals/profile-viewer-modal/profile-viewer-modal';
+import { FriendsProvider } from '../../providers/friends/friends';
  
 /**
  * Generated class for the FriendsPage page.
@@ -24,18 +25,20 @@ export class FriendsPage {
   allUsers = [];
   showSpinner: boolean = true;
   searchInput: string;
+  userId: any;
+  friends: any;
 
-
-  constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider, private modalCtrl: ModalController) {
-  
+  constructor(public navCtrl: NavController, public navParams: NavParams, private friendProvider: FriendsProvider, private userProvider: UserProvider, private modalCtrl: ModalController) {
+    this.initializeUsers();
+    this.userId = this.userProvider.retrieveUserId()
   }
 
   ionViewDidLoad() {
-    this.initializeUsers();
+    
   }
 
   initializeUsers(){
-    this.users = this.userProvider.retrieveUsers().snapshotChanges().map(actions => {
+    this.friends = this.userProvider.retrieveUsers().snapshotChanges().map(actions => {
       return actions.map(a => {
         const data = a.payload.doc.data() as User;
         const id = a.payload.doc.id;
@@ -43,9 +46,11 @@ export class FriendsPage {
       }); 
     });
 
-    this.users.subscribe(snapshots=>{
+    this.friends.subscribe(snapshots=>{
       snapshots.forEach(user => {
         this.showSpinner = false;
+        // user.payload.data().
+        alert(user.username)
         this.allUsers.push(user);
       });
     });
@@ -70,14 +75,6 @@ export class FriendsPage {
       })
     }
 
-    // this.users = this.users.filter((v) => {
-    //   if(v.name && this.searchInput) {
-    //     if (v.name.toLowerCase().indexOf(this.searchInput.toLowerCase()) > -1) {
-    //       return true;
-    //     }
-    //     return false;
-    //   }
-    // });
   }
 
   openProfile(user){
