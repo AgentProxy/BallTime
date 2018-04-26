@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, ModalController, AlertController } from 'ionic-angular';
-import { MapModalPage } from '../modals/map-modal/map-modal';
-import { JoinCourtModalPage } from '../modals/join-court-modal/join-court-modal';
-import { CourtProvider } from '../../providers/court/court';
-import { UserProvider } from '../../providers/user/user';
+import { MapModalPage } from '../../modals/map-modal/map-modal';
+import { JoinCourtModalPage } from '../../modals/join-court-modal/join-court-modal';
+import { CourtProvider } from '../../../providers/court/court';
+import { UserProvider } from '../../../providers/user/user';
 /**
  * Generated class for the CourtModalPage page.
  *

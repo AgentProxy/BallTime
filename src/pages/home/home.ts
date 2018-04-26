@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, Platform, ModalController } from '
 import { LocationServiceProvider } from '../../providers/location-service/location-service';
 import { CourtProvider } from '../../providers/court/court';
 import { AlertController } from 'ionic-angular';
-import { CourtModalPage } from '../court-modal/court-modal';
+import { CourtModalPage } from '../modals/court-modal/court-modal';
 import { Court } from '../../models/court/court.model';
 
 
@@ -31,35 +31,31 @@ export class HomePage {
   currentLocation : any;
   platform: any;
   showLoading: boolean = true;
+  subscription: any;
 
   constructor(platform: Platform,  public navCtrl: NavController, public navParams: NavParams,
       private locationProvider: LocationServiceProvider, private courtProvider: CourtProvider,
       private alertCtrl: AlertController, private modalCtrl: ModalController ){
-          this.currentLocation = this.locationProvider.getUpdatedLocation();
+          // this.currentLocation = this.locationProvider.getUpdatedLocation();
           this.platform = platform;
     }
 
-  ionViewDidLoad() {
+  ionViewCanEnter(){
     google.maps.event.trigger(this.map, 'resize');
-    this.locationProvider.getLocation();            //I DON'T KNOW WHY
     this.showMapAndLocation();
-    
+   
   }
 
-  // ionViewDidEnter(){
-  //   this.platform.ready().then(() => { 
-  //     google.maps.event.trigger(this.map, 'resize');
-  //     this.showMapAndLocation();
-  //    });
-  // //   this.showMapAndLocation();
-  // }
+  ionViewDidLoad() {
+  }
 
-  showMapAndLocation() {
-    this.currentLocation.filter((postion) => postion.coords !== undefined) //Filter Out Errors
-    .subscribe((position) => {
-      this.showLoading = false;
-      let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
  
+  showMapAndLocation() {
+    this.currentLocation = this.locationProvider.getUpdatedLocation();
+    this.subscription =  this.currentLocation.filter((position) => position.coords !== undefined) //Filter Out Errors
+    .subscribe((position) => {
+      alert(position);
+      let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
       let mapOptions = {
         center: latLng,
         zoom: 15,
@@ -67,24 +63,15 @@ export class HomePage {
         fullscreenControl: false,
         mapTypeId: google.maps.MapTypeId.ROADMAP
       }
- 
-      this.map = new google.maps.Map(this.mapRef.nativeElement, mapOptions);
-     
- 
+      this.map = new google.maps.Map(this.mapRef.nativeElement, mapOptions);  
       let userMarker = new google.maps.Marker({
         map: this.map,
-        // icon: 'http://maps.google.com/mapfiles/ms/micons/blue.png',
-        // icon: 'http://maps.google.com/mapfiles/kml/pal3/icon57.png',
-        // icon: 'http://maps.google.com/mapfiles/ms/micons/man.png',
-        
-
         icon: new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/mobile/mobileimgs2.png',
         new google.maps.Size(22, 22),
         new google.maps.Point(0, 18),
         new google.maps.Point(11, 11)),
         position: latLng
       });
-
       let courts = this.courtProvider.retrieveCourts().snapshotChanges().map(actions => {
         return actions.map(a => {
           const data = a.payload.doc.data() as Court;
@@ -92,7 +79,6 @@ export class HomePage {
           return { id, ...data };
         }); 
       });
-
       courts.subscribe(snapshots=>{
           snapshots.forEach(court => {
             new google.maps.Marker({
@@ -102,6 +88,7 @@ export class HomePage {
             }).addListener('click', this.courtClicked.bind(this,court));                   //To prevent it from calling instantly.
           });
         });
+        this.showLoading = false;
       }, (err) => {
         alert("Map cannot be loaded.");
       });
@@ -118,6 +105,11 @@ export class HomePage {
     let modal = this.modalCtrl.create(CourtModalPage, data);
     modal.present();
   }
+
+  ionViewWillUnload(){
+    this.subscription.unsubscribe();
+  }
+
 
 }
 

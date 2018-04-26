@@ -74,6 +74,7 @@ export class MyApp {
 
   openPage(page){
     if(page.title == "Home"){
+      // this.nav.push(page.component);
       this.nav.setRoot(page.component);
       // alert("you're home!")
     }

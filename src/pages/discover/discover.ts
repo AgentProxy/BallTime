@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angu
 import { CourtProvider } from '../../providers/court/court';
 import { Court } from '../../models/court/court.model';
 import { Observable } from 'rxjs/Observable';
-import { CourtModalPage } from '../court-modal/court-modal';
+import { CourtModalPage } from '../modals/court-modal/court-modal';
 import { LocationServiceProvider } from '../../providers/location-service/location-service';
 
 declare var google: any;

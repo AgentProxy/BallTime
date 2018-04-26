@@ -20,7 +20,7 @@ import { ProfilePage } from '../pages/profile/profile';
 import { CourtProvider } from '../providers/court/court';
 import { DiscoverPage } from '../pages/discover/discover';
 import { FriendsPage } from '../pages/friends/friends';
-import { CourtModalPage } from '../pages/court-modal/court-modal';
+import { CourtModalPage } from '../pages/modals/court-modal/court-modal';
 import { MessagesPage } from '../pages/messages/messages';
 import { GoogleFunctionsProvider } from '../providers/google-functions/google-functions';
 import { MapModalPage } from '../pages/modals/map-modal/map-modal';

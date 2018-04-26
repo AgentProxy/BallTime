@@ -17,7 +17,7 @@ export class LocationServiceProvider {
   userLocation: any;
   constructor(public http: HttpClient, private geolocation: Geolocation) {
     // console.log('Hello LocationServiceProvider Provider');
-    this.location = geolocation;
+    
     
   }
 
@@ -25,8 +25,7 @@ export class LocationServiceProvider {
   getLocation(){
     // var userLatitude;
     // var userLongitude;
-
-    this.location.getCurrentPosition().then((resp) => {
+    this.geolocation.getCurrentPosition().then((resp) => {
       this.userLatitude = resp.coords.latitude;
       this.userLongitude = resp.coords.longitude;  
       this.userLocation = {
@@ -56,8 +55,7 @@ export class LocationServiceProvider {
       maxAge: 0,
       timeout: 1000,
     };
-
-    return this.location.watchPosition(watchOptions)
+    return this.geolocation.watchPosition(watchOptions)
   }
 
 }
