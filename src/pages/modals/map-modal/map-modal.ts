@@ -27,15 +27,22 @@ export class MapModalPage {
   footerState: IonPullUpFooterState;
   mode:string = 'WALKING';
   icon:string = 'walk';
+  showJoin:boolean = true;
 
   
   constructor(private locationProvider: LocationServiceProvider, private viewCtrl: ViewController, private alertCtrl: AlertController, private navParams: NavParams) {
     this.currentLocation = this.locationProvider.getUpdatedLocation();
     this.court = navParams.get('Court');
     this.footerState = IonPullUpFooterState.Collapsed;
-    if(this.navParams.get('Page')!="home"){
+    if(this.navParams.get('Page')!="home" && this.navParams.get('Page')!="join"){
       this.mode = this.navParams.get('Mode');
     }
+    else{}
+
+    if(this.navParams.get('Page')=='join'){
+      this.showJoin = false;
+    }
+    else{}
   }
 
   ionViewDidLoad(){

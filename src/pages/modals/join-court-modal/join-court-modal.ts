@@ -1,9 +1,11 @@
 import { Component, OnDestroy } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, AlertController, ModalController } from 'ionic-angular';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { CourtProvider } from '../../../providers/court/court';
 import { UserProvider } from '../../../providers/user/user';
 import { User } from '../../../models/user/user.model';
+import { ChatProvider } from '../../../providers/chat/chat';
+import { MapModalPage } from '../map-modal/map-modal';
 
 
 /**
@@ -26,10 +28,15 @@ export class JoinCourtModalPage {
   playerId: string;
   userInfo: any;
   courtInfo: any;
+  messages: any;
+  message: string = ""; 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private db: AngularFirestore, private courtProvider: CourtProvider, private viewCtrl: ViewController, private userProvider: UserProvider, private alertCtrl: AlertController ) {
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, private db: AngularFirestore, private courtProvider: CourtProvider, private viewCtrl: ViewController, private userProvider: UserProvider, private alertCtrl: AlertController, private chatProvider: ChatProvider, private modalCtrl: ModalController ) {
     this.court = this.navParams.get('Court');
     this.courtInfo = this.courtProvider.retrieveCourtLive(this.court.id);
+    this.messages = this.db.collection('courts/' + this.court.id + "/chat",ref => ref.orderBy('timestamp','asc').limit(20)).valueChanges();
+    // this.db.collection('courts').doc(courtId).collection("chat").ref.orderBy('timestamp','desc');
   }
 
   ngOnDestroy(){
@@ -62,9 +69,6 @@ export class JoinCourtModalPage {
     });
 
     // this.playersCount.
-   
-    
-
   }
 
   leaveCourt(){
@@ -90,16 +94,22 @@ export class JoinCourtModalPage {
     confirm.present();
 
   }
-
-  // async addPlayer(){
-  //   this.playerId = await this.courtProvider.addUserToCourt(this.userProvider.retrieveUserObject(),this.court.id);
-  //   alert(this.playerId);
-  // }
-
-  // addPlayer2(){
   
-  // let player = this.courtProvider.addUserToCourt2(this.userProvider.retrieveUserInfo(),this.court.id);
-  // alert(player.username);
-  // }
+  showDirection(courtInfo){  
+    let data = {
+      Court: courtInfo,
+      Page: 'join',
+    }
+    let modal = this.modalCtrl.create(MapModalPage, data);
+    modal.present();
+  }
+
+  async sendMessage(){
+    let userId = this.userProvider.retrieveUserId();
+    let user = await this.userProvider.retrieveUserObject(userId);
+
+    this.chatProvider.addCourtChat(this.court.id,this.message, user);
+    this.message = "";
+  }
 
 }

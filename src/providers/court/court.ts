@@ -7,6 +7,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { LocationServiceProvider } from '../location-service/location-service';
 import { UserProvider } from '../user/user';
 import { User } from '../../models/user/user.model';
+import { ChatProvider } from '../chat/chat';
 
 declare var google: any;
 /*
@@ -25,7 +26,7 @@ export class CourtProvider {
   nearestCourts = [];
   player:any;
   
-  constructor(private http: HttpClient, private db: AngularFirestore, private location: LocationServiceProvider, private userProvider: UserProvider) {
+  constructor(private http: HttpClient, private db: AngularFirestore, private location: LocationServiceProvider, private userProvider: UserProvider, private chatProvider: ChatProvider) {
     this.location.getLocation();        //I DON'T KNOW WHY
   }
 
@@ -37,7 +38,11 @@ export class CourtProvider {
 
   retrieveCourtLive(courtId){
     //GET LIVE DATA FROM COURT
-    let courtInfo = this.courtCol.doc(courtId).valueChanges();
+    let courtInfo = this.courtCol.doc(courtId).snapshotChanges().map(action => {
+      const data = action.payload.data();
+      const id = action.payload.id;
+      return { id, ...data };
+    }); ;
     return courtInfo;
   }
 
@@ -109,6 +114,9 @@ export class CourtProvider {
       
       this.db.doc('courts/' + courtId ).set({players_count: playersCount}, {merge: true});
     });    
+    if(playersCount==0){
+      this.chatProvider.deleteCourtChat(courtId);
+    }
   }
 
   retrieveCourtDistance(court){

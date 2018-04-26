@@ -30,6 +30,7 @@ import { UserProvider } from '../providers/user/user';
 import { ComponentsModule } from '../components/components.module';
 import { ProfileViewerModalPage } from '../pages/modals/profile-viewer-modal/profile-viewer-modal';
 import { FriendsProvider } from '../providers/friends/friends';
+import { ChatProvider } from '../providers/chat/chat';
 
 
 @NgModule({
@@ -80,6 +81,7 @@ import { FriendsProvider } from '../providers/friends/friends';
     GoogleFunctionsProvider,
     UserProvider,
     FriendsProvider,
+    ChatProvider,
     
   ]
 })

@@ -39,6 +39,7 @@ export class UserProvider {
     createUser(userId){
         this.db.doc('users/' + userId).set({
             uid: userId,
+            registered: false,
         });
     }
 
@@ -58,6 +59,7 @@ export class UserProvider {
         return this.userInfo;
     }
 
+    //BEST EXAMPLE
     async retrieveUserObject(userId){
         this.userDoc = this.db.doc<User>('users/' + userId);
         let userObj:any;

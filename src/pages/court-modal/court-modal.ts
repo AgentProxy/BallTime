@@ -68,7 +68,7 @@ export class CourtModalPage {
               Court: court,
             }
             //ADD USER TO COURT VIA COURT PROVIDER      
-            if(court.players_count <1 ){
+            if(court.players_count <10 ){
               let modal = this.modalCtrl.create(JoinCourtModalPage, data);
               modal.present();
             }

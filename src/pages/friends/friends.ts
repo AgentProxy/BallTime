@@ -35,7 +35,6 @@ export class FriendsPage {
   }
 
   ionViewDidLoad() {
-    
   }
 
   initializeUsers(){
@@ -61,7 +60,7 @@ export class FriendsPage {
     this.filteredUsers = this.allUsers;
   }
 
-  searchUsers(ev: any){
+  searchFriends(ev: any){
     this.showSpinner = true;
 
     if (!this.searchInput) {
@@ -86,6 +85,10 @@ export class FriendsPage {
     
     let modal = this.modalCtrl.create(ProfileViewerModalPage, data);
     modal.present();
+  }
+
+  discoverUsers(){
+
   }
 
 }

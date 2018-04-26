@@ -5,19 +5,22 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
   <ion-navbar color="nav">
     <ion-buttons start>
         <button ion-button (click)="leaveCourt()">
           Leave Court
         </button>
     </ion-buttons>
-    <ion-title>{{court.name}}</ion-title>
+    <ion-buttons end>
+        <button ion-button (click)="showDirection(court)">
+          Directions
+        </button>
+    </ion-buttons>
   </ion-navbar>
-
 </ion-header>
   
 <ion-content padding>
+    <h1> {{court.name}}</h1>
     <h1>Players in this court ({{(courtInfo|async)?.players_count}}/10): </h1>
     <ion-list>
       <ion-item *ngFor="let player of players | async">
@@ -27,9 +30,15 @@
         {{ player.user.username}}
       </ion-item>
     </ion-list>
-    <!-- <h2>{{(userInfo|async)?.firstname}}</h2> -->
     <h3>Chatbox</h3>
     <div id="chatbox">
+      <ion-list>
+        <ion-item *ngFor="let item of messages | async" text-wrap>
+            <strong>{{item.sender_username}}</strong>:
+            {{ item.message }}
+        </ion-item>
+      </ion-list>
     </div>
-    <ion-input type="text" placeholder="Enter your message"></ion-input>
-</ion-content>
+    <ion-input type="text" id="message_input" maxlength="100" placeholder="Enter your message" [(ngModel)]="message"></ion-input>
+    <button ion-button (click)="sendMessage()"> Send </button>
+  </ion-content>

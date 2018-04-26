@@ -8,14 +8,6 @@
       <ion-title>
         {{court.name}}
       </ion-title>
-      <!-- <ion-segment [(ngModel)]="choice">
-        <ion-segment-button value="map">
-          Map
-        </ion-segment-button>
-        <ion-segment-button value="directions">
-          Directions
-        </ion-segment-button>
-      </ion-segment> -->
       <ion-buttons end>
           <button ion-button icon-only >
             <ion-icon name="more"></ion-icon>
@@ -36,7 +28,7 @@
       </ion-fab-list>
     </ion-fab>
 
-    <button id="joinButton" ion-button color="ball">
+    <button id="joinButton" ion-button color="ball" *ngIf="showJoin">
       Join Court
     </button>
 

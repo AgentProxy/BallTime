@@ -1,7 +1,17 @@
 page-join-court-modal {
     #chatbox{
-        border: solid black 10px;
+        border: solid black 3px;
         width: 100%;
         height: 50%;
+        overflow: scroll;
     }
+
+    .scroll-content {
+        overflow-y: scroll;    //To remove sidebars in all pages in apps
+    }
+
+    #message_input{
+        border: solid 2px black;
+    }
+
 }

@@ -11,6 +11,7 @@ import { FriendsPage } from '../pages/friends/friends';
 import { DiscoverPage } from '../pages/discover/discover';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import { MessagesPage } from '../pages/messages/messages';
+import { UserProvider } from '../providers/user/user';
 
 
 @Component({
@@ -20,10 +21,12 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   rootPage:string = 'LandingPage';
+  user:any;
 
   pages: Array<{title: string, component: any}>;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private afAuth: AngularFireAuth, private alertCtrl: AlertController, private menuCtrl: MenuController, private backgroundMode: BackgroundMode) {
+  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private afAuth: AngularFireAuth, private alertCtrl: AlertController, private menuCtrl: MenuController, private backgroundMode: BackgroundMode, private userProvider: UserProvider) {
+    
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.

@@ -5,16 +5,16 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
   <ion-navbar color="nav">
-    <ion-title>FriendsPage <ion-icon name="person-add" float-right></ion-icon></ion-title>
+    <ion-title>Friends Page</ion-title>
+    <ion-buttons end> 
+      <ion-icon id="discoverUsers" name="person-add" (click)="discoverUsers()"></ion-icon>
+    </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
-
 <ion-content >
-    <ion-searchbar [(ngModel)]="searchInput" (ionInput)="searchUsers($event)"></ion-searchbar>
+    <ion-searchbar [(ngModel)]="searchInput" (ionInput)="searchFriends($event)"></ion-searchbar>
     <ion-icon name="options" end></ion-icon>
     <ion-list>
       <ion-spinner *ngIf="showSpinner"></ion-spinner>
