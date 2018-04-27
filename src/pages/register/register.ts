@@ -27,6 +27,7 @@ export class RegisterPage {
     weight: undefined,
     profile_pic: "",
     registered: true,
+    role: 'baller',
   };
   
   constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider) {

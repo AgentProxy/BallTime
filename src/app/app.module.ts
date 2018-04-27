@@ -31,6 +31,7 @@ import { ComponentsModule } from '../components/components.module';
 import { ProfileViewerModalPage } from '../pages/modals/profile-viewer-modal/profile-viewer-modal';
 import { FriendsProvider } from '../providers/friends/friends';
 import { ChatProvider } from '../providers/chat/chat';
+import { DiscoverFriendsPage } from '../pages/discover-friends/discover-friends';
 
 
 @NgModule({
@@ -45,6 +46,7 @@ import { ChatProvider } from '../providers/chat/chat';
     MapModalPage,
     JoinCourtModalPage,
     ProfileViewerModalPage,
+    DiscoverFriendsPage
   ],
   imports: [
     BrowserModule,
@@ -67,6 +69,7 @@ import { ChatProvider } from '../providers/chat/chat';
     MapModalPage,
     JoinCourtModalPage,
     ProfileViewerModalPage,
+    DiscoverFriendsPage,
   ],
   providers: [
     StatusBar,

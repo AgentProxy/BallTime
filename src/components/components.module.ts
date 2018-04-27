@@ -6,14 +6,14 @@ import { Component } from '@angular/core';
 import { RegisterComponent } from './register/register';
 // import { AngularFireAuthModule, AngularFireAuth } from 'angularfire2/auth';
 import { LoadingComponent } from './loading/loading';
-import { ChatCourtComponent } from './chat-court/chat-court';
+import { MenuBarComponent } from './menu-bar/menu-bar';
 
 @NgModule({
 	declarations: [
 	LoginComponent,
 	RegisterComponent,
 	LoadingComponent,
-    ChatCourtComponent,
+    MenuBarComponent,
 	],
 	imports: [ IonicModule,
 	// AngularFireAuthModule,
@@ -23,7 +23,7 @@ import { ChatCourtComponent } from './chat-court/chat-court';
 	LoginComponent,
     RegisterComponent,
 	LoadingComponent,
-    ChatCourtComponent,
+    MenuBarComponent,
 	],
 })
 export class ComponentsModule {}

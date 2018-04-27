@@ -62,8 +62,8 @@ export class FriendsProvider {
   }
 
   getFriends(userId){
-    let friends = this.db.collection('users/' + userId + '/friends').snapshotChanges();
-    return friends;
+    let friends = this.db.collection('users/' + userId + '/friends', ref => ref.where('status', '==', 'Friends'));
+    return friends.snapshotChanges();
   }
 
   unfriend(userId1,userId2){

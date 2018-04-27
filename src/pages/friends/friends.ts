@@ -6,6 +6,7 @@ import { IfObservable } from 'rxjs/observable/IfObservable';
 import { UserProvider } from '../../providers/user/user';
 import { ProfileViewerModalPage } from '../../pages/modals/profile-viewer-modal/profile-viewer-modal';
 import { FriendsProvider } from '../../providers/friends/friends';
+import { DiscoverFriendsPage } from '../discover-friends/discover-friends';
  
 /**
  * Generated class for the FriendsPage page.
@@ -88,7 +89,8 @@ export class FriendsPage {
   }
 
   discoverUsers(){
-
+    let modal = this.modalCtrl.create(DiscoverFriendsPage);
+    modal.present()
   }
 
 }

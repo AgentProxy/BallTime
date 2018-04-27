@@ -5,14 +5,26 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
-  <ion-navbar>
-    <ion-title>DiscoverFriends</ion-title>
+  <ion-navbar color="nav">
+    <ion-title>Discover Ballers</ion-title>
+      <ion-buttons>
+        <button ion-button (click)="dismiss()" >
+          <span ion-text>Back</span>
+        </button>
+      </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
-
-<ion-content padding>
-
+<ion-content >
+    <ion-searchbar [(ngModel)]="searchInput" (ionInput)="searchUsers($event)"></ion-searchbar>
+    <ion-list *ngIf="showList">
+      <ion-spinner *ngIf="showSpinner"></ion-spinner>
+      <ion-item *ngFor="let user of filteredUsers"  (click) = "openProfile(user)">
+        <ion-thumbnail item-start>
+          <img src="../assets/imgs/prof_pic/default_profpic.png">
+        </ion-thumbnail>
+        <h1> {{user.username}} </h1>
+        <!-- <h3> {{user.uid}} </h3>  -->
+      </ion-item>
+    </ion-list> 
 </ion-content>

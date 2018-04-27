@@ -68,8 +68,15 @@ export class UserProvider {
     }
 
     retrieveUsers(){
-        this.userCollection = this.userCol;
-        return this.userCollection;
+        this.userCollection = this.db.collection('users', ref => ref.orderBy('username','asc'));
+        return this.userCollection.snapshotChanges();
+    }
+
+    async retrieveRole(userId){
+        this.userDoc = this.db.doc<User>('users/' + userId);
+        let userObj:any;
+        userObj = await this.userDoc.ref.get();
+        return userObj.data().role;
     }
 
 }

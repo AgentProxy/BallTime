@@ -9,4 +9,5 @@ export interface User{
     weight: number;
     profile_pic?: string;
     registered: boolean;
+    role: string;
 }

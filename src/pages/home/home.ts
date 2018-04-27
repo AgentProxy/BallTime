@@ -50,45 +50,47 @@ export class HomePage {
   }
 
  
-  showMapAndLocation() {
+  async showMapAndLocation() {
     this.currentLocation = this.locationProvider.getUpdatedLocation();
+    let staticLocation = await this.locationProvider.getLocation();
+    alert(staticLocation);
     this.subscription =  this.currentLocation.filter((position) => position.coords !== undefined) //Filter Out Errors
     .subscribe((position) => {
-      alert(position);
-      let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-      let mapOptions = {
-        center: latLng,
-        zoom: 15,
-        clickableIcons: false,
-        fullscreenControl: false,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      }
-      this.map = new google.maps.Map(this.mapRef.nativeElement, mapOptions);  
-      let userMarker = new google.maps.Marker({
-        map: this.map,
-        icon: new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/mobile/mobileimgs2.png',
-        new google.maps.Size(22, 22),
-        new google.maps.Point(0, 18),
-        new google.maps.Point(11, 11)),
-        position: latLng
-      });
-      let courts = this.courtProvider.retrieveCourts().snapshotChanges().map(actions => {
-        return actions.map(a => {
-          const data = a.payload.doc.data() as Court;
-          const id = a.payload.doc.id;
-          return { id, ...data };
-        }); 
-      });
-      courts.subscribe(snapshots=>{
-          snapshots.forEach(court => {
-            new google.maps.Marker({
-              map: this.map,
-              icon: 'http://maps.google.com/mapfiles/kml/pal3/icon57.png',
-              position: new google.maps.LatLng(Number(court.latitude),Number(court.longitude))
-            }).addListener('click', this.courtClicked.bind(this,court));                   //To prevent it from calling instantly.
-          });
-        });
-        this.showLoading = false;
+      // alert(position);
+      // let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      // let mapOptions = {
+      //   center: latLng,
+      //   zoom: 15,
+      //   clickableIcons: false,
+      //   fullscreenControl: false,
+      //   mapTypeId: google.maps.MapTypeId.ROADMAP
+      // }
+      // this.map = new google.maps.Map(this.mapRef.nativeElement, mapOptions);  
+      // let userMarker = new google.maps.Marker({
+      //   map: this.map,
+      //   icon: new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/mobile/mobileimgs2.png',
+      //   new google.maps.Size(22, 22),
+      //   new google.maps.Point(0, 18),
+      //   new google.maps.Point(11, 11)),
+      //   position: latLng
+      // });
+      // let courts = this.courtProvider.retrieveCourts().snapshotChanges().map(actions => {
+      //   return actions.map(a => {
+      //     const data = a.payload.doc.data() as Court;
+      //     const id = a.payload.doc.id;
+      //     return { id, ...data };
+      //   }); 
+      // });
+      // courts.subscribe(snapshots=>{
+      //     snapshots.forEach(court => {
+      //       new google.maps.Marker({
+      //         map: this.map,
+      //         icon: 'http://maps.google.com/mapfiles/kml/pal3/icon57.png',
+      //         position: new google.maps.LatLng(Number(court.latitude),Number(court.longitude))
+      //       }).addListener('click', this.courtClicked.bind(this,court));                   //To prevent it from calling instantly.
+      //     });
+      //   });
+      //   this.showLoading = false;
       }, (err) => {
         alert("Map cannot be loaded.");
       });

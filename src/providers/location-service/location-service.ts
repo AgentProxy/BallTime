@@ -22,23 +22,28 @@ export class LocationServiceProvider {
   }
 
   //returns users current Location's Latitude and Longitude in an object
-  getLocation(){
+  async getLocation(){
     // var userLatitude;
     // var userLongitude;
-    this.geolocation.getCurrentPosition().then((resp) => {
-      this.userLatitude = resp.coords.latitude;
-      this.userLongitude = resp.coords.longitude;  
-      this.userLocation = {
-        latitude: this.userLatitude,
-        longitude: this.userLongitude,
-      }; 
-    })
-    .catch((error) => {
-      return false;
-    });
+    // this.geolocation.getCurrentPosition().then((resp) => {
+    //   this.userLatitude = resp.coords.latitude;
+    //   this.userLongitude = resp.coords.longitude;  
+    //   this.userLocation = {
+    //     latitude: this.userLatitude,
+    //     longitude: this.userLongitude,
+    //   }; 
+    // })
+    // .catch((error) => {
+    //   return false;
+    // });
 
-    return this.userLocation;
-
+    return await this.geolocation.getCurrentPosition()
+    // .then(async(resp) => {
+    //   this.userLatitude = await resp.coords.latitude;
+    //   this.userLongitude = await resp.coords.longitude;
+      
+    // });
+    // return this.userLatitude;
     // var userLocation = {
     //     latitude: this.userLatitude,
     //     longitude: this.userLongitude,
@@ -55,7 +60,7 @@ export class LocationServiceProvider {
       maxAge: 0,
       timeout: 1000,
     };
-    return this.geolocation.watchPosition(watchOptions)
+    return this.geolocation.watchPosition(watchOptions);
   }
 
 }
