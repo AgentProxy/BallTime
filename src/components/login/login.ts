@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Account } from '../../models/account/account.model';
-import { NavController } from 'ionic-angular';
+import { NavController, Events } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
 import * as firebase from 'firebase/app';
+import { UserProvider } from '../../providers/user/user';
+
 
 
 /**
@@ -21,7 +23,7 @@ export class LoginComponent {
   text: string;
   account = {} as Account;
 
-  constructor(private afAuth: AngularFireAuth, private navCtrl: NavController, private toast: ToastController) {
+  constructor(private afAuth: AngularFireAuth, private navCtrl: NavController, private toast: ToastController, public events: Events, private userProvider: UserProvider) {
   }
 
   async login(){
@@ -29,7 +31,8 @@ export class LoginComponent {
     try{
       const result = await this.afAuth.auth.signInWithEmailAndPassword(this.account.email, this.account.password);
       this.afAuth.auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
-      this.navCtrl.setRoot('HomePage');
+      
+      this.loggedIn(); 
     }
     catch(e){
       console.error(e);
@@ -39,6 +42,18 @@ export class LoginComponent {
           position: 'top'
         }).present();
     }
+  }
+
+
+  async loggedIn(){
+    let role = await this.userProvider.retrieveRole(this.userProvider.retrieveUserId());
+    if(role=='Baller'){
+      this.navCtrl.setRoot('HomePage');
+    }
+    else if(role=='Administrator'){
+      this.navCtrl.setRoot('HomeAdminPage');
+    }
+    this.events.publish('user:login');
   }
 
 }

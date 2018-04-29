@@ -6,14 +6,12 @@ import { Component } from '@angular/core';
 import { RegisterComponent } from './register/register';
 // import { AngularFireAuthModule, AngularFireAuth } from 'angularfire2/auth';
 import { LoadingComponent } from './loading/loading';
-import { MenuBarComponent } from './menu-bar/menu-bar';
 
 @NgModule({
 	declarations: [
 	LoginComponent,
 	RegisterComponent,
 	LoadingComponent,
-    MenuBarComponent,
 	],
 	imports: [ IonicModule,
 	// AngularFireAuthModule,
@@ -23,7 +21,6 @@ import { MenuBarComponent } from './menu-bar/menu-bar';
 	LoginComponent,
     RegisterComponent,
 	LoadingComponent,
-    MenuBarComponent,
 	],
 })
 export class ComponentsModule {}

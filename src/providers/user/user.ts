@@ -31,6 +31,8 @@ export class UserProvider {
             weight: user.weight,
             profile_pic: user.profile_pic,
             registered: user.registered,   
+            longitude: '',
+            latitude: '',
         });
         
         // return this.UserCol.push(user);
@@ -78,5 +80,21 @@ export class UserProvider {
         userObj = await this.userDoc.ref.get();
         return userObj.data().role;
     }
+
+    updateUserLocation(position){
+        this.db.collection('users').doc(this.retrieveUserId()).update({longitude: position.coords.longitude.toString(), latitude: position.coords.latitude.toString()})
+    }
+
+    async retrieveUserLocation(){
+        this.userDoc = this.db.doc<User>('users/' + this.retrieveUserId());
+        let userObj:any;
+        userObj = await this.userDoc.ref.get();
+        let userLocation = {
+            latitude: userObj.data().latitude,
+            longitude: userObj.data().longitude
+        }
+        return userLocation;
+    }
+
 
 }

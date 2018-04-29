@@ -1,10 +1,4 @@
 <ion-menu [content]="content" type="push" [swipeEnabled]="false" >
-    <!-- <ion-header>
-            <img id="prof_pic" src="../assets/imgs/prof_pic/default_profpic.png" />
-        <ion-toolbar>
-            <ion-title> Menu </ion-title>
-        </ion-toolbar> 
-    </ion-header> -->
     <ion-content>
         <div id='navbar_background'></div>
         <div id="navbar_overlay"></div>   
@@ -14,6 +8,8 @@
                     <img id="prof_pic" src="../assets/imgs/prof_pic/default_profpic.png" />
                 </div>
                 <p text-center> Games Played: 0 </p>
+                <h2 text-center *ngIf="showInfo"> {{user.username}} </h2>
+                <p text-center *ngIf="showInfo"> {{user.role}} </p>
             </div>
             <ion-list>
                 <ion-buttons>
@@ -25,8 +21,8 @@
                     </button>
                 </ion-buttons>
             </ion-list>
-        </div>  
-    </ion-content>
+            </div>  
+        </ion-content>
 </ion-menu>
 
 <ion-nav [root]="rootPage" #content></ion-nav>

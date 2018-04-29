@@ -10,4 +10,6 @@ export interface User{
     profile_pic?: string;
     registered: boolean;
     role: string;
+    latitude: string,
+    longitude: string,
 }

@@ -15,13 +15,13 @@
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 
+.scroll-content {
+    overflow-y: hidden;    //To remove sidebars in all pages in apps
+}
+
 .navbar_buttons{
     background-color: transparent;
     border-bottom: solid #fa8320 3px;
-}
-
-.scroll-content {
-    overflow-y: hidden;    //To remove sidebars in all pages in apps
 }
 
 #prof_pic{
@@ -83,3 +83,4 @@
     z-index: 1;
 
 }
+

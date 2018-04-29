@@ -12,6 +12,7 @@ import { DiscoverPage } from '../pages/discover/discover';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import { MessagesPage } from '../pages/messages/messages';
 import { UserProvider } from '../providers/user/user';
+import { Events } from 'ionic-angular';
 
 
 @Component({
@@ -22,10 +23,12 @@ export class MyApp {
 
   rootPage:string = 'LandingPage';
   user:any;
+  userId:string;
+  showInfo:boolean = false;
 
   pages: Array<{title: string, component: any}>;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private afAuth: AngularFireAuth, private alertCtrl: AlertController, private menuCtrl: MenuController, private backgroundMode: BackgroundMode, private userProvider: UserProvider) {
+  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private afAuth: AngularFireAuth, private alertCtrl: AlertController, private menuCtrl: MenuController, private backgroundMode: BackgroundMode, private userProvider: UserProvider, public events: Events) {
     
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
@@ -35,14 +38,48 @@ export class MyApp {
       this.backgroundMode.enable(); // Enable Running in Background Mode
     });
 
-    this.pages = [
-      { title: 'Home', component: HomePage },
-      { title: 'Profile', component: ProfilePage},
-      { title: 'Discover Courts', component: DiscoverPage},
-      { title: 'Messages', component: MessagesPage},
-      { title: 'Friends', component: FriendsPage}
-    ];
+    events.subscribe('user:login', () => {
+      this.getUserInfo();
+    });
 
+    
+    
+  }
+
+  async getUserInfo(){
+    // this.showInfo = true;
+    this.user = await this.userProvider.retrieveUserObject(this.userProvider.retrieveUserId()); 
+    this.showInfo = true;
+    if(this.user.role=='Administrator'){
+      this.pages = [
+        { title: 'Home', component: HomePage },
+        { title: 'Profile', component: ProfilePage},
+        { title: 'Manage Courts', component: DiscoverPage},
+        { title: 'Messages', component: MessagesPage},
+      ];
+    }
+    else {
+      this.pages = [
+        { title: 'Home', component: HomePage },
+        { title: 'Profile', component: ProfilePage},
+        { title: 'Discover Courts', component: DiscoverPage},
+        { title: 'Messages', component: MessagesPage},
+        { title: 'Friends', component: FriendsPage}
+      ];
+    }
+    // alert(this.user.username);
+  }
+
+  openPage(page){
+    if(page.title == "Home"){
+      if(this.nav.getActive().name=='HomePage'){
+        return;
+      }
+      this.nav.setRoot(page.component);
+    }
+    else{
+      this.nav.push(page.component);
+    }
   }
 
   confirmLogout(){
@@ -71,17 +108,5 @@ export class MyApp {
     this.menuCtrl.close();
     this.nav.setRoot('LandingPage');
   }
-
-  openPage(page){
-    if(page.title == "Home"){
-      // this.nav.push(page.component);
-      this.nav.setRoot(page.component);
-      // alert("you're home!")
-    }
-    else{
-      this.nav.push(page.component);
-    }
-  }
-  
 }
 

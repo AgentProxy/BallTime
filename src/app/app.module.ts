@@ -32,6 +32,8 @@ import { ProfileViewerModalPage } from '../pages/modals/profile-viewer-modal/pro
 import { FriendsProvider } from '../providers/friends/friends';
 import { ChatProvider } from '../providers/chat/chat';
 import { DiscoverFriendsPage } from '../pages/discover-friends/discover-friends';
+import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
+import { HTTP } from '@ionic-native/http';
 
 
 @NgModule({
@@ -85,6 +87,8 @@ import { DiscoverFriendsPage } from '../pages/discover-friends/discover-friends'
     UserProvider,
     FriendsProvider,
     ChatProvider,
+    BackgroundGeolocation,
+    HTTP,
     
   ]
 })

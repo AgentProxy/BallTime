@@ -28,6 +28,8 @@ export class RegisterPage {
     profile_pic: "",
     registered: true,
     role: 'baller',
+    latitude: '',
+    longitude: '',
   };
   
   constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider) {

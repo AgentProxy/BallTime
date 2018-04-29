@@ -18,7 +18,7 @@
 </ion-header>
 
 <ion-content>
-
+    <loading *ngIf="showLoading"></loading>
     <ion-fab id="ion-fab" #fab top right>
       <button ion-fab mini color="nav"><ion-icon [name]="icon"></ion-icon></button>
       <ion-fab-list>

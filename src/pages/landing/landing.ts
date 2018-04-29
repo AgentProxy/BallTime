@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, MenuController } from 'ionic-angular';
 import { RegisterComponent } from '../../components/register/register';
 
 
@@ -19,11 +19,12 @@ export class LandingPage {
 
   private showLogin: boolean = false;
 
-  constructor(private navCtrl: NavController, public navParams: NavParams, private modal: ModalController) {
+  constructor(private navCtrl: NavController, public navParams: NavParams, private modal: ModalController, private menu: MenuController) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LandingPage');
+    this.menu.enable(false);
   }
 
   login_clicked(): void{

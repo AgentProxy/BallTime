@@ -24,6 +24,7 @@ export class ProfileViewerModalPage {
   user:any;
   sameUser: boolean = false;
   status: String = '';
+  role:String = 'Baller';
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider, private viewCtrl: ViewController, 
     private friendsProvider: FriendsProvider, private alertCtrl: AlertController, private db: AngularFirestore) {
@@ -43,13 +44,16 @@ export class ProfileViewerModalPage {
     this.retrieveUserInfo();
   }
 
-  retrieveUserInfo(){
-    this.userInfo =  this.userProvider.retrieveUserInfoLive(this.userId).map(action => {
+  async retrieveUserInfo(){
+    this.userInfo = await this.userProvider.retrieveUserInfoLive(this.userId).map(action => {
       let id = action.payload.id;
       let data = action.payload.data();
       this.showLoading = false;
       return { id, ...data };
     });
+
+    this.role = await this.userProvider.retrieveRole(this.userId);
+  
   }
 
   checkUserAndStatus(){

@@ -5,14 +5,17 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-  <ion-navbar color="nav">
+  <ion-toolbar color="nav">
     <ion-title>Friends Page</ion-title>
+    <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
     <ion-buttons end> 
       <button ion-button (click)="discoverUsers()">
         <ion-icon id="discoverUsers" name="person-add"></ion-icon>
       </button>
     </ion-buttons>
-  </ion-navbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content >

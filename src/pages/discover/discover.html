@@ -5,17 +5,16 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
-  <ion-navbar>
-    <ion-title>DiscoverPage</ion-title>
-  </ion-navbar>
-
+  <ion-toolbar color="nav">
+    <ion-title>Discover Courts</ion-title>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+  </ion-toolbar>
 </ion-header>
-
 
 <ion-content padding>
   <h1>Maximum Distance: {{preferredDistance}} km</h1>
-
     <ion-range min="1" max="60" [(ngModel)]="preferredDistance">
       <ion-label range-left>1</ion-label>
       <ion-label range-right>60</ion-label>

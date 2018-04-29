@@ -27,7 +27,7 @@ export class CourtProvider {
   player:any;
   
   constructor(private http: HttpClient, private db: AngularFirestore, private location: LocationServiceProvider, private userProvider: UserProvider, private chatProvider: ChatProvider) {
-    this.location.getLocation();        //I DON'T KNOW WHY
+    // this.location.getLocation();        //I DON'T KNOW WHY
   }
 
 
@@ -36,20 +36,38 @@ export class CourtProvider {
     return this.courts;
   }
 
-  retrieveCourtLive(courtId){
+  async retrieveCourtLive(courtId){
     //GET LIVE DATA FROM COURT
-    let courtInfo = this.courtCol.doc(courtId).snapshotChanges().map(action => {
+    let courtInfo = await  this.courtCol.doc(courtId).snapshotChanges().map(action => {
       const data = action.payload.data();
       const id = action.payload.id;
       return { id, ...data };
-    }); ;
+    });
     return courtInfo;
   }
 
-  // retrieveCourtInfo(courtId){
-  //   let courtDoc = this.courtCol.doc(courtId);
-  //   let courtInfo = courtDoc.snapshotChanges();
-  // }
+  async retrieveCourtsUnderAdmin(userId){
+    let adminCourts = [];
+    let courts = this.db.collection('courts_admin', ref=>ref.where('admin_id','==',userId));
+    // let courtsObj = courts.snapshotChanges().map(actions => {
+    //   return actions.map(a => {
+    //     const id = a.payload.doc.id;
+    //     const data = a.payload.doc.data();
+    //     return { id, ...data };
+    //   }); 
+    // });
+    
+    courts.snapshotChanges().subscribe(snapshots=>{
+      snapshots.forEach(async snapshot =>{
+        alert(snapshot.payload.doc.data().court_id)
+        let court = await this.retrieveCourtLive(snapshot.payload.doc.data().court_id);
+        alert(court);
+        adminCourts.push(court);
+      });
+    });
+
+    return await adminCourts;
+  }
 
   async addUserToCourt(user, courtId){
     let userObj = await user;
@@ -120,7 +138,7 @@ export class CourtProvider {
   }
 
   retrieveCourtDistance(court){
-    this.userLocation = this.location.getLocation();
+    this.userLocation = this.userProvider.retrieveUserLocation();
     this.distance = google.maps.geometry.spherical.computeDistanceBetween(
       new google.maps.LatLng(this.userLocation.latitude,this.userLocation.longitude),new google.maps.LatLng(court.latitude, court.longitude)
     )/1000;

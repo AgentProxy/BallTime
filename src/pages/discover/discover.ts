@@ -61,7 +61,7 @@ export class DiscoverPage {
   retrieveClosestCourts(preferredDistance){
     var durationTemp;
     this.showSpinner = true;
-    this.userLocation = this.location.getLocation();
+    this.userLocation = this.location.getCurrentLocation();
     let courts = this.courtProvider.retrieveCourts().valueChanges();
     this.nearestCourts = [];
     

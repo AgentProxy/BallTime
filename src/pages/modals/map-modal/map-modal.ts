@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, ViewController, FabContainer, Aler
 import { LocationServiceProvider } from '../../../providers/location-service/location-service';
 import { GoogleFunctionsProvider } from '../../../providers/google-functions/google-functions';
 import { IonPullUpFooterState } from 'ionic-pullup';
+import { UserProvider } from '../../../providers/user/user';
 
 declare var google;
 /**
@@ -28,12 +29,16 @@ export class MapModalPage {
   mode:string = 'WALKING';
   icon:string = 'walk';
   showJoin:boolean = true;
+  userLocation: any;
 
   
-  constructor(private locationProvider: LocationServiceProvider, private viewCtrl: ViewController, private alertCtrl: AlertController, private navParams: NavParams) {
+  constructor(private locationProvider: LocationServiceProvider, private viewCtrl: ViewController, private alertCtrl: AlertController, private navParams: NavParams, private userProvider: UserProvider) {
     this.currentLocation = this.locationProvider.getUpdatedLocation();
     this.court = navParams.get('Court');
     this.footerState = IonPullUpFooterState.Collapsed;
+    
+    
+
     if(this.navParams.get('Page')!="home" && this.navParams.get('Page')!="join"){
       this.mode = this.navParams.get('Mode');
     }
@@ -44,6 +49,7 @@ export class MapModalPage {
     }
     else{}
   }
+
 
   ionViewDidLoad(){
     this.showMap(this.court);
@@ -58,8 +64,9 @@ export class MapModalPage {
     
   }
 
-  showMap(court){
-    let latLng = new google.maps.LatLng(10.6858733, 122.51181480000002);      //TO CHANGE
+  async showMap(court){
+    this.userLocation = await this.userProvider.retrieveUserLocation();
+    let latLng = new google.maps.LatLng(this.userLocation.latitude,this.userLocation.longitude);      //TO CHANGE
     let mapOptions = {
       center: latLng,
       zoom: 15,
@@ -116,7 +123,7 @@ export class MapModalPage {
     }
 
     var request = {
-      origin: new google.maps.LatLng(10.6858733, 122.51181480000002),        //TO CHANGE
+      origin: new google.maps.LatLng(this.userLocation.latitude, this.userLocation.longitude),        //TO CHANGE
       destination: new google.maps.LatLng(court.latitude, court.longitude),
       travelMode: google.maps.TravelMode[this.mode],                          //TO CHANGE
     };
