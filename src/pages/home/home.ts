@@ -58,15 +58,13 @@ export class HomePage {
   async showMapAndLocation() {
     this.subscription =  this.locationProvider.getUpdatedLocation()//Filter Out Errors
     .subscribe((position) => {
-      if(position.coords.accuracy>100){
-        console.log(position.coords.accuracy);
-        this.subscription.unsubscribe();
-        this.showMapAndLocation();
-        return;
-        // return false;
-        
-      }
-      else{
+      // if(position.coords.accuracy>100){
+      //   console.log(position.coords.accuracy);
+      //   this.subscription.unsubscribe();
+      //   this.showMapAndLocation();
+      //   return;
+      // }
+      // else{
         this.userProvider.updateUserLocation(position);
         let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
         let mapOptions = {
@@ -103,7 +101,7 @@ export class HomePage {
           });
           this.showLoading = false;
         }
-      }
+      // }
       , (err) => {
         alert("Map cannot be loaded.");
       });

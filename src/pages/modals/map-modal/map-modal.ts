@@ -44,7 +44,7 @@ export class MapModalPage {
     }
     else{}
 
-    if(this.navParams.get('Page')=='join'){
+    if(this.navParams.get('Page')=='join'||this.navParams.get('Page')=='game'){
       this.showJoin = false;
     }
     else{}

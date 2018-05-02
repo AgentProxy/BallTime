@@ -34,6 +34,7 @@ import { ChatProvider } from '../providers/chat/chat';
 import { DiscoverFriendsPage } from '../pages/discover-friends/discover-friends';
 import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
 import { HTTP } from '@ionic-native/http';
+import { GamePage } from '../pages/game/game';
 
 
 @NgModule({
@@ -48,7 +49,8 @@ import { HTTP } from '@ionic-native/http';
     MapModalPage,
     JoinCourtModalPage,
     ProfileViewerModalPage,
-    DiscoverFriendsPage
+    DiscoverFriendsPage,
+    GamePage,
   ],
   imports: [
     BrowserModule,
@@ -72,6 +74,7 @@ import { HTTP } from '@ionic-native/http';
     JoinCourtModalPage,
     ProfileViewerModalPage,
     DiscoverFriendsPage,
+    GamePage,
   ],
   providers: [
     StatusBar,

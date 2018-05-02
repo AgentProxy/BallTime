@@ -5,6 +5,7 @@ import { Court } from '../../models/court/court.model';
 import { Observable } from 'rxjs/Observable';
 import { CourtModalPage } from '../modals/court-modal/court-modal';
 import { LocationServiceProvider } from '../../providers/location-service/location-service';
+import { UserProvider } from '../../providers/user/user';
 
 declare var google: any;
 
@@ -39,9 +40,9 @@ export class DiscoverPage {
   selectedMode: string;
   directionsService = new google.maps.DirectionsService();
   courtObj: CourtObject;
-  
+  subscription: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private courtProvider: CourtProvider, private modalCtrl: ModalController, private location: LocationServiceProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private courtProvider: CourtProvider, private modalCtrl: ModalController, private location: LocationServiceProvider, private userProvider: UserProvider) {
     // this.courtProvider.retrieveClosestCourts(this.preferredDistance);
   }
 
@@ -65,9 +66,16 @@ export class DiscoverPage {
     let courts = this.courtProvider.retrieveCourts().valueChanges();
     this.nearestCourts = [];
     
+    // this.subscription = this.location.getCurrentLocation().then((position)=>{
+    //   this.userProvider.updateUserLocation(position);
+    // });//Filter Out Errors
+   
+
+
     courts.subscribe(snapshots=>{
       this.showSpinner = false;
       snapshots.forEach(court => {
+        
         let distance = google.maps.geometry.spherical.computeDistanceBetween(
           new google.maps.LatLng(this.userLocation.latitude,this.userLocation.longitude),new google.maps.LatLng(court.latitude, court.longitude)
         )/1000;

@@ -7,4 +7,5 @@ export interface Court{
     name: string;
     status: string;
     duration: any;
+    id: string,
 }

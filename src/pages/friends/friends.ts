@@ -30,7 +30,7 @@ export class FriendsPage {
   friends: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private friendProvider: FriendsProvider, private userProvider: UserProvider, private modalCtrl: ModalController) {
-    this.userId = this.userProvider.retrieveUserId();
+    this.userId = this.userProvider.retrieveUserID();
     this.initializeUsers();
     
   }

@@ -13,6 +13,7 @@ import { BackgroundMode } from '@ionic-native/background-mode';
 import { MessagesPage } from '../pages/messages/messages';
 import { UserProvider } from '../providers/user/user';
 import { Events } from 'ionic-angular';
+import { HomeAdminPage } from '../pages/admin/home-admin/home-admin';
 
 
 @Component({
@@ -48,11 +49,11 @@ export class MyApp {
 
   async getUserInfo(){
     // this.showInfo = true;
-    this.user = await this.userProvider.retrieveUserObject(this.userProvider.retrieveUserId()); 
+    this.user = await this.userProvider.retrieveUserObject(this.userProvider.retrieveUserID()); 
     this.showInfo = true;
     if(this.user.role=='Administrator'){
       this.pages = [
-        { title: 'Home', component: HomePage },
+        { title: 'Home', component: HomeAdminPage },
         { title: 'Profile', component: ProfilePage},
         { title: 'Manage Courts', component: DiscoverPage},
         { title: 'Messages', component: MessagesPage},

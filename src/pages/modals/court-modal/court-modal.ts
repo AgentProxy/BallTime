@@ -65,6 +65,7 @@ export class CourtModalPage {
           text: 'Join',
           handler: () => {
             let data = {
+              Role: 'Baller',
               Court: court,
             }
             //ADD USER TO COURT VIA COURT PROVIDER      

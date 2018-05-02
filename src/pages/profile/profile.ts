@@ -24,7 +24,7 @@ export class ProfilePage {
   userInfo: any;
   showLoading: boolean = true;
   constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider : UserProvider) {
-    this.userId = this.userProvider.retrieveUserId();
+    this.userId = this.userProvider.retrieveUserID();
   }
 
   retrieveUserInfo(){

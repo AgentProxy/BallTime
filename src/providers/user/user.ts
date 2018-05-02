@@ -12,9 +12,10 @@ export class UserProvider {
     private userCollection: AngularFirestoreCollection<User>;
     userInfo: any;
     users: Observable<User>;
+    // uid: any;
 
     constructor(private db: AngularFirestore, private afAuth: AngularFireAuth,){
-
+        // this.uid = this.retrieveUserID();
     }
     existingUserId : string;
     
@@ -33,6 +34,7 @@ export class UserProvider {
             registered: user.registered,   
             longitude: '',
             latitude: '',
+            role: 'baller',
         });
         
         // return this.UserCol.push(user);
@@ -45,13 +47,20 @@ export class UserProvider {
         });
     }
 
-    retrieveUserId(){
+    retrieveUserID(){
+        // this.uid = this.afAuth.auth.currentUser.uid;
         return this.afAuth.auth.currentUser.uid; 
     }
 
     retrieveUserInfo(){
-        this.userDoc = this.db.doc<User>('users/' + this.retrieveUserId());
+        this.userDoc = this.db.doc<User>('users/' + this.retrieveUserID());
         this.userInfo = this.userDoc.snapshotChanges();
+        return this.userInfo;
+    }
+
+    retrieveUserInfoValue(userId){
+        this.userDoc = this.db.doc<User>('users/' + userId);
+        this.userInfo = this.userDoc.valueChanges();
         return this.userInfo;
     }
 
@@ -82,11 +91,11 @@ export class UserProvider {
     }
 
     updateUserLocation(position){
-        this.db.collection('users').doc(this.retrieveUserId()).update({longitude: position.coords.longitude.toString(), latitude: position.coords.latitude.toString()})
+        this.db.collection('users').doc(this.retrieveUserID()).update({longitude: position.coords.longitude.toString(), latitude: position.coords.latitude.toString()})
     }
 
     async retrieveUserLocation(){
-        this.userDoc = this.db.doc<User>('users/' + this.retrieveUserId());
+        this.userDoc = this.db.doc<User>('users/' + this.retrieveUserID());
         let userObj:any;
         userObj = await this.userDoc.ref.get();
         let userLocation = {

@@ -29,10 +29,11 @@ export class LoginComponent {
   async login(){
     
     try{
-      const result = await this.afAuth.auth.signInWithEmailAndPassword(this.account.email, this.account.password);
-      this.afAuth.auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+      const result = await this.afAuth.auth.signInWithEmailAndPassword(this.account.email, this.account.password).then(()=>{
+        this.afAuth.auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+        this.loggedIn(); 
+      });
       
-      this.loggedIn(); 
     }
     catch(e){
       console.error(e);
@@ -46,7 +47,8 @@ export class LoginComponent {
 
 
   async loggedIn(){
-    let role = await this.userProvider.retrieveRole(this.userProvider.retrieveUserId());
+    alert(this.userProvider.retrieveUserID());
+    let role = await this.userProvider.retrieveRole(this.userProvider.retrieveUserID());
     if(role=='Baller'){
       this.navCtrl.setRoot('HomePage');
     }

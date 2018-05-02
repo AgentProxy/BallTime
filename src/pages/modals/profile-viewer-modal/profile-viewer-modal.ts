@@ -29,7 +29,7 @@ export class ProfileViewerModalPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider, private viewCtrl: ViewController, 
     private friendsProvider: FriendsProvider, private alertCtrl: AlertController, private db: AngularFirestore) {
     this.userId = this.navParams.get('Id');
-    this.friendsProvider.friendStatusChanges(this.userProvider.retrieveUserId(),this.navParams.get('Id')).subscribe(() => {
+    this.friendsProvider.friendStatusChanges(this.userProvider.retrieveUserID(),this.navParams.get('Id')).subscribe(() => {
       this.checkStatus();
       }
     );
@@ -57,7 +57,7 @@ export class ProfileViewerModalPage {
   }
 
   checkUserAndStatus(){
-    if(this.userId == this.userProvider.retrieveUserId()){
+    if(this.userId == this.userProvider.retrieveUserID()){
       this.sameUser = true;
     }
     else{
@@ -66,16 +66,16 @@ export class ProfileViewerModalPage {
   }
 
   async checkStatus(){
-    let friendRequest = await this.friendsProvider.getStatus(this.userProvider.retrieveUserId(),this.navParams.get('Id'));
+    let friendRequest = await this.friendsProvider.getStatus(this.userProvider.retrieveUserID(),this.navParams.get('Id'));
     this.status = friendRequest.status;
   }
 
   addFriend(){
-    let sent = this.friendsProvider.addFriend(this.userProvider.retrieveUserId(),this.userId);
+    let sent = this.friendsProvider.addFriend(this.userProvider.retrieveUserID(),this.userId);
   }
 
   confirmFriend(){
-    this.friendsProvider.confirmFriend(this.userProvider.retrieveUserId(),this.userId);
+    this.friendsProvider.confirmFriend(this.userProvider.retrieveUserID(),this.userId);
   }
 
   async cancelRequest(){
@@ -88,7 +88,7 @@ export class ProfileViewerModalPage {
           {
             text: 'Yes',
             handler: () => {    
-              this.friendsProvider.unfriend(this.userProvider.retrieveUserId(), this.userId);
+              this.friendsProvider.unfriend(this.userProvider.retrieveUserID(), this.userId);
             }
           },
           {
@@ -108,7 +108,7 @@ export class ProfileViewerModalPage {
           {
             text: 'Yes',
             handler: () => {    
-              this.friendsProvider.unfriend(this.userProvider.retrieveUserId(), this.userId);
+              this.friendsProvider.unfriend(this.userProvider.retrieveUserID(), this.userId);
             }
           },
           {

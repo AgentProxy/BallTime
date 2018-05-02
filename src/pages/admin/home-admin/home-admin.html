@@ -6,23 +6,22 @@
 -->
 <ion-header>
   <ion-navbar color="nav">
+    <ion-title >Home Admin</ion-title>
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title >Home Admin</ion-title>
   </ion-navbar>
 </ion-header>
 
-
 <ion-content padding>
-<ion-card *ngFor='let court of courts | async'>
-  <ion-card-header>
-    {{court.court_id}}
-    <button ion-button float-right> Manage </button>
-  </ion-card-header>
-  <ion-card-content>
-    
-  </ion-card-content>
-</ion-card>
+  <ion-card *ngFor='let court of courts'>
+    <ion-card-header>
+      {{court.data.name}}
+      <button ion-button float-right (click)="manageCourt(court)"> Manage </button>
+    </ion-card-header>
+    <ion-card-content>
+      <h1> </h1>
+    </ion-card-content>
+  </ion-card>
 
 </ion-content>

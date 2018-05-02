@@ -27,7 +27,7 @@ export class DiscoverFriendsPage {
   showList:boolean = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private viewCtrl: ViewController, private friendProvider: FriendsProvider, private userProvider: UserProvider, private modalCtrl: ModalController) {
-    this.userId = this.userProvider.retrieveUserId();
+    this.userId = this.userProvider.retrieveUserID();
     // this.users = this.userProvider.retrieveUsers();
     this.initializeUsers();
   }
