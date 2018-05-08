@@ -20,46 +20,49 @@
   </ion-navbar>
 </ion-header>
   
-<ion-content padding>
-    <h1> {{court.name}}</h1>
-    <h1>Admin: </h1>
-    <ion-list>
-        <ion-item *ngFor="let administrator of admin | async">
+<ion-content id='join-court'>
+    <div id="grey_layer">
+      <h1> {{court.name}}</h1>
+      <h1>Admin: </h1>
+      <ion-list>
+          <ion-item *ngFor="let administrator of admin | async">
+              <ion-avatar item-start>
+                  <img src="../assets/imgs/prof_pic/default_profpic.png">
+                </ion-avatar>
+            {{ administrator.user.username }}
+          </ion-item>
+        </ion-list>
+
+      <h1>Players in this court ({{(courtInfo|async)?.players_count}}/10): </h1>
+      <ion-list>
+        <ion-item *ngFor="let player of players | async">
             <ion-avatar item-start>
                 <img src="../assets/imgs/prof_pic/default_profpic.png">
               </ion-avatar>
-          {{ administrator.user.username }}
+          {{ player.user.username}} {{player.status}}
+          <button ion-button color="primary" *ngIf="role=='Administrator' && player.status=='Arrived'" (click)='confirmPlayer(player.user.uid)'>Confirm</button>
+          <button ion-button color="danger" *ngIf="role=='Administrator'" (click)="kickPlayer(player.user.uid, player.user.username)">Kick</button>
         </ion-item>
+        
       </ion-list>
-
-    <h1>Players in this court ({{(courtInfo|async)?.players_count}}/10): </h1>
-    <ion-list>
-      <ion-item *ngFor="let player of players | async">
-          <ion-avatar item-start>
-              <img src="../assets/imgs/prof_pic/default_profpic.png">
-            </ion-avatar>
-        {{ player.user.username}} {{player.status}}
-        <button ion-button color="primary" *ngIf="role=='Administrator' && player.status=='Arrived'" (click)='confirmPlayer(player.user.uid)'>Confirm</button>
-        <button ion-button color="danger" *ngIf="role=='Administrator'" (click)="kickPlayer(player.user.uid, player.user.username)">Kick</button>
+      <h3>Chatbox</h3>
+      <div id="chatbox">
+        <ion-list>
+          <ion-item *ngFor="let item of messages | async" text-wrap>
+              <strong>{{item.sender_username}}</strong>:
+              {{ item.message }}
+          </ion-item>
+        </ion-list>
+      </div>
+      <ion-item id='message_input'>
+        <ion-input type="text" maxlength="100" placeholder="Enter your message" [(ngModel)]="message"></ion-input>
+        <button ion-button (click)="sendMessage()" clear item-right color='ball'> Send </button>
       </ion-item>
-      
-    </ion-list>
-    <h3>Chatbox</h3>
-    <div id="chatbox">
-      <ion-list>
-        <ion-item *ngFor="let item of messages | async" text-wrap>
-            <strong>{{item.sender_username}}</strong>:
-            {{ item.message }}
-        </ion-item>
-      </ion-list>
+      <ion-buttons id='buttons'>
+        <button ion-button color="secondary" *ngIf="role=='Administrator' && courtStatus==''" (click)="readyCourt()">Ready Court</button>
+        <button ion-button color="ball" *ngIf="role=='Administrator' && courtStatus=='Waiting'" (click)='startGame()'>Start Game</button>
+        <button ion-button color="secondary" *ngIf="role=='Baller' && status==''" (click)='readyPlayer()'>Ready</button>
+        <button ion-button color="danger" *ngIf="role=='Baller' && status=='Ready'" (click)='unreadyPlayer()'>Cancel</button>
+      </ion-buttons>
     </div>
-    <ion-input type="text" id="message_input" maxlength="100" placeholder="Enter your message" [(ngModel)]="message"></ion-input>
-    <button ion-button (click)="sendMessage()"> Send </button>
-
-    <button ion-button color="secondary" *ngIf="role=='Administrator' && courtStatus==''" (click)="readyCourt()">Ready Court</button>
-    <!-- <button ion-button color="danger" *ngIf="role=='Administrator' && status=='Waiting'" (click)='unreadyCourt()'>Cancel</button> -->
-    <button ion-button color="ball" *ngIf="role=='Administrator' && courtStatus=='Waiting'" (click)='startGame()'>Start Game</button>
-    <button ion-button color="secondary" *ngIf="role=='Baller' && status==''" (click)='readyPlayer()'>Ready</button>
-    <button ion-button color="danger" *ngIf="role=='Baller' && status=='Ready'" (click)='unreadyPlayer()'>Cancel</button>
-
   </ion-content>

@@ -18,6 +18,7 @@ import { RegisterComponent } from '../../components/register/register';
 export class LandingPage {
 
   private showLogin: boolean = false;
+  private showRegister: boolean = false;
 
   constructor(private navCtrl: NavController, public navParams: NavParams, private modal: ModalController, private menu: MenuController) {
   }
@@ -32,9 +33,10 @@ export class LandingPage {
   }
 
   register_clicked(): void{
-    const register_modal = this.modal.create(RegisterComponent);
-    register_modal.present();
-    //DELETE MODAL
+    this.showRegister = !this.showRegister;
+    // const register_modal = this.modal.create(RegisterComponent);
+    // register_modal.present();
+    // //DELETE MODAL
     //this.navCtrl.push('RegisterPage');
   }
 

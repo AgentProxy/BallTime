@@ -15,43 +15,34 @@
 
 <ion-content id='discover'>
   <div id="grey_layer">
-    <h1>Maximum Distance: {{preferredDistance}} km</h1>
-      <ion-range min="1" max="20" [(ngModel)]="preferredDistance">
-        <ion-label range-left>1</ion-label>
-        <ion-label range-right>20</ion-label>
-      </ion-range>
-<!-- 
-    <ion-list radio-group [(ngModel)]="selectedMode" required>
-        <ion-item>
-          <ion-label>Walk</ion-label>
-          <ion-radio value="WALKING"></ion-radio>
-        </ion-item>
-        <ion-item>
-          <ion-label>Drive</ion-label>
-          <ion-radio value="DRIVING"></ion-radio>
-        </ion-item>
-        <ion-item>
-          <ion-label>Bike</ion-label>
-          <ion-radio value="BICYCLING"></ion-radio>
-        </ion-item>           
-    </ion-list> -->
-
-    <div class='options'>
-      <button id='1' class='option' (click)='chooseMethod(1)'><ion-icon name='walk'></ion-icon></button>
-      <button id='2' class='option' (click)='chooseMethod(2)'>Bike</button>
-      <button id='3'  class='option' (click)='chooseMethod(3)'>Drive</button>
-    </div>
-
+  <ion-segment id='modes' [(ngModel)]="selectedMode" color="ball">
+      <ion-segment-button value='WALKING' selected>
+        <ion-icon name="walk"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value='BICYCLING'>
+          <ion-icon name="bicycle"></ion-icon>
+        </ion-segment-button>
+      <ion-segment-button value='DRIVING'>
+        <ion-icon name="car"></ion-icon>
+      </ion-segment-button>
+    </ion-segment>
+    <h1>Maximum Distance: {{preferredDistance}} KM</h1>
+    <ion-range min="1" max="20" [(ngModel)]="preferredDistance">
+      <ion-label range-left>1 KM</ion-label>
+      <ion-label range-right>20 KM</ion-label>
+    </ion-range>
     <div class='center'>
       <button id="findButton" color='ball' ion-button round (click)="retrieveClosestCourts(preferredDistance)"> Find </button>
     </div>  
     <h1 text-center> Results </h1>
     <ion-spinner *ngIf="showSpinner"></ion-spinner>
     <ion-list>
-      <ion-item *ngFor="let court of nearestCourts" (click)="openModal(court)">
-        <h1>{{ court.name }}</h1>
+      <ion-item class='item' *ngFor="let court of nearestCourts" (click)="openModal(court)">
+        <h2 text-wrap>{{ court.name }}</h2>
         <h3>Distance: <span id={{court.name}}distance></span></h3>
         <h3>Travel Time: <span id={{court.name}}time></span></h3>
+        <h3>Players: {{court.players_count}}</h3>
+        <h3>Status: {{court.status}}</h3>
       </ion-item>
     </ion-list>
     </div>

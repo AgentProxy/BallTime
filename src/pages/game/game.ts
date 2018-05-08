@@ -32,7 +32,6 @@ export class GamePage {
 
     alert(this.status);
     if(this.role == 'Baller'){
-
       this.courtProvider.retrieveCourtSnapshot(this.court.id).subscribe(async ()=>{
         let court = await this.courtProvider.courtStatusChanges(this.court.id);
         if(court.status == 'In Game' && this.role =='Baller' && this.status=='Confirmed'){
@@ -93,6 +92,57 @@ export class GamePage {
    
   }
 
+  quitGame(type){
+    if(type=='Quit'){
+      let confirm = this.alertCtrl.create({
+        title: 'Quit Game?',
+        message: "Do you want to quit the game? You won't receive any points when you quit!",
+        buttons: [
+          {
+            text: 'Quit',
+            handler: () => {    
+              // this.courtProvider.removePlayer(this.court.id, this.role, this.court.players_count, type);
+              this.navCtrl.popToRoot().then(()=>{
+              });
+            }
+          },
+          {
+            text: 'Cancel',
+            handler: () => {
+            }
+          }
+      ]
+      });
+      confirm.present();
+    }
+    else if(type=='Cancel' || type=='Cancel Coming'){
+      let confirm = this.alertCtrl.create({
+        title: 'Cancel?',
+        message: "Do you want to cancel your spot? You will get 1 penalty for this (3 penalties = banned account)",
+        buttons: [
+          {
+            text: 'Yes',
+            handler: () => {    
+              // this.courtProvider.removePlayer(this.court.id, this.role, this.court.players_count, type);
+              this.navCtrl.popToRoot().then(()=>{
+                // this.courtProvider.penalizePlayer(this.userProvider.retrieveUserID());
+              });
+            }
+          },
+          {
+            text: 'No',
+            handler: () => {
+            }
+          }
+      ]
+      });
+      confirm.present();
+    }
+    else{
+
+    }
+  }
+
   showDirection(){  
     let data = {
       Court: this.court,
@@ -102,5 +152,7 @@ export class GamePage {
     let modal = this.modalCtrl.create(MapModalPage, data);
     modal.present();
   }
+
+
 
 }

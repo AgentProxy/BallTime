@@ -55,8 +55,8 @@ export class RegisterComponent {
   // this.navCtrl.push('RegisterPage');
   }
 
-  closeRegister(){
-    this.viewCtrl.dismiss();
-  }
+  // closeRegister(){
+  //   this.viewCtrl.dismiss();
+  // }
   
 }

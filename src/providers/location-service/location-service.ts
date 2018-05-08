@@ -45,14 +45,14 @@ export class LocationServiceProvider {
       // alert(accuracy);
       return {latitude, longitude, accuracy} ;
     });
-    if(location.accuracy>150){
-      alert(location.accuracy);
-      this.getCurrentLocation();
-      return false;
-    }
-    else{
+    // if(location.accuracy>150){
+    //   alert(location.accuracy);
+    //   this.getCurrentLocation();
+    //   return false;
+    // }
+    // else{
       return location;
-    }
+    // }
   }
 
 }

@@ -1,7 +1,6 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, FabContainer, AlertController, ModalController } from 'ionic-angular';
 import { LocationServiceProvider } from '../../../providers/location-service/location-service';
-import { GoogleFunctionsProvider } from '../../../providers/google-functions/google-functions';
 import { IonPullUpFooterState } from 'ionic-pullup';
 import { UserProvider } from '../../../providers/user/user';
 import { JoinCourtModalPage } from '../join-court-modal/join-court-modal';

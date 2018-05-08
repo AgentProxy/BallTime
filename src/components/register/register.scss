@@ -11,7 +11,18 @@ register {
         //margin-bottom: auto;
     }
 
-    #or{
-        color: white;
+    ion-item{
+        border-radius: 30px !important;
+        padding-left: 30px !important;
+        font-size: 0.9em;
+        // border-bottom: 0px !important;
+        border-bottom-color: transparent
+        
     }
+
+    .item.item-input{
+        background-color: rgba(10, 10, 10, 0.555);
+        margin-bottom: 20px;
+    }
+
 }

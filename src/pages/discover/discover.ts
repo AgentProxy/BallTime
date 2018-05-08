@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, AlertController } from 'ionic-angular';
 import { CourtProvider } from '../../providers/court/court';
 import { Court } from '../../models/court/court.model';
 import { Observable } from 'rxjs/Observable';
@@ -37,12 +37,12 @@ export class DiscoverPage {
   nearestCourts: any;
   showSpinner: boolean = false;
   userLocation: any;
-  selectedMode: string;
+  selectedMode: string = '';
   directionsService = new google.maps.DirectionsService();
   courtObj: CourtObject;
   subscription: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private courtProvider: CourtProvider, private modalCtrl: ModalController, private location: LocationServiceProvider, private userProvider: UserProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private courtProvider: CourtProvider, private modalCtrl: ModalController, private location: LocationServiceProvider, private userProvider: UserProvider, private alertCtrl: AlertController) {
     // this.courtProvider.retrieveClosestCourts(this.preferredDistance);
   }
 
@@ -50,43 +50,39 @@ export class DiscoverPage {
     console.log('ionViewDidLoad DiscoverPage');
   }
 
-  chooseMethod(options){
-    switch(options){
-      case 1:
-        this.selectedMode = 'WALKING';
-        break;
-      case 2:
-        this.selectedMode = 'WALKING';
-        break;
-      case 3:
-        this.selectedMode = 'WALKING';
-        break;
-      default:
-
-    }
-  }
-
   async retrieveClosestCourts(preferredDistance){
+    if(this.selectedMode==''){
+      let alert = this.alertCtrl.create({
+        title: 'No Mode of Transportation Selected!',
+        subTitle: 'Select a mode of tranportation',
+        buttons: ['OK']
+      });
+      alert.present();
+      return false;
+    }
+
     var durationTemp;
     this.showSpinner = true;
     this.userLocation = await this.location.getCurrentLocation();
-    let courts = this.courtProvider.retrieveCourts().valueChanges();
-    this.nearestCourts = [];
-  
-    if(this.userLocation=='false'){
+    console.log(this.userLocation.accuracy);
+
+    if(this.userLocation.accuracy > 100){
+      this.retrieveClosestCourts(preferredDistance);
+      
+      console.log(this.userLocation.accuracy);
       return;
     }
-
+    this.userProvider.updateUserLocation(this.userLocation);
+    let courts = this.courtProvider.retrieveCourts().valueChanges();
+    this.nearestCourts = [];
     courts.subscribe(snapshots=>{
       this.showSpinner = false;
       snapshots.forEach(court => {
         let distance = google.maps.geometry.spherical.computeDistanceBetween(
           new google.maps.LatLng(this.userLocation.latitude,this.userLocation.longitude),new google.maps.LatLng(court.latitude, court.longitude)
         )/1000;
-        if(distance<=preferredDistance){
-          
+        if(distance<=preferredDistance){ 
           let duration = this.routeInfo(court);
-          // alert(duration);
           this.nearestCourts.push(court);
         }
       });
@@ -105,7 +101,6 @@ export class DiscoverPage {
     let duration = "";
     this.directionsService.route(request,  function(response, status) {
       if (status == 'OK') {
-        // var deferredObj = new deferred();
         var route = response.routes[0];
         console.log(route);
         // alert(route.legs[0].duration.text);

@@ -3,7 +3,6 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule, NavController } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
-
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { HomePageModule } from '../pages/home/home.module';
@@ -22,7 +21,6 @@ import { DiscoverPage } from '../pages/discover/discover';
 import { FriendsPage } from '../pages/friends/friends';
 import { CourtModalPage } from '../pages/modals/court-modal/court-modal';
 import { MessagesPage } from '../pages/messages/messages';
-import { GoogleFunctionsProvider } from '../providers/google-functions/google-functions';
 import { MapModalPage } from '../pages/modals/map-modal/map-modal';
 import { IonPullupModule } from 'ionic-pullup';
 import { JoinCourtModalPage } from '../pages/modals/join-court-modal/join-court-modal';
@@ -86,7 +84,6 @@ import { GamePage } from '../pages/game/game';
     Geolocation,
     BackgroundMode,
     CourtProvider,
-    GoogleFunctionsProvider,
     UserProvider,
     FriendsProvider,
     ChatProvider,

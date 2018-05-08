@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams, Slides } from 'ionic-angular';
 import { User } from '../../models/user/user.model';
 import { UserProvider } from '../../providers/user/user';
 
@@ -16,6 +16,7 @@ import { UserProvider } from '../../providers/user/user';
   templateUrl: 'register.html',
 })
 export class RegisterPage {
+  @ViewChild(Slides) slides: Slides;
   userInfo: User = {
     uid: undefined,
     username: "",
@@ -30,6 +31,7 @@ export class RegisterPage {
     role: 'baller',
     latitude: '',
     longitude: '',
+    penalty: 0,
     reputation_points: 0,
     reputation_level: 1,
   };
@@ -46,6 +48,14 @@ export class RegisterPage {
     this.userProvider.addUserInfo(userInfo);
     this.navCtrl.setRoot('HomePage');               //should put try catch for errors
     
+  }
+
+  nextSlide(){
+    this.slides.slideNext();
+  }
+
+  prevSlide(){
+    this.slides.slidePrev();
   }
 
 }

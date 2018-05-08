@@ -12,6 +12,7 @@ export interface User{
     role: string;
     latitude: string,
     longitude: string,
+    penalty: number,
     reputation_level: number;
     reputation_points: number;
 }

@@ -11,7 +11,7 @@
 </ion-header> -->
 
 <ion-content class="content" padding>
-  <ion-slides id="register_steps" pager shouldLockSwipes="true">
+  <ion-slides id="register_steps" shouldLockSwipes="true">
     <ion-slide>
       <div id = "header" style="text-align:center; color: white">
         <h1> Personal Info </h1>
@@ -44,10 +44,16 @@
           </ion-item>
         </form>
       </ion-list>
-      <button color="ball" ion-button full round type="button" style="position: relative" >Next<ion-icon id="arrow_proceed" name="arrow-round-forward"></ion-icon></button>
+      <button color="ball" ion-button full round type="button" style="position: relative" (click)='nextSlide()' >Next<ion-icon id="arrow_proceed" name="arrow-round-forward"></ion-icon></button>
     </ion-slide>
     <ion-slide>
-      <ion-item> 
+      <button ion-button clear float-left>
+        <ion-icon name="arrow-round-back" (click)="prevSlide()" style="position:relative; color:white; font-size:40px"></ion-icon> 
+      </button>
+      <ion-item>
+        <button>
+          <ion-icon name="arrow-round-back" (click)="prevSlide()" style="position:relative; color:white; font-size:40px"></ion-icon> 
+        </button>
         <ion-label>
           <ion-icon name="lock"></ion-icon>
         </ion-label>
@@ -65,9 +71,12 @@
         </ion-label>
         <ion-input name="weight" [(ngModel)]="userInfo.weight" placeholder="Weight" type="number" round></ion-input>
       </ion-item>
-      <button color="ball" ion-button full round type="button" style="position: relative" >Next<ion-icon id="arrow_proceed" name="arrow-round-forward"></ion-icon></button>
+      <button color="ball" ion-button full round type="button" style="position: relative" (click)='nextSlide()'>Next<ion-icon id="arrow_proceed" name="arrow-round-forward"></ion-icon></button>
     </ion-slide>
     <ion-slide>
+      <button ion-button clear float-left>
+        <ion-icon name="arrow-round-back" (click)="prevSlide()" style="position:relative; color:white; font-size:40px"></ion-icon> 
+      </button>
       <div id = "header" style="text-align:center; color: white">
       <h1> Add Profile Pic </h1>
       </div>

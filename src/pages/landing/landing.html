@@ -13,7 +13,7 @@
     <h1 id="ball_text"> BALL TIME </h1>
     <img id="ball_logo" alt="Logo" class="logo" src="assets/imgs/logobasketball.png"/>
   </div>
-  <div *ngIf="!showLogin">
+  <div *ngIf="!showLogin && !showRegister">
     <div id="logo_slides">
       <ion-slides id="ion-slides" autoplay="3000" loop="true" pager="false">
           <ion-slide>
@@ -33,10 +33,13 @@
     </div>
   </div>
   <div *ngIf="showLogin">  
-      <ion-icon name="arrow-round-back" (click)="login_clicked()" style="position:relative; color:white; font-size:35px"></ion-icon>
+      <ion-icon name="arrow-round-back" (click)="login_clicked()" style="position:relative; color:white; font-size:40px"></ion-icon>
       <login></login>
     <!-- <button style="display:hidden"></button> --> 
-    
+  </div>
+  <div *ngIf="showRegister">
+    <ion-icon name="arrow-round-back" (click)="register_clicked()" style="position:relative; color:white; font-size:40px"></ion-icon>
+    <register></register>
   </div>
  
 </ion-content>

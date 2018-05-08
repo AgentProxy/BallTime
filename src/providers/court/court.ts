@@ -220,8 +220,21 @@ export class CourtProvider {
   }
 
 
-  removePlayer(playerId, courtId, playersCount){
+  removePlayer(playerId, courtId, playersCount, type?){
     playersCount = playersCount--;
+
+    if(type=='Quit'){
+      // this.courtCol.doc(courtId).collection('players').doc(playerId).set({players_confirmed: })
+    }
+
+    else if (type=='Cancel'||type=='Cancel Coming'){
+
+    }
+
+    else{
+
+    }
+
     let courtDoc = this.courtCol.doc(courtId).collection('players').doc(playerId).delete().then(result => {
       this.db.doc('courts/' + courtId ).set({players_count: playersCount}, {merge: true});
     });    
