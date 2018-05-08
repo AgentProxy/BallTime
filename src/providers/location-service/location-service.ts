@@ -37,9 +37,22 @@ export class LocationServiceProvider {
       maximumAge: 0,
       // timeout: 1000,
     };
-    // let position: any;
-    return this.geolocation.getCurrentPosition(watchOptions);
-    
+    let location;
+    location = await this.geolocation.getCurrentPosition(watchOptions).then((resp)=>{
+      let latitude = resp.coords.latitude;
+      let longitude = resp.coords.longitude;
+      let accuracy = resp.coords.accuracy;
+      // alert(accuracy);
+      return {latitude, longitude, accuracy} ;
+    });
+    if(location.accuracy>150){
+      alert(location.accuracy);
+      this.getCurrentLocation();
+      return false;
+    }
+    else{
+      return location;
+    }
   }
 
 }

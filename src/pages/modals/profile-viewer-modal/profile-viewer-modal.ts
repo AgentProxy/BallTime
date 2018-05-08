@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, AlertController, ModalController } from 'ionic-angular';
 import { UserProvider } from '../../../providers/user/user';
 import { FriendsProvider } from '../../../providers/friends/friends';
 import { AngularFirestore } from 'angularfire2/firestore';
+import { CourtProvider } from '../../../providers/court/court';
+import { FriendsPage } from '../../friends/friends';
 
 /**
  * Generated class for the ProfileViewerModalPage page.
@@ -24,10 +26,12 @@ export class ProfileViewerModalPage {
   user:any;
   sameUser: boolean = false;
   status: String = '';
-  role:String = 'Baller';
+  role: any;
+  courts: any = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider, private viewCtrl: ViewController, 
-    private friendsProvider: FriendsProvider, private alertCtrl: AlertController, private db: AngularFirestore) {
+    private friendsProvider: FriendsProvider, private alertCtrl: AlertController, private db: AngularFirestore, private courtProvider: CourtProvider,
+    private modalCtrl: ModalController) {
     this.userId = this.navParams.get('Id');
     this.friendsProvider.friendStatusChanges(this.userProvider.retrieveUserID(),this.navParams.get('Id')).subscribe(() => {
       this.checkStatus();
@@ -45,6 +49,10 @@ export class ProfileViewerModalPage {
   }
 
   async retrieveUserInfo(){
+    this.role = await this.userProvider.retrieveRole(this.userId);
+    if(this.role=='Administrator'){
+      this.courts = await this.courtProvider.retrieveCourtsUnderAdmin(this.userId);
+    }
     this.userInfo = await this.userProvider.retrieveUserInfoLive(this.userId).map(action => {
       let id = action.payload.id;
       let data = action.payload.data();
@@ -52,7 +60,7 @@ export class ProfileViewerModalPage {
       return { id, ...data };
     });
 
-    this.role = await this.userProvider.retrieveRole(this.userId);
+    // this.role = this.userInfo.data.role;
   
   }
 
@@ -127,6 +135,16 @@ export class ProfileViewerModalPage {
 
   dismiss(){
     this.viewCtrl.dismiss();
+  }
+
+  showFriends(){
+    let data = {
+      userId: this.userId,
+      use: 'Modal',
+    }
+
+    let modal = this.modalCtrl.create(FriendsPage, data);
+    modal.present();
   }
 
 }

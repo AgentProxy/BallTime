@@ -69,6 +69,28 @@ export class CourtProvider {
     });
   }
 
+  changeCourtStatus(courtId, status){
+    this.db.collection('courts').doc(courtId).set({status: status}, {merge: true});
+
+    if(status == 'In Game'){
+      alert('CourtProvider: ' + status);
+      this.db.collection('courts').doc(courtId).set({players_confirmed: 0},{merge: true})
+      // .then(()=>{
+      //   this.courtCol.doc(courtId).collection('players').snapshotChanges().subscribe(snapshots=>{
+      //     snapshots.forEach(snapshot => {
+      //       alert('changing');
+      //       this.db.collection('courts').doc(courtId).collection('players').doc(snapshot.payload.doc.data().user.uid).set({status: 'In Game'}, {merge: true});
+      //     });
+      //   });
+      // });
+    }
+    return true;
+  }
+
+  changePlayerStatus(userId, courtId, status){
+    this.db.collection('courts').doc(courtId).collection('players').doc(userId).set({status: status}, {merge: true});
+  }
+
   checkPlayersInCourt(courtId){
     let query = this.db.collection('courts').doc(courtId).ref.get().then((snapShot)=>{
       if(snapShot.data().players_confirmed == snapShot.data().players_count){
@@ -98,6 +120,34 @@ export class CourtProvider {
     let court = await this.db.collection('courts').doc(courtId);
     let courtObj = await court.ref.get();
     return courtObj.data().current_admin;
+  }
+
+  endGame(courtId, role){
+    if(role=='Administrator'){
+      this.db.collection('courts').doc(courtId).set({status: ''},{merge: true}).then(()=>{
+        this.courtCol.doc(courtId).collection('players').snapshotChanges().map(actions => {
+          return actions.map(a => {
+            // const data = a.payload.doc.data();
+            this.db.collection('courts').doc(courtId).collection('players').doc(a.payload.doc.data().user.uid).set({status: ''}, {merge: true});
+            // const id = a.payload.doc.id;
+            // return { id, ...data };
+          }); 
+        });
+        // .subscribe(snapshots=>{
+        //   snapshots.forEach(async snapshot => {
+        //     this.db.collection('courts').doc(courtId).collection('players').doc(snapshot.payload.doc.data().user.uid).set({status: ''}, {merge: true});
+        //   });
+        // });
+      });
+    }
+    // else{
+    //   this.db.doc('courts/' + courtId + '/players/' + userId ).set({status: ''},{merge: true})
+    // }
+    
+  }
+
+  kickPlayer(playerId, courtId){
+    this.db.collection('courts').doc(courtId).collection('players').doc(playerId).set({status: 'Kicked'}, {merge: true});
   }
 
   retrieveCourts(){
@@ -210,6 +260,26 @@ export class CourtProvider {
     return this.db.collection('courts').doc(courtId).snapshotChanges();
   }
 
+  //FOR CHECKING
+  rewardPlayers(userId){
+    this.db.collection('users').doc(userId).ref.get().then(snap => {
+      let reputation_points = snap.data().reputation_points + 150;
+      let reputation_level = snap.data().reputation_level;
+      if(reputation_level>=5){
+        this.db.collection('users').doc(userId).set({games_played: (snap.data().games_played + 1), reputation_points: reputation_points});
+      }
+      else{
+        if(reputation_points  == 1500 || reputation_points  == 4500 || reputation_points == 7500 || reputation_points == 10500 || reputation_points == 15000){
+          reputation_level++;
+          this.db.collection('users').doc(userId).set({games_played: (snap.data().games_played + 1), reputation_points: reputation_points, reputation_level: reputation_level});
+        }
+        else{
+          this.db.collection('users').doc(userId).set({games_played: (snap.data().games_played + 1), reputation_points: reputation_points});
+        }
+      }
+    });
+  }
+
   updatePlayerStatus(userId, courtId, status){
     this.db.doc('courts/' + courtId + '/players/' + userId ).set({status: status},{merge: true}).then(()=>{
       this.db.doc('courts/' + courtId).ref.get().then(snap => {
@@ -224,6 +294,7 @@ export class CourtProvider {
           return;
         }
         else if(status=='Confirmed'){
+          alert('hi')
           // let players_ready_count = snap.data().players_ready - 1;
           this.db.doc('courts/' + courtId).update({players_confirmed: (snap.data().players_confirmed + 1)});
           return;

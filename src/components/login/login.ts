@@ -47,7 +47,6 @@ export class LoginComponent {
 
 
   async loggedIn(){
-    alert(this.userProvider.retrieveUserID());
     let role = await this.userProvider.retrieveRole(this.userProvider.retrieveUserID());
     if(role=='Baller'){
       this.navCtrl.setRoot('HomePage');

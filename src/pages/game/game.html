@@ -24,7 +24,7 @@
     <!-- <court-timer></court-timer> -->
     <div text-center id="ball-animation"><img id="ball" src="../../assets/imgs/logobasketball.png"></div>
 
-    <button ion-button block color="danger" *ngIf="role=='Administrator'" id='button-end'> End Game</button>
+    <button ion-button block color="danger" *ngIf="role=='Administrator'" id='button-end' (click)='endGame()'> End Game</button>
     <button ion-button block color="danger" *ngIf="role=='Baller' && status=='In Game'" id='button-end'> Quit Game</button>
     <button ion-button block color="danger" *ngIf="role=='Baller' && status=='Confirmed'" id='button-end'> Cancel </button>
   </div>

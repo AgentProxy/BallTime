@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
 import { User } from '../../models/user/user.model';
 import { UserProvider } from '../../providers/user/user';
+import { CourtProvider } from '../../providers/court/court';
 /**
  * Generated class for the ProfilePage page.
  *
@@ -23,12 +24,19 @@ export class ProfilePage {
   userId: any;
   userInfo: any;
   showLoading: boolean = true;
-  constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider : UserProvider) {
+  role: any;
+  courts:any = [];
+  constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider : UserProvider, private courtProvider: CourtProvider) {
     this.userId = this.userProvider.retrieveUserID();
   }
 
-  retrieveUserInfo(){
-    this.userInfo =  this.userProvider.retrieveUserInfoLive(this.userId).map(action => {
+  async retrieveUserInfo(){
+    this.role = await this.userProvider.retrieveRole(this.userId);
+    if(this.role=='Administrator'){
+      this.courts = await this.courtProvider.retrieveCourtsUnderAdmin(this.userId);
+    }
+    this.userInfo =  await this.userProvider.retrieveUserInfoLive(this.userId).map(action => {
+      this.showLoading = false;
       let id = action.payload.id;
       let data = action.payload.data();
       this.showLoading = false;
@@ -36,8 +44,15 @@ export class ProfilePage {
     });
   }
 
+  async retrieveRole(){
+    this.role = await this.userProvider.retrieveRole(this.userId);
+  }
+
   ionViewWillEnter() {
+    
     this.retrieveUserInfo();
+
+    
     console.log('ionViewDidLoad ProfilePage');
   }
 

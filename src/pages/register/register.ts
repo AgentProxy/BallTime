@@ -30,6 +30,8 @@ export class RegisterPage {
     role: 'baller',
     latitude: '',
     longitude: '',
+    reputation_points: 0,
+    reputation_level: 1,
   };
   
   constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider) {

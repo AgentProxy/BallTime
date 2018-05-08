@@ -1,4 +1,5 @@
 page-profile-viewer-modal {
+
     #profile_header{
         text-align: center;
         width: 100vw;
@@ -10,11 +11,17 @@ page-profile-viewer-modal {
 
     #prof_pic{
         border-radius: 50%;
-        width: 100px;
-        height: 100px;
+        width: 200px;
+        height: 200px;
         border-color:  #fa8320;
         border-style: solid;
         border-width: 5px;
+    }
+
+    #edit{
+        background-color: transparent;
+        height: 50px;
+        // width: 50px;
     }
 
     $width: 130vw;
@@ -32,19 +39,120 @@ page-profile-viewer-modal {
         position: absolute;
         z-index: -1;
         max-width: unset!important;
+    
     }
+
+    .items{
+        background-color: transparent;
+        color: white;
+    }
+
+    // #edit_profile{
+    //     height: 50px;
+    //     width: 50px;
+    // }
 
     #menu_button{
         font-size: 50px;
         position: relative;
         color: white;
         margin: 0;
+        margin-left: 20px;
         padding: 0;
         text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     }
 
     #profile_info{
-        background-color: white;
-        color: black;
+        // background-color: white;
+        background-image: url('../assets/imgs/ProfPageBackground.jpg');
+        color: white;
+        background-position: center bottom; 
+        margin-top: -6%;
     }
+
+    #title{
+        // margin-left: 40%;
+        // position: absolute;
+        text-align: center;
+        margin-top: 20%;
+    }
+
+    #profile_header{
+        margin-top: 10%;
+        padding: 10%;
+    }
+
+    #separator{
+        height: 2px;
+        width: 95%;
+        background-color: #fa8320;
+    }
+
+    #header_bar{
+        padding-top: 5%;
+
+    }
+
+    #grey_layer{
+        background-color: rgba(29, 29, 29, 0.685);
+        height: 100%;
+        width: 100%;
+    }
+
+    .scroll-content {
+        overflow-y: scroll;    //To remove sidebars in all pages in apps
+    }
+
+//     #profile_header{
+//         text-align: center;
+//         width: 100vw;
+//         // position: relative;
+//         overflow-x: hidden;
+//         color: white;
+//         text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+//     }
+
+//     #prof_pic{
+//         border-radius: 50%;
+//         width: 100px;
+//         height: 100px;
+//         border-color:  #fa8320;
+//         border-style: solid;
+//         border-width: 5px;
+//     }
+
+//     $width: 130vw;
+//     #cover_pic{
+//         top: 0;
+//         left: (($width - 100vw) / 2) * -1;
+//         border: solid 1px transparent;
+//         border-radius: 0 0 80% 80%;
+//         object-fit: cover;
+//         object-position: center;
+//         height: 20em;
+//         color: white;
+//         display: block;
+//         width: $width;
+//         position: absolute;
+//         z-index: -1;
+//         max-width: unset!important;
+//     }
+
+//     #menu_button{
+//         font-size: 50px;
+//         position: relative;
+//         color: white;
+//         margin: 0;
+//         padding: 0;
+//         text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+//     }
+
+//     #profile_info{
+//         background-color: white;
+//         color: black;
+//     }
+
+//     .scroll-content {
+//         overflow-y: scroll;    //To remove sidebars in all pages in apps
+//     }
 }

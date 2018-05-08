@@ -6,12 +6,60 @@ page-discover {
     }
 
     #findButton{
-        margin-left: auto;
-        margin-right: auto;
+        // position: relative;
+        // margin-right: 50%;
+        width: 200px;
     }
 
     .scroll-content {
         overflow-y: scroll;    //To remove sidebars in all pages in apps
+    }
+
+    #discover{
+        background-image: url('../assets/imgs/RegisterBackground3.jpg');
+        color: white;
+    }
+
+    .center{
+        text-align: center;
+        
+    }
+
+    #grey_layer{
+        background-color: rgba(29, 29, 29, 0.685);
+        height: 100%;
+        width: 100%;
+        position: absolute;
+    }
+
+    .options{
+        background-color: transparent;
+        text-align: center;
+        color: white;
+        // margin-left: 10px;
+     
+    }
+
+    .option{
+        background-color: #fa8320;
+        color: white;
+        width: 50px;
+        height: 50px;
+        border-radius: 50% 50%;
+        margin: 10px;
+    }
+
+    .option_clicked{
+        background-color: #f65515;
+        color: white;
+        width: 50px;
+        height: 50px;
+        border-radius: 50% 50%;  
+    }
+
+    #list{
+        // width: 50px;
+        // clear: none;
     }
 
 }

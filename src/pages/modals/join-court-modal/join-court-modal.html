@@ -7,7 +7,7 @@
 <ion-header>
   <ion-navbar hideBackButton color="nav">
     <ion-buttons start>
-        <button ion-button (click)="leaveCourt()" *ngIf='ready!=true'>
+        <button ion-button (click)="leaveCourt()" *ngIf="status!='Ready'">
           Leave Court
         </button>
     </ion-buttons>
@@ -40,7 +40,7 @@
             </ion-avatar>
         {{ player.user.username}} {{player.status}}
         <button ion-button color="primary" *ngIf="role=='Administrator' && player.status=='Arrived'" (click)='confirmPlayer(player.user.uid)'>Confirm</button>
-        <button ion-button color="danger" *ngIf="role=='Administrator'">Kick</button>
+        <button ion-button color="danger" *ngIf="role=='Administrator'" (click)="kickPlayer(player.user.uid, player.user.username)">Kick</button>
       </ion-item>
       
     </ion-list>
@@ -56,10 +56,10 @@
     <ion-input type="text" id="message_input" maxlength="100" placeholder="Enter your message" [(ngModel)]="message"></ion-input>
     <button ion-button (click)="sendMessage()"> Send </button>
 
-    <button ion-button color="secondary" *ngIf="role=='Administrator' && status==''" (click)="readyCourt()">Ready Court</button>
+    <button ion-button color="secondary" *ngIf="role=='Administrator' && courtStatus==''" (click)="readyCourt()">Ready Court</button>
     <!-- <button ion-button color="danger" *ngIf="role=='Administrator' && status=='Waiting'" (click)='unreadyCourt()'>Cancel</button> -->
-    <button ion-button color="ball" *ngIf="role=='Administrator' && courtReady==true" (click)='startGame()'>Start Game</button>
-    <button ion-button color="secondary" *ngIf="role=='Baller' && ready==false" (click)='readyPlayer()'>Ready</button>
-    <button ion-button color="danger" *ngIf="role=='Baller' && ready==true" (click)='unreadyPlayer()'>Cancel</button>
+    <button ion-button color="ball" *ngIf="role=='Administrator' && courtStatus=='Waiting'" (click)='startGame()'>Start Game</button>
+    <button ion-button color="secondary" *ngIf="role=='Baller' && status==''" (click)='readyPlayer()'>Ready</button>
+    <button ion-button color="danger" *ngIf="role=='Baller' && status=='Ready'" (click)='unreadyPlayer()'>Cancel</button>
 
   </ion-content>

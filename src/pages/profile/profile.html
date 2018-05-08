@@ -6,13 +6,14 @@
 -->
 
 <ion-content id="profile_info">
+    <loading *ngIf="showLoading"></loading>
     <div id="grey_layer">
       <header id="header_bar">
         <ion-icon name="menu" id="menu_button" float-start menuToggle></ion-icon>
-        <h1 id="title">Baller</h1>
         <button ion-button float-right id="edit" > 
             <img src="../assets/imgs/profile_edit_white.png" id="edit_profile">
         </button>
+        <h1 id="title">{{(userInfo|async)?.role}}</h1>
       </header>
       <div id="profile_header">
         <img id="prof_pic" src="../assets/imgs/RegisterBackground2.jpg" />
@@ -20,17 +21,27 @@
         <h3 text-center>@{{(userInfo|async)?.username}}</h3>
       </div>
       <hr id="separator">
-      <div id="feats">
-        <h1>Games Played:       Rank:</h1>
+      <div id="feats" *ngIf="role=='Baller'">
+        <h2 text-left>Games Played: {{(userInfo|async)?.games_played}}<span float-right>Rep Level: {{(userInfo|async)?.reputation_level}} </span></h2>
+      </div>
+      <div id="feats" *ngIf="role!='Baller'">
+        <h2 text-left>Courts Managed: </h2>
+        <ion-list>
+            <ion-item class='items' *ngFor='let court of courts'>
+              {{court.data.name}}
+            </ion-item>
+        </ion-list>
       </div>
       <hr id="separator">
-      <div id="stats" padding>
-        <h1>Height: {{(userInfo|async)?.height}}</h1>
-        <h1>Weight: {{(userInfo|async)?.weight}}</h1>       
+      <div id="stats" padding *ngIf="role=='Baller'">
+        <h1 text-left>Height: <span float-right> {{(userInfo|async)?.height}} ft </span> </h1>
+        <h1 text-left>Weight: <span float-right>{{(userInfo|async)?.weight}} kg </span></h1>
+        <h1 text-left>Age:  <span float-right>{{(userInfo|async)?.age}} </span></h1>       
       </div>
-    </div>
+   
+    </div> 
   </ion-content>
-    <!-- <loading *ngIf="showLoading"></loading>
+    <!-- 
    
       <img src="../assets/imgs/profile_edit.png" id="edit_profile">
     </button>

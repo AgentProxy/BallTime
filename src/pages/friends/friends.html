@@ -6,21 +6,29 @@
 -->
 <ion-header>
   <ion-toolbar color="nav">
-    <ion-title>Friends Page</ion-title>
-    <button ion-button menuToggle>
+    <ion-title>Friends</ion-title>
+    <div *ngIf="use=='Modal'">
+      <ion-buttons start>
+        <button ion-button (click)='dismiss()'>
+          Close
+        </button>
+      </ion-buttons>
+    </div>
+    <div *ngIf="use=='Page'">
+      <button ion-button menuToggle>
         <ion-icon name="menu"></ion-icon>
       </button>
-    <ion-buttons end> 
-      <button ion-button (click)="discoverUsers()">
-        <ion-icon id="discoverUsers" name="person-add"></ion-icon>
-      </button>
-    </ion-buttons>
+      <ion-buttons end> 
+        <button ion-button (click)="discoverUsers()">
+          <ion-icon id="discoverUsers" name="person-add"></ion-icon>
+        </button>
+      </ion-buttons>
+    </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content >
     <ion-searchbar [(ngModel)]="searchInput" (ionInput)="searchFriends($event)"></ion-searchbar>
-    <ion-icon name="options" end></ion-icon>
     <ion-list>
       <ion-spinner *ngIf="showSpinner"></ion-spinner>
       <ion-item *ngFor="let user of filteredUsers" (click) = "openProfile(user)">
@@ -28,7 +36,6 @@
           <img src="../assets/imgs/prof_pic/default_profpic.png">
         </ion-thumbnail>
         <h1> {{user.username}} </h1>
-        <h3> {{user.id}} </h3>
       </ion-item>
     </ion-list>
 </ion-content>

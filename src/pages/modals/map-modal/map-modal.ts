@@ -1,9 +1,10 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, FabContainer, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, FabContainer, AlertController, ModalController } from 'ionic-angular';
 import { LocationServiceProvider } from '../../../providers/location-service/location-service';
 import { GoogleFunctionsProvider } from '../../../providers/google-functions/google-functions';
 import { IonPullUpFooterState } from 'ionic-pullup';
 import { UserProvider } from '../../../providers/user/user';
+import { JoinCourtModalPage } from '../join-court-modal/join-court-modal';
 
 declare var google;
 /**
@@ -32,7 +33,7 @@ export class MapModalPage {
   userLocation: any;
 
   
-  constructor(private locationProvider: LocationServiceProvider, private viewCtrl: ViewController, private alertCtrl: AlertController, private navParams: NavParams, private userProvider: UserProvider) {
+  constructor(private locationProvider: LocationServiceProvider, private viewCtrl: ViewController, private alertCtrl: AlertController, private navParams: NavParams, private userProvider: UserProvider, private modalCtrl: ModalController) {
     this.currentLocation = this.locationProvider.getUpdatedLocation();
     this.court = navParams.get('Court');
     this.footerState = IonPullUpFooterState.Collapsed;
@@ -166,6 +167,43 @@ export class MapModalPage {
       });
     }
 
+  }
+
+  joinCourt(court){
+    let confirm = this.alertCtrl.create({
+      title: 'Confirm Join Court',
+      message: "Do you want to join this court?",
+      buttons: [
+        {
+          text: 'Join',
+          handler: () => {
+            let data = {
+              Role: 'Baller',
+              Court: court,
+            }
+            //ADD USER TO COURT VIA COURT PROVIDER      
+            if(court.players_count <10 ){
+              let modal = this.modalCtrl.create(JoinCourtModalPage, data);
+              modal.present();
+            }
+            else{
+                let alert = this.alertCtrl.create({
+                  title: 'Court is Full!',
+                  subTitle: 'Sorry! The court is currently full. Go find other courts!',
+                  buttons: ['OK']
+                });
+                alert.present();
+            }
+          }
+        },
+        {
+          text: 'Cancel',
+          handler: () => {
+          }
+        }
+    ]
+    });
+    confirm.present();
   }
 
   dismiss(){

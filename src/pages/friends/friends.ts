@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, ViewController } from 'ionic-angular';
 import { User } from '../../models/user/user.model';
 import { Observable } from '@firebase/util';
 import { IfObservable } from 'rxjs/observable/IfObservable';
@@ -28,14 +28,22 @@ export class FriendsPage {
   searchInput: string;
   userId: any;
   friends: any;
+  use: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private friendProvider: FriendsProvider, private userProvider: UserProvider, private modalCtrl: ModalController) {
-    this.userId = this.userProvider.retrieveUserID();
-    this.initializeUsers();
-    
+  constructor(public navCtrl: NavController, public navParams: NavParams, private friendProvider: FriendsProvider, private userProvider: UserProvider, 
+    private modalCtrl: ModalController, private viewCtrl: ViewController) {
+    if(this.navParams.get('userId')!=null){
+      this.userId = this.navParams.get('userId');
+      this.use = this.navParams.get('use');
+    }
+    else{
+      this.userId = this.userProvider.retrieveUserID();
+      this.use = 'Page';
+    }
+    this.initializeUsers();  
   }
 
-  ionViewDidLoad() {
+  ionViewDidLoad(){
   }
 
   initializeUsers(){
@@ -91,6 +99,10 @@ export class FriendsPage {
   discoverUsers(){
     let modal = this.modalCtrl.create(DiscoverFriendsPage);
     modal.present()
+  }
+
+  dismiss(){
+    this.viewCtrl.dismiss();
   }
 
 }

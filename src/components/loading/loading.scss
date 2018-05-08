@@ -1,3 +1,46 @@
 loading {
 
+    #load{
+        background-image: url('../assets/imgs/ProfPageBackground.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        color: white;
+    }
+
+    #ball{
+        animation: animationFrames linear 0.8s;
+        animation-iteration-count: infinite;
+        transform-origin: 50% 50%;
+        margin-left:auto;
+        margin-right: auto;
+      }
+
+    #ball-animation{
+        margin-top: 40%;
+        margin-bottom: 20%;
+    }
+
+    @keyframes animationFrames{
+      0% {
+        transform:  translate(0px,0px)  ;
+      }
+      15% {
+        transform:  translate(0px,-50px)  ;
+      }
+      30% {
+        transform:  translate(0px,0px)  ;
+      }
+      45% {
+        transform:  translate(0px,-25px)  ;
+      }
+      60% {
+        transform:  translate(0px,0px)  ;
+      }
+      75% {
+        transform:  translate(0px,-5px)  ;
+      }
+      100% {
+        transform:  translate(0px,0px)  ;
+      }
+    }
 }

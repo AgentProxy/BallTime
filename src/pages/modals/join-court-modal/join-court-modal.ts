@@ -22,57 +22,76 @@ import { GamePage } from '../../game/game';
   templateUrl: 'join-court-modal.html',
 })
 export class JoinCourtModalPage {
-  court: any;
-  playersCount: any;
-  players: any;
-  showSpinner:boolean = true;
-  playerId: string;
-  userInfo: any;
-  courtInfo: any;
-  messages: any;
-  message: string = ""; 
-  role: any;
   admin: any;
-  adminInside: boolean = false;
-  ready: boolean = false;
-  status: string = '';
-  courtReady: boolean = false;
-
+  court: any;
+  courtStatus: String;
+  message: String = ""; 
+  messages: any;
+  role: any;
+  status: String;
+  players: any;
+  // showSpinner:boolean = true;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private db: AngularFirestore, private courtProvider: CourtProvider, private viewCtrl: ViewController, private userProvider: UserProvider, private alertCtrl: AlertController, private chatProvider: ChatProvider, private modalCtrl: ModalController ) {
+    this.status='';
+    this.courtStatus='';
     this.court = this.navParams.get('Court');
-    this.courtInfo = this.courtProvider.retrieveCourtLive(this.court.id);
-    this.messages = this.db.collection('courts/' + this.court.id + "/chat",ref => ref.orderBy('timestamp','asc').limit(20)).valueChanges();
     this.role = this.navParams.get('Role');
+    this.messages = this.db.collection('courts/' + this.court.id + "/chat",ref => ref.orderBy('timestamp','asc').limit(20)).valueChanges();
+    
     this.courtProvider.retrieveCourtSnapshot(this.court.id).subscribe(async ()=>{
       let court = await this.courtProvider.courtStatusChanges(this.court.id);
+      this.changeCourtStatus(court.status);
       if(court.status == 'Waiting' && this.role =='Baller' && this.status=='Ready'){
-        this.status="Coming";
         let data = {
           Role: 'Baller',
           Court: this.court,
           Status: 'Coming',
         }
+        this.status='Coming';
+        this.courtProvider.updatePlayerStatus(this.userProvider.retrieveUserID(),this.court.id,'Coming');
         let modal = this.modalCtrl.create(GamePage,data);
         modal.present();
-        this.courtProvider.updatePlayerStatus(this.userProvider.retrieveUserID(),this.court.id,'Coming');
       }
+      // else if(court.status == '' && this.status=='Coming'){
+      //   this.status='';
+      // }
+      let subscription = this.courtProvider.retrievePlayerSnapshot(this.userProvider.retrieveUserID(), this.court.id).subscribe(async ()=>{
+        let player = await this.courtProvider.retrievePlayerStatus(this.userProvider.retrieveUserID(), this.court.id);
+        if(player.status=='Kicked' && this.status!='Kicked'){
+          this.status='Kicked';
+          let alertNotif = this.alertCtrl.create({
+            title: 'Kicked!',
+            subTitle: 'You have been kicked by the admin!',
+            buttons: ['OK']
+          });
+          this.courtProvider.removePlayer(this.userProvider.retrieveUserID(), this.court.id,this.court.players_count);
+          alertNotif.present().then(()=>{
+            
+            this.navCtrl.popToRoot();
+          });
+        }
+        else{}
+      });
+
     })
   }
 
-  async ionViewDidLoad() {
+  async ionViewDidEnter() {
+    this.status = '';
+    this.courtStatus = '';
+    // this.court.status = ''
     if (this.role=='Administrator'){
         if(await this.adminExists()==false){
           this.courtProvider.addAdminToCourt(this.userProvider.retrieveUserObject(this.userProvider.retrieveUserID()),this.court.id);
-          this.adminInside = true;
         }
         else{
-          let alert = this.alertCtrl.create({
+          let alertNotif = this.alertCtrl.create({
             title: 'Multiple Admins!',
             subTitle: 'There can be only one admin on each court!',
             buttons: ['OK']
           });
-          alert.present().then(()=>{
+          alertNotif.present().then(()=>{
             this.viewCtrl.dismiss();
           });
         }
@@ -81,27 +100,50 @@ export class JoinCourtModalPage {
       this.courtProvider.addUserToCourt2(this.userProvider.retrieveUserInfo(),this.court.id, this.court.players_count);
     }
     else{}
+
     this.retrieveAdmin();
     this.players = this.courtProvider.retrievePlayers(this.court.id);
   }
 
-  ionViewWillLeave(){
-   
+  async adminExists(){
+    let adminId = await this.courtProvider.currentAdminExists(this.court.id);
+    if(adminId == ""){
+      return false;
+    }
+    else{
+      return true;
+    }
   }
 
-  checkCourtStatus(){
-    
-    this.courtProvider.courtStatusChanges(this.court.id);
+  confirmPlayer(userId){
+    this.courtProvider.updatePlayerStatus(userId, this.court.id, 'Confirmed');
   }
 
-  joinCourt(){
-    //USE SUBSCRIBE TO STREAM DATA WITHOUT DISPLAYING IT TO FRONT END
-    this.userInfo = this.userProvider.retrieveUserInfo().subscribe(action => {        
-      let id = action.payload.id;
-      let data = action.payload.data();
-      return { id, ...data };
+  changeCourtStatus(courtStatus){
+    this.courtStatus = courtStatus;
+  }
+
+  kickPlayer(playerId, playerUsername){
+    let confirm = this.alertCtrl.create({
+      title: 'Kick ' + playerUsername +'?', 
+      message: "Do you really want to kick " + playerUsername + '?',
+      buttons: [
+        {
+          text: 'Kick',
+          handler: () => {    
+            this.courtProvider.kickPlayer(playerId, this.court.id);
+          }
+        },
+        {
+          text: 'Cancel',
+          handler: () => {
+          }
+        }
+    ]
     });
-  }
+    confirm.present();
+  
+  };
 
   leaveCourt(){
     let confirm = this.alertCtrl.create({
@@ -112,11 +154,10 @@ export class JoinCourtModalPage {
           text: 'Leave',
           handler: () => {    
             this.viewCtrl.dismiss().then(()=>{
-              alert('leaving');
               if(this.role=="Baller"){
                 this.courtProvider.removePlayer(this.userProvider.retrieveUserID(), this.court.id,this.court.players_count);
               }
-              else if(this.role=='Administrator' && this.adminInside==true){
+              else if(this.role=='Administrator'){
                 this.courtProvider.removeAdminFromCourt(this.court.id, this.userProvider.retrieveUserID());
               }
               else{}
@@ -131,49 +172,12 @@ export class JoinCourtModalPage {
     ]
     });
     confirm.present();
-
-  }
-  
-  showDirection(courtInfo){  
-    let data = {
-      Court: courtInfo,
-      Page: 'join',
-    }
-    let modal = this.modalCtrl.create(MapModalPage, data);
-    modal.present();
-  }
-
-  async sendMessage(){
-    let userId = this.userProvider.retrieveUserID();
-    let user = await this.userProvider.retrieveUserObject(userId);
-    this.chatProvider.addCourtChat(this.court.id,this.message, user);
-    this.message = "";
-  }
-
-  retrieveAdmin(){
-    this.admin = this.courtProvider.retrieveAdmin(this.court.id);
-  }
-
-  async adminExists(){
-    let adminId = await this.courtProvider.currentAdminExists(this.court.id);
-    adminId = await this.courtProvider.currentAdminExists(this.court.id);
-    if(adminId == ""){
-      return false;
-    }
-    else{
-      return true;
-    }
-  }
-
-  changeCourtStatus(){
-    this.courtReady = true;
   }
 
   async readyCourt(){
     let limit = 1;            //THIS IS THE LIMIT FOR THE PLAYERS ON COURT
     let wait = await this.courtProvider.readyCourt(this.court.id, limit);
     if(wait==true){
-
       let confirm = this.alertCtrl.create({
         title: 'Ready Court',
         message: "Are you sure that the court is ready?",
@@ -181,7 +185,7 @@ export class JoinCourtModalPage {
           {
             text: 'Yes',
             handler: () => {    
-              this.changeCourtStatus();
+              this.changeCourtStatus('Waiting');
             }
           },
           {
@@ -191,34 +195,26 @@ export class JoinCourtModalPage {
           }
         ]
     });
-    
-    confirm.present();
-      // let data = {
-      //   Role: 'Administrator',
-      //   Court: this.court,
-      // }
-      // this.navCtrl.push(GamePage, data);
-      //change court status to waiting
+      confirm.present();
     }
     else{
-      let alert = this.alertCtrl.create({
+      let alertNotif = this.alertCtrl.create({
         title: 'Players are not ready!',
         subTitle: 'Wait for the players to be ready!',
         buttons: ['OK']
       });
-      alert.present().then(()=>{
+      alertNotif.present().then(()=>{
       });
     }  
   }
 
- 
-
-
-
   readyPlayer(){
-    this.ready = true;
     this.status = 'Ready';
     this.courtProvider.updatePlayerStatus(this.userProvider.retrieveUserID(), this.court.id, 'Ready');
+  }
+
+  retrieveAdmin(){
+    this.admin = this.courtProvider.retrieveAdmin(this.court.id);
   }
 
   async startGame(){
@@ -229,53 +225,50 @@ export class JoinCourtModalPage {
     }
     let start = await this.courtProvider.checkPlayersInCourt(this.court.id);
     if(start==true){
+      this.courtProvider.changeCourtStatus(this.court.id,'In Game');
+      // this.courtProvider.startCourtGame(this.court.id);
+      start=false;
       let modal = this.modalCtrl.create(GamePage,data);
       modal.present();
+     
     }
     else{
-      let alert = this.alertCtrl.create({
+      let alertNotif = this.alertCtrl.create({
         title: 'Players Not Complete!',
         subTitle: 'All players are not yet complete!',
         buttons: ['OK']
       });
-      alert.present();
+      alertNotif.present();
     }
-   
-
-    //FOR ALL PLAYERS CHANGE STATUS TO IN GAME
-    //check if all players are confirmed: count == limit 
-    //if yes set set all their status to in game
-    //push game modal for admin 
-    //if not return an alert
-    //
-
-    // this.courtProvider.updatePlayerStatus(this.userProvider.retrieveUserID(),this.court.id,'In Game');
   }
 
-  async unreadyCourt(){
-  
-    // let wait = await this.courtProvider.readyCourt(this.court.id, limit);
-  
+  async sendMessage(){
+    let userId = this.userProvider.retrieveUserID();
+    let user = await this.userProvider.retrieveUserObject(userId);
+    this.chatProvider.addCourtChat(this.court.id, this.message, user);
+    this.message = "";
+  }
+
+  showDirection(courtInfo){  
+    let data = {
+      Court: courtInfo,
+      Page: 'join',
+    }
+    let modal = this.modalCtrl.create(MapModalPage, data);
+    modal.present();
   }
 
   unreadyPlayer(){
-    this.ready = false;
     this.status = '';
     this.courtProvider.updatePlayerStatus(this.userProvider.retrieveUserID(), this.court.id, '');
   }
 
+  // async unreadyCourt(){
+  
+  //   // let wait = await this.courtProvider.readyCourt(this.court.id, limit);
+  
+  // }
 
-  confirmPlayer(userId){
-    this.courtProvider.updatePlayerStatus(userId, this.court.id, 'Confirmed');
-    //change player status to confirmed
-    //all players will have waiting for other players to arrive
-    //if all players have arrived and are confirmed
-    //start game
-    //change court status to in game
-    //change all players status to in game
-    //admin will be navigated to game page
-    //players will be changed to 'In game' status and ball bouncing animation
-  }
  
 
 }

@@ -13,35 +13,38 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  <h1>Maximum Distance: {{preferredDistance}} km</h1>
-    <ion-range min="1" max="60" [(ngModel)]="preferredDistance">
-      <ion-label range-left>1</ion-label>
-      <ion-label range-right>60</ion-label>
-    </ion-range>
+<ion-content id='discover'>
+  <div id="grey_layer">
+    <h1>Maximum Distance: {{preferredDistance}} km</h1>
+      <ion-range min="1" max="20" [(ngModel)]="preferredDistance">
+        <ion-label range-left>1</ion-label>
+        <ion-label range-right>20</ion-label>
+      </ion-range>
+<!-- 
+    <ion-list radio-group [(ngModel)]="selectedMode" required>
+        <ion-item>
+          <ion-label>Walk</ion-label>
+          <ion-radio value="WALKING"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>Drive</ion-label>
+          <ion-radio value="DRIVING"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>Bike</ion-label>
+          <ion-radio value="BICYCLING"></ion-radio>
+        </ion-item>           
+    </ion-list> -->
 
-  <!-- <ion-buttons>
-    <button value="WALKING"> Walk </button>
-    <button value="DRIVE"> Drive </button>
-    <button> Bike </button>
-  </ion-buttons> -->
+    <div class='options'>
+      <button id='1' class='option' (click)='chooseMethod(1)'><ion-icon name='walk'></ion-icon></button>
+      <button id='2' class='option' (click)='chooseMethod(2)'>Bike</button>
+      <button id='3'  class='option' (click)='chooseMethod(3)'>Drive</button>
+    </div>
 
-  <ion-list radio-group [(ngModel)]="selectedMode" required>
-      <ion-item>
-        <ion-label>Walk</ion-label>
-        <ion-radio value="WALKING"></ion-radio>
-      </ion-item>
-      <ion-item>
-        <ion-label>Drive</ion-label>
-        <ion-radio value="DRIVING"></ion-radio>
-      </ion-item>
-      <ion-item>
-        <ion-label>Bike</ion-label>
-        <ion-radio value="BICYCLING"></ion-radio>
-      </ion-item>           
-  </ion-list>
-
-  <button id="findButton" ion-button (click)="retrieveClosestCourts(preferredDistance)"> Find </button>
+    <div class='center'>
+      <button id="findButton" color='ball' ion-button round (click)="retrieveClosestCourts(preferredDistance)"> Find </button>
+    </div>  
     <h1 text-center> Results </h1>
     <ion-spinner *ngIf="showSpinner"></ion-spinner>
     <ion-list>
@@ -51,5 +54,5 @@
         <h3>Travel Time: <span id={{court.name}}time></span></h3>
       </ion-item>
     </ion-list>
-
+    </div>
 </ion-content>

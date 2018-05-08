@@ -14,16 +14,16 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content id="profile_info">
+<!-- <ion-content id="profile_info">
   <loading *ngIf="showLoading"></loading>
   <ion-icon name="menu" id="menu_button" float-start menuToggle></ion-icon>
   <header id="profile_header">
     <img src="../assets/imgs/RegisterBackground4.jpg" id="cover_pic" alt="cover_photo">
     <img id="prof_pic" src="../assets/imgs/RegisterBackground2.jpg" />
     <h1> {{(userInfo|async)?.firstname}} {{(userInfo|async)?.lastname}} </h1>
-    <h3>@{{(userInfo|async)?.username}}</h3>
+    <h3>@{{(userInfo|async)?.username}}</h3> -->
     <!-- Throws error and is a bug in VS -->
-    <button ion-button *ngIf="!sameUser && status=='' && role=='Baller'" (click)="addFriend()" > Add Friend </button>
+    <!-- <button ion-button *ngIf="!sameUser && status=='' && role=='Baller'" (click)="addFriend()" > Add Friend </button>
     <button ion-button *ngIf="!sameUser && status=='Pending' && role=='Baller'" (click)="cancelRequest()" > Pending Friend Request </button>
     <button ion-button *ngIf="!sameUser && status=='Accept Request' && role=='Baller'" (click)="confirmFriend()" > Confirm Friend Request </button>
     <button ion-button *ngIf="!sameUser && status=='Friends' && role=='Baller'" (click)="cancelRequest()" > Friends </button>
@@ -34,6 +34,46 @@
     <h1>Height: {{(userInfo|async)?.height}}</h1>
     <p> {{(userInfo|async)?.weight}}</p>            
   </div>
-</ion-content>
+</ion-content> -->
+
+<ion-content id="profile_info">
+    <loading *ngIf="showLoading"></loading>
+    <div id="grey_layer">
+      <header id="header_bar">
+        <button ion-button float-right id="edit" > 
+            <span><ion-icon name="people" style="font-size: 40px;" (click)='showFriends()'></ion-icon></span> 
+        </button>
+        <h1 id="title">{{(userInfo|async)?.role}}</h1>
+      </header>
+      <div id="profile_header">
+        <img id="prof_pic" src="../assets/imgs/RegisterBackground2.jpg" />
+        <h1 text-center> {{(userInfo|async)?.firstname}} {{(userInfo|async)?.lastname}} </h1>
+        <h3 text-center>@{{(userInfo|async)?.username}}</h3>
+         <button ion-button *ngIf="!sameUser && status=='' && role=='Baller'" (click)="addFriend()" > Add Friend </button>
+        <button ion-button *ngIf="!sameUser && status=='Pending' && role=='Baller'" (click)="cancelRequest()" > Pending Friend Request </button>
+        <button ion-button *ngIf="!sameUser && status=='Accept Request' && role=='Baller'" (click)="confirmFriend()" > Confirm Friend Request </button>
+        <button ion-button *ngIf="!sameUser && status=='Friends' && role=='Baller'" (click)="cancelRequest()" > Friends </button>
+        <button ion-button *ngIf="!sameUser && status=='Friends' && role=='Administrator'" color="dark" > Admin </button>
+      </div>
+      <hr id="separator">
+      <div id="feats" *ngIf="role=='Baller'">
+        <h2 text-left>Games Played: {{(userInfo|async)?.games_played}}<span float-right>Rep Level: {{(userInfo|async)?.reputation_level}} </span></h2>
+      </div>
+      <div id="feats" *ngIf="role!='Baller'">
+        <h2 text-left>Courts Managed: </h2>
+        <ion-list>
+          <ion-item class='items' *ngFor='let court of courts'>
+            {{court.data.name}}
+          </ion-item>
+        </ion-list>
+      </div>
+      <hr id="separator">
+      <div id="stats" padding *ngIf="role=='Baller'">
+        <h1 text-left>Height: <span float-right> {{(userInfo|async)?.height}} ft </span> </h1>
+        <h1 text-left>Weight: <span float-right>{{(userInfo|async)?.weight}} kg </span></h1>
+        <h1 text-left>Age:  <span float-right>{{(userInfo|async)?.age}} </span></h1>       
+      </div>
+    </div>
+  </ion-content>
 
 

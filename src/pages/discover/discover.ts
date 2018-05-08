@@ -50,32 +50,36 @@ export class DiscoverPage {
     console.log('ionViewDidLoad DiscoverPage');
   }
 
-  // discoverCourts(){      //include location
-  //   // this.nearestCourts = this.courtProvider.retrieveClosestCourts(this.preferredDistance);
-  //   setTimeout(() => {
+  chooseMethod(options){
+    switch(options){
+      case 1:
+        this.selectedMode = 'WALKING';
+        break;
+      case 2:
+        this.selectedMode = 'WALKING';
+        break;
+      case 3:
+        this.selectedMode = 'WALKING';
+        break;
+      default:
 
-  //   } ,100);
-  //   console.log(this.nearestCourts);
-    
-  // }
+    }
+  }
 
-  retrieveClosestCourts(preferredDistance){
+  async retrieveClosestCourts(preferredDistance){
     var durationTemp;
     this.showSpinner = true;
-    this.userLocation = this.location.getCurrentLocation();
+    this.userLocation = await this.location.getCurrentLocation();
     let courts = this.courtProvider.retrieveCourts().valueChanges();
     this.nearestCourts = [];
-    
-    // this.subscription = this.location.getCurrentLocation().then((position)=>{
-    //   this.userProvider.updateUserLocation(position);
-    // });//Filter Out Errors
-   
-
+  
+    if(this.userLocation=='false'){
+      return;
+    }
 
     courts.subscribe(snapshots=>{
       this.showSpinner = false;
       snapshots.forEach(court => {
-        
         let distance = google.maps.geometry.spherical.computeDistanceBetween(
           new google.maps.LatLng(this.userLocation.latitude,this.userLocation.longitude),new google.maps.LatLng(court.latitude, court.longitude)
         )/1000;

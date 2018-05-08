@@ -28,7 +28,7 @@
       </ion-fab-list>
     </ion-fab>
 
-    <button id="joinButton" ion-button color="ball" *ngIf="showJoin">
+    <button id="joinButton" (click)='joinCourt(court)' ion-button color="ball" *ngIf="showJoin">
       Join Court
     </button>
 
