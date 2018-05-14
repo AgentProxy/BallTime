@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, AlertController, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, AlertController, ModalController, PopoverController } from 'ionic-angular';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { CourtProvider } from '../../../providers/court/court';
 import { UserProvider } from '../../../providers/user/user';
@@ -7,6 +7,7 @@ import { User } from '../../../models/user/user.model';
 import { ChatProvider } from '../../../providers/chat/chat';
 import { MapModalPage } from '../map-modal/map-modal';
 import { GamePage } from '../../game/game';
+import { PopoverSettingsComponent } from '../../../components/popover-settings/popover-settings';
 
 
 /**
@@ -27,18 +28,26 @@ export class JoinCourtModalPage {
   courtStatus: String;
   message: String = ""; 
   messages: any;
+  notifs: any;
   role: any;
   status: String;
   players: any;
+  view: String = 'court';
+  waitlisted: any;
+  playersCount: any;
   // showSpinner:boolean = true;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private db: AngularFirestore, private courtProvider: CourtProvider, private viewCtrl: ViewController, private userProvider: UserProvider, private alertCtrl: AlertController, private chatProvider: ChatProvider, private modalCtrl: ModalController ) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private db: AngularFirestore, private courtProvider: CourtProvider, private viewCtrl: ViewController, 
+    private userProvider: UserProvider, private alertCtrl: AlertController, private chatProvider: ChatProvider, private modalCtrl: ModalController, private popoverCtrl: PopoverController) {
     this.status='';
-    this.courtStatus='';
+    this.courtStatus='Online';
     this.court = this.navParams.get('Court');
     this.role = this.navParams.get('Role');
     this.messages = this.db.collection('courts/' + this.court.id + "/chat",ref => ref.orderBy('timestamp','asc').limit(20)).valueChanges();
-    
+    this.notifs = this.courtProvider.retrieveWaitlisted(this.court.id);
+    this.playerCountChanges();
+    // this.navCtrl.setRoot('HomePage');
+
     this.courtProvider.retrieveCourtSnapshot(this.court.id).subscribe(async ()=>{
       let court = await this.courtProvider.courtStatusChanges(this.court.id);
       this.changeCourtStatus(court.status);
@@ -53,9 +62,19 @@ export class JoinCourtModalPage {
         let modal = this.modalCtrl.create(GamePage,data);
         modal.present();
       }
-      // else if(court.status == '' && this.status=='Coming'){
-      //   this.status='';
-      // }
+      else if(court.status == 'Offline'){
+        let alertNotif = this.alertCtrl.create({
+          title: 'The court is offline',
+          subTitle: 'The court is offline! Please try again later',
+          buttons: ['OK']
+        });
+        // this.courtProvider.removePlayer(this.userProvider.retrieveUserID(), this.court.id,this.court.players_count);
+        alertNotif.present().then(()=>{
+          this.navCtrl.popToRoot();
+        });
+      }
+      else{}
+
       let subscription = this.courtProvider.retrievePlayerSnapshot(this.userProvider.retrieveUserID(), this.court.id).subscribe(async ()=>{
         let player = await this.courtProvider.retrievePlayerStatus(this.userProvider.retrieveUserID(), this.court.id);
         if(player.status=='Kicked' && this.status!='Kicked'){
@@ -79,7 +98,7 @@ export class JoinCourtModalPage {
 
   async ionViewDidEnter() {
     this.status = '';
-    this.courtStatus = '';
+    this.courtStatus = 'Online';
     // this.court.status = ''
     if (this.role=='Administrator'){
         if(await this.adminExists()==false){
@@ -115,12 +134,24 @@ export class JoinCourtModalPage {
     }
   }
 
+  acceptPlayer(userId){
+    // this.courtProvider.addUserToCourt2(this.userProvider.retrieveUserInfo(),this.court.id, this.court.players_count);
+    this.courtProvider.changePlayerStatus(userId, this.court.id, 'Accepted');
+  }
+
   confirmPlayer(userId){
     this.courtProvider.updatePlayerStatus(userId, this.court.id, 'Confirmed');
   }
 
   changeCourtStatus(courtStatus){
     this.courtStatus = courtStatus;
+  }
+
+  displayPopover(myEvent){
+    let popoover = this.popoverCtrl.create(PopoverSettingsComponent);
+    popoover.present({
+      ev: myEvent
+    })
   }
 
   kickPlayer(playerId, playerUsername){
@@ -153,7 +184,7 @@ export class JoinCourtModalPage {
         {
           text: 'Leave',
           handler: () => {    
-            this.viewCtrl.dismiss().then(()=>{
+            this.navCtrl.popToRoot().then(()=>{
               if(this.role=="Baller"){
                 this.courtProvider.removePlayer(this.userProvider.retrieveUserID(), this.court.id,this.court.players_count);
               }
@@ -172,6 +203,12 @@ export class JoinCourtModalPage {
     ]
     });
     confirm.present();
+  }
+
+  playerCountChanges(){
+    this.db.doc('courts/'+this.court.id).valueChanges().subscribe(async x => {
+      this.playersCount =  await this.courtProvider.retrieveCourtPlayersCount(this.court.id);
+    })
   }
 
   async readyCourt(){
@@ -213,8 +250,16 @@ export class JoinCourtModalPage {
     this.courtProvider.updatePlayerStatus(this.userProvider.retrieveUserID(), this.court.id, 'Ready');
   }
 
+  rejectPlayer(userId){
+    this.courtProvider.changePlayerStatus(userId, this.court.id, 'Rejected');
+  }
+
   retrieveAdmin(){
     this.admin = this.courtProvider.retrieveAdmin(this.court.id);
+  }
+
+  retrieveWaitlisted(){
+    this.waitlisted = this.courtProvider.retrieveWaitlisted(this.court.id);
   }
 
   async startGame(){
@@ -263,12 +308,5 @@ export class JoinCourtModalPage {
     this.courtProvider.updatePlayerStatus(this.userProvider.retrieveUserID(), this.court.id, '');
   }
 
-  // async unreadyCourt(){
-  
-  //   // let wait = await this.courtProvider.readyCourt(this.court.id, limit);
-  
-  // }
-
- 
 
 }

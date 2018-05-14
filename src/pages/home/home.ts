@@ -65,7 +65,7 @@ export class HomePage {
         return;
       }
       else{
-        this.userProvider.updateUserLocation(position);
+        this.userProvider.updateUserLocation(position,'home');
         let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
         let mapOptions = {
           center: latLng,
@@ -92,11 +92,13 @@ export class HomePage {
         });
         courts.subscribe(snapshots=>{
             snapshots.forEach(court => {
-              new google.maps.Marker({
-                map: this.map,
-                icon: 'http://maps.google.com/mapfiles/kml/pal3/icon57.png',
-                position: new google.maps.LatLng(Number(court.latitude),Number(court.longitude))
-              }).addListener('click', this.courtClicked.bind(this,court));                   //To prevent it from calling instantly.
+              if(court.status!='Offline'){
+                new google.maps.Marker({
+                  map: this.map,
+                  icon: 'http://maps.google.com/mapfiles/kml/pal3/icon57.png',
+                  position: new google.maps.LatLng(Number(court.latitude),Number(court.longitude))
+                }).addListener('click', this.courtClicked.bind(this,court));                   //To prevent it from calling instantly.
+              }
             });
           });
           this.showLoading = false;

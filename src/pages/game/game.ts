@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, ModalController, ViewController, A
 import { CourtProvider } from '../../providers/court/court';
 import { UserProvider } from '../../providers/user/user';
 import { MapModalPage } from '../modals/map-modal/map-modal';
+import { AngularFireAuth } from 'angularfire2/auth';
 
 /**
  * Generated class for the GamePage page.
@@ -24,7 +25,7 @@ export class GamePage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private courtProvider: CourtProvider, 
     private userProvider: UserProvider, private modalCtrl: ModalController, private viewCtrl: ViewController,
-    private alertCtrl: AlertController) {
+    private alertCtrl: AlertController, private afAuth: AngularFireAuth) {
 
     this.role = this.navParams.get('Role');
     this.status = this.navParams.get('Status');
@@ -38,17 +39,22 @@ export class GamePage {
           this.status='In Game';
           this.courtProvider.changePlayerStatus(this.userProvider.retrieveUserID(), this.court.id, status);
         }
-        else if(court.status == '' && this.role=='Baller' && this.status=='In Game'){
+        else if(court.status == 'Online' && this.role=='Baller' && this.status=='In Game'){
           this.status='';
           let alert = this.alertCtrl.create({
             title: 'Game Has Ended!',
             subTitle: 'Great game ballers! You earned 150 Reputation Points',
             buttons: ['OK']
           });
-          alert.present();
+          alert.present().then(()=>{
+            if(this.role=='Baller'){
+              this.courtProvider.rewardPlayers(this.userProvider.retrieveUserID());
+            }
+            this.navCtrl.popToRoot();
+          });
           //ADD TO PLAYERS' RECORD IF GAME IS DONE
           //PROMPT IF END GAME (3 tries to click yes)
-          this.viewCtrl.dismiss();
+         
         }
       });
 
@@ -77,7 +83,7 @@ export class GamePage {
           handler: () => {    
             this.courtProvider.endGame(this.court.id, this.role);
             this.viewCtrl.dismiss().then(()=>{
-              this.courtProvider.rewardPlayers(this.userProvider.retrieveUserID());
+              
             });
           }
         },
@@ -124,8 +130,14 @@ export class GamePage {
             text: 'Yes',
             handler: () => {    
               // this.courtProvider.removePlayer(this.court.id, this.role, this.court.players_count, type);
-              this.navCtrl.popToRoot().then(()=>{
-                // this.courtProvider.penalizePlayer(this.userProvider.retrieveUserID());
+              this.navCtrl.popToRoot().then(async()=>{
+                if(this.role == 'Baller'){
+                  let kicked = await this.userProvider.penalizeUser(this.userProvider.retrieveUserID());
+                  if(kicked == true){
+                    this.afAuth.auth.signOut();
+                    this.navCtrl.setRoot('LandingPage');
+                  }
+                }
               });
             }
           },

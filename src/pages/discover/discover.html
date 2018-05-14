@@ -37,7 +37,7 @@
     <h1 text-center> Results </h1>
     <ion-spinner *ngIf="showSpinner"></ion-spinner>
     <ion-list>
-      <ion-item class='item' *ngFor="let court of nearestCourts" (click)="openModal(court)">
+      <ion-item class='item' *ngFor="let court of nearestCourts" (click)="openCourt(court)">
         <h2 text-wrap>{{ court.name }}</h2>
         <h3>Distance: <span id={{court.name}}distance></span></h3>
         <h3>Travel Time: <span id={{court.name}}time></span></h3>

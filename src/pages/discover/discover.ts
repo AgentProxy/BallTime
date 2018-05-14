@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, AlertController } from 'ionic-angular';
 import { CourtProvider } from '../../providers/court/court';
 import { Court } from '../../models/court/court.model';
-import { Observable } from 'rxjs/Observable';
 import { CourtModalPage } from '../modals/court-modal/court-modal';
 import { LocationServiceProvider } from '../../providers/location-service/location-service';
 import { UserProvider } from '../../providers/user/user';
@@ -72,10 +71,10 @@ export class DiscoverPage {
       console.log(this.userLocation.accuracy);
       return;
     }
-    this.userProvider.updateUserLocation(this.userLocation);
+    this.userProvider.updateUserLocation(this.userLocation,'discover');
     let courts = this.courtProvider.retrieveCourts().valueChanges();
     this.nearestCourts = [];
-    courts.subscribe(snapshots=>{
+    courts.forEach(snapshots=>{
       this.showSpinner = false;
       snapshots.forEach(court => {
         let distance = google.maps.geometry.spherical.computeDistanceBetween(
@@ -138,14 +137,14 @@ export class DiscoverPage {
     // google.maps.DirectionService().route();
   }
 
-  openModal(court){
+  openCourt(court){
     var data = { 
       Court : court,
       Page: "discover",
       Mode: this.selectedMode,
     };
-    let modal = this.modalCtrl.create(CourtModalPage, data);
-    modal.present();
+    this.navCtrl.push(CourtModalPage, data);
+    // modal.present();
   }
   
   // compare(a,b) {

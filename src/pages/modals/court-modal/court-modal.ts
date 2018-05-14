@@ -4,6 +4,8 @@ import { MapModalPage } from '../../modals/map-modal/map-modal';
 import { JoinCourtModalPage } from '../../modals/join-court-modal/join-court-modal';
 import { CourtProvider } from '../../../providers/court/court';
 import { UserProvider } from '../../../providers/user/user';
+import { WaitingPage } from '../../modals/waiting/waiting';
+import { AngularFirestore } from 'angularfire2/firestore';
 /**
  * Generated class for the CourtModalPage page.
  *
@@ -25,11 +27,13 @@ export class CourtModalPage {
   mode: string;
   user: any;
   courtInfo: any;
+  playersCount: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl : ViewController, private modalCtrl : ModalController, private alertCtrl: AlertController, private userProvider: UserProvider, private courtProvider: CourtProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl : ViewController, private modalCtrl : ModalController, private alertCtrl: AlertController, private userProvider: UserProvider, private courtProvider: CourtProvider, private db : AngularFirestore) {
     this.page = this.navParams.get('Page');
     this.user = this.userProvider.retrieveUserInfo();
     this.court = this.navParams.get('Court');
+    
 
     if(this.page == "home"){
       this.courtDistance = this.navParams.get('Distance');
@@ -40,6 +44,9 @@ export class CourtModalPage {
     }
 
     this.courtInfo = this.courtProvider.retrieveCourtLive(this.court.id);
+
+   this.playerCountChanges();
+
   }
 
   ionViewDidLoad() {
@@ -69,11 +76,10 @@ export class CourtModalPage {
               Court: court,
             }
             //ADD USER TO COURT VIA COURT PROVIDER      
-            if(court.players_count <10 ){
-              let modal = this.modalCtrl.create(JoinCourtModalPage, data);
+            if(this.playersCount < 10 ){
+              let modal = this.modalCtrl.create(WaitingPage, data);
               modal.present();
             }
-
             else{
                 let alert = this.alertCtrl.create({
                   title: 'Court is Full!',
@@ -92,6 +98,12 @@ export class CourtModalPage {
     ]
     });
     confirm.present();
+  }
+
+  playerCountChanges(){
+    this.db.doc('courts/'+this.court.id).valueChanges().subscribe(async x => {
+      this.playersCount =  await this.courtProvider.retrieveCourtPlayersCount(this.court.id);
+    })
   }
 
   // confirmJoin(){

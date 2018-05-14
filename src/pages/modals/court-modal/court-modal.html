@@ -18,12 +18,12 @@
 <ion-content id="modal" padding>
   <div id="modal_content">
     <h1 text-center> {{court.name}} </h1>
-    <h2 text-center>Distance:  {{courtDistance}} km </h2>
+    <!-- <h2 text-center>Distance:  {{courtDistance}} km </h2> -->
     <div id="courtpic_div" text-center>
         <img id="court_pic" src="../assets/imgs/RegisterBackground4.jpg" />
     </div>
     <div text-center>
-      <h2> Players: {{(courtInfo|async)?.players_count}}/10 </h2>
+      <h2> Players: {{playersCount}}/10 </h2>
       <button ion-button color="ball" (click)="joinCourt(court)">
         Join Court
       </button>

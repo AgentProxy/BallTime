@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation';
-import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
+// import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
+import { UserProvider } from '../user/user';
+import { CourtProvider } from '../court/court';
 
 /*
   Generated class for the LocationServiceProvider provider.
@@ -9,6 +11,8 @@ import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocati
   See https://angular.io/guide/dependency-injection for more info on providers
   and Angular DI.
 */
+declare var google: any;
+
 @Injectable()
 export class LocationServiceProvider {
   location: any;
@@ -16,10 +20,7 @@ export class LocationServiceProvider {
   userLatitude: any;
   userLongitude: any;
   userLocation: any;
-  constructor(public http: HttpClient, private geolocation: Geolocation, private backgroundGeolocation: BackgroundGeolocation) {
-    // console.log('Hello LocationServiceProvider Provider');
-    
-    
+  constructor( private geolocation: Geolocation) {  
   }
 
   getUpdatedLocation(){
@@ -45,14 +46,18 @@ export class LocationServiceProvider {
       // alert(accuracy);
       return {latitude, longitude, accuracy} ;
     });
-    // if(location.accuracy>150){
-    //   alert(location.accuracy);
-    //   this.getCurrentLocation();
-    //   return false;
-    // }
-    // else{
-      return location;
-    // }
+    return location;
+  }
+
+  async getDistanceAndTravelTime(userObj, courtObj){
+    let userObject = await userObj;
+    let courtObject = await courtObj;
+    let distance = google.maps.geometry.spherical.computeDistanceBetween(
+      new google.maps.LatLng(userObject.latitude, userObject.longitude),new google.maps.LatLng(courtObject.latitude, courtObject.longitude)
+    )/1000;
+
+    return Math.round(distance * 100)/100;
+
   }
 
 }

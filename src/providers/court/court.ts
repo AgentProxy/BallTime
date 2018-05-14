@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Court } from '../../models/court/court.model';
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from 'angularfire2/firestore';
-import { Observable } from 'rxjs/Observable';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { LocationServiceProvider } from '../location-service/location-service';
 import { UserProvider } from '../user/user';
 import { User } from '../../models/user/user.model';
+import { LocationServiceProvider } from '../location-service/location-service';
 import { ChatProvider } from '../chat/chat';
+import { LocationProvider } from '../location/location';
+
 
 declare var google: any;
 /*
@@ -26,7 +27,7 @@ export class CourtProvider {
   nearestCourts = [];
   player:any;
   
-  constructor(private http: HttpClient, private db: AngularFirestore, private location: LocationServiceProvider, private userProvider: UserProvider, private chatProvider: ChatProvider) {
+  constructor(private db: AngularFirestore, private userProvider: UserProvider, private chatProvider: ChatProvider, private locationProvider: LocationServiceProvider) {
 
   }
 
@@ -69,6 +70,17 @@ export class CourtProvider {
     });
   }
 
+  addUserToWaitlist(user, courtId){
+    user.subscribe(async action => {
+      const id = action.payload.id;
+      const data = action.payload.data();
+      let distance = await this.locationProvider.getDistanceAndTravelTime(this.userProvider.retrieveUserObject(id),this.retrieveCourtObject(courtId));
+      this.db.doc('courts/' + courtId + '/waitlist/' + id ).set({user: data, status: '', distance: distance}).then(async result => {
+      });
+    });
+    // user.unsubscribe();
+  }
+
   changeCourtStatus(courtId, status){
     this.db.collection('courts').doc(courtId).set({status: status}, {merge: true});
 
@@ -84,11 +96,20 @@ export class CourtProvider {
       //   });
       // });
     }
+    else if(status=='Offline'){
+      this.db.collection('courts').doc(courtId).set({players_confirmed: 0, players_count: 0, players_ready: 0},{merge: true})
+    }
+    else{}
     return true;
   }
 
-  changePlayerStatus(userId, courtId, status){
-    this.db.collection('courts').doc(courtId).collection('players').doc(userId).set({status: status}, {merge: true});
+  changePlayerStatus(userId, courtId, status ){
+    if(status=='Accepted'||status=='Rejected'){
+      this.db.collection('courts').doc(courtId).collection('waitlist').doc(userId).set({status: status}, {merge: true});
+    }
+    else{
+      this.db.collection('courts').doc(courtId).collection('players').doc(userId).set({status: status}, {merge: true});
+    }
   }
 
   checkPlayersInCourt(courtId){
@@ -124,26 +145,14 @@ export class CourtProvider {
 
   endGame(courtId, role){
     if(role=='Administrator'){
-      this.db.collection('courts').doc(courtId).set({status: ''},{merge: true}).then(()=>{
+      this.db.collection('courts').doc(courtId).set({status: 'Online'},{merge: true}).then(()=>{
         this.courtCol.doc(courtId).collection('players').snapshotChanges().map(actions => {
           return actions.map(a => {
-            // const data = a.payload.doc.data();
             this.db.collection('courts').doc(courtId).collection('players').doc(a.payload.doc.data().user.uid).set({status: ''}, {merge: true});
-            // const id = a.payload.doc.id;
-            // return { id, ...data };
           }); 
         });
-        // .subscribe(snapshots=>{
-        //   snapshots.forEach(async snapshot => {
-        //     this.db.collection('courts').doc(courtId).collection('players').doc(snapshot.payload.doc.data().user.uid).set({status: ''}, {merge: true});
-        //   });
-        // });
       });
-    }
-    // else{
-    //   this.db.doc('courts/' + courtId + '/players/' + userId ).set({status: ''},{merge: true})
-    // }
-    
+    }  
   }
 
   kickPlayer(playerId, courtId){
@@ -151,6 +160,7 @@ export class CourtProvider {
   }
 
   retrieveCourts(){
+    // this.courts = this.db.collection('courts', ref=>ref.where('status','==', 'Online').where('status','==','In Game').where('status','==', 'Waiting'));
     this.courts = this.courtCol;
     return this.courts;
   }
@@ -165,23 +175,27 @@ export class CourtProvider {
     return courtInfo;
   }
 
+  async retrieveCourtObject(courtId){
+    let courtDoc;
+    courtDoc = this.db.doc('courts/' + courtId);
+    let courtObj:any;
+    courtObj = await courtDoc.ref.get();
+    return courtObj.data();
+  }
+
   async retrieveCourtsUnderAdmin(userId){
-    let adminCourts = [];
+
+    let adminCourtsArray = [];
     let courts = this.db.collection('courts_admin', ref=>ref.where('admin_id','==',userId));
-    
-    courts.snapshotChanges().subscribe(snapshots=>{
+    let adminCourts = courts.snapshotChanges().subscribe(snapshots=>{
       snapshots.forEach(async snapshot =>{
         const id = snapshot.payload.doc.data().court_id;
-        this.db.collection('courts').doc(id).snapshotChanges().subscribe((court)=>{
-          let courtObj = {
-            data: court.payload.data(),
-          }
-
-          adminCourts.push(courtObj);
+        this.db.collection('courts').doc(id).ref.get().then(a=>{
+         adminCourtsArray.push(a.data());
         })
       });
     });
-    return adminCourts;
+    return adminCourtsArray;
   }
 
   retrieveAdmin(courtId){
@@ -243,6 +257,10 @@ export class CourtProvider {
     }
   }
 
+  removeUserFromWaitlist(userId, courtId){
+    this.db.collection('courts').doc(courtId).collection('waitlist').doc(userId).delete();
+  }
+
   retrieveCourtDistance(court){
     this.userLocation = this.userProvider.retrieveUserLocation();
     this.distance = google.maps.geometry.spherical.computeDistanceBetween(
@@ -269,8 +287,42 @@ export class CourtProvider {
     }
   }
 
+  retrieveCourtPlayersCount(courtId){
+    let query = this.db.doc('courts/' + courtId).ref.get().then((docSnapshot) => {
+      let count;
+      if (docSnapshot.exists){
+        count = docSnapshot.data().players_count;
+      } 
+      else{
+        count = '';
+      }
+      return count;
+    });
+    return query;
+  }
+
   retrieveCourtSnapshot(courtId){
     return this.db.collection('courts').doc(courtId).snapshotChanges();
+  }
+
+  retrieveWaitlisted(courtId){
+    return this.db.collection('courts/' + courtId + '/waitlist', ref => ref.where('status','==','')).valueChanges();
+  }
+
+  retrieveWaitlistedUser(userId, courtId){
+   return this.db.collection('courts').doc(courtId).collection('waitlist').doc(userId).snapshotChanges();
+  }
+
+  retrieveWaitlistedUserStatus(userId, courtId){
+    let query = this.db.collection('courts').doc(courtId).collection('waitlist').doc(userId).ref.get().then((docSnapshot) => {
+      if (docSnapshot.exists){
+        status = docSnapshot.data().status;
+      } 
+      else{
+      }
+      return {status};
+    });
+    return query;
   }
 
   //FOR CHECKING
@@ -279,15 +331,15 @@ export class CourtProvider {
       let reputation_points = snap.data().reputation_points + 150;
       let reputation_level = snap.data().reputation_level;
       if(reputation_level>=5){
-        this.db.collection('users').doc(userId).set({games_played: (snap.data().games_played + 1), reputation_points: reputation_points});
+        this.db.collection('users').doc(userId).set({games_played: (snap.data().games_played + 1), reputation_points: reputation_points}, {merge: true});
       }
       else{
-        if(reputation_points  == 1500 || reputation_points  == 4500 || reputation_points == 7500 || reputation_points == 10500 || reputation_points == 15000){
+        if(reputation_points==150 ||reputation_points  == 1500 || reputation_points  == 4500 || reputation_points == 7500 || reputation_points == 10500 || reputation_points == 15000){
           reputation_level++;
-          this.db.collection('users').doc(userId).set({games_played: (snap.data().games_played + 1), reputation_points: reputation_points, reputation_level: reputation_level});
+          this.db.collection('users').doc(userId).set({games_played: (snap.data().games_played + 1), reputation_points: reputation_points, reputation_level: reputation_level}, {merge: true});
         }
         else{
-          this.db.collection('users').doc(userId).set({games_played: (snap.data().games_played + 1), reputation_points: reputation_points});
+          this.db.collection('users').doc(userId).set({games_played: (snap.data().games_played + 1), reputation_points: reputation_points}, {merge: true});
         }
       }
     });

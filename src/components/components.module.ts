@@ -6,12 +6,14 @@ import { Component } from '@angular/core';
 import { RegisterComponent } from './register/register';
 // import { AngularFireAuthModule, AngularFireAuth } from 'angularfire2/auth';
 import { LoadingComponent } from './loading/loading';
+import { PopoverSettingsComponent } from './popover-settings/popover-settings';
 
 @NgModule({
 	declarations: [
 	LoginComponent,
 	RegisterComponent,
 	LoadingComponent,
+    PopoverSettingsComponent,
 	],
 	imports: [ IonicModule,
 	// AngularFireAuthModule,
@@ -21,6 +23,7 @@ import { LoadingComponent } from './loading/loading';
 	LoginComponent,
     RegisterComponent,
 	LoadingComponent,
+    PopoverSettingsComponent,
 	],
 })
 export class ComponentsModule {}

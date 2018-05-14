@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 /**
- * Generated class for the WaitingPage page.
+ * Generated class for the JoinCourtAdminPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -10,16 +10,16 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 @IonicPage()
 @Component({
-  selector: 'page-waiting',
-  templateUrl: 'waiting.html',
+  selector: 'page-join-court-admin',
+  templateUrl: 'join-court-admin.html',
 })
-export class WaitingPage {
+export class JoinCourtAdminPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad WaitingPage');
+    console.log('ionViewDidLoad JoinCourtAdminPage');
   }
 
 }

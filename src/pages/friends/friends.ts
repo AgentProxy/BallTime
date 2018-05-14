@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, ViewController } from 'ionic-angular';
 import { User } from '../../models/user/user.model';
-import { Observable } from '@firebase/util';
-import { IfObservable } from 'rxjs/observable/IfObservable';
+// import { Observable } from '@firebase/util';
 import { UserProvider } from '../../providers/user/user';
 import { ProfileViewerModalPage } from '../../pages/modals/profile-viewer-modal/profile-viewer-modal';
 import { FriendsProvider } from '../../providers/friends/friends';
@@ -29,6 +28,8 @@ export class FriendsPage {
   userId: any;
   friends: any;
   use: any;
+  mode: String = 'friends';
+  notifs: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private friendProvider: FriendsProvider, private userProvider: UserProvider, 
     private modalCtrl: ModalController, private viewCtrl: ViewController) {
@@ -96,6 +97,15 @@ export class FriendsPage {
     modal.present();
   }
 
+  openProfileNotif(userId){
+    let data = {
+      Id: userId,
+    }
+    
+    let modal = this.modalCtrl.create(ProfileViewerModalPage, data);
+    modal.present();
+  }
+
   discoverUsers(){
     let modal = this.modalCtrl.create(DiscoverFriendsPage);
     modal.present()
@@ -103,6 +113,10 @@ export class FriendsPage {
 
   dismiss(){
     this.viewCtrl.dismiss();
+  }
+
+  retrieveNotifs(){
+    this.notifs = this.friendProvider.getNotifs(this.userId);
   }
 
 }

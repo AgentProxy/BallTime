@@ -6,19 +6,29 @@
 -->
 <ion-header>
   <ion-toolbar color="nav">
-    <ion-title>Friends</ion-title>
     <div *ngIf="use=='Modal'">
       <ion-buttons start>
         <button ion-button (click)='dismiss()'>
           Close
         </button>
       </ion-buttons>
+      <ion-title>
+        Friends
+      </ion-title>
     </div>
     <div *ngIf="use=='Page'">
-      <button ion-button menuToggle>
+      <button ion-button menuToggle float-left>
         <ion-icon name="menu"></ion-icon>
       </button>
-      <ion-buttons end> 
+      <ion-segment id='modes' [(ngModel)]="mode" color="ball" text-center>
+        <ion-segment-button value='friends' selected>
+          Friends
+        </ion-segment-button>
+        <ion-segment-button value='notifs' (click)='retrieveNotifs()'>
+          Notifs
+        </ion-segment-button>
+      </ion-segment>
+      <ion-buttons float-right> 
         <button ion-button (click)="discoverUsers()">
           <ion-icon id="discoverUsers" name="person-add"></ion-icon>
         </button>
@@ -27,7 +37,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content >
+<ion-content [ngSwitch]="mode">
+  <div *ngSwitchCase="'friends'">
     <ion-searchbar [(ngModel)]="searchInput" (ionInput)="searchFriends($event)"></ion-searchbar>
     <ion-list>
       <ion-spinner *ngIf="showSpinner"></ion-spinner>
@@ -38,4 +49,16 @@
         <h1> {{user.username}} </h1>
       </ion-item>
     </ion-list>
+  </div>
+  <div *ngSwitchCase="'notifs'">
+    <ion-list>
+      <ion-spinner *ngIf="showSpinner"></ion-spinner>
+      <ion-item *ngFor="let notif of notifs | async " (click) = "openProfileNotif(notif.from_userId)">
+        <ion-thumbnail item-start>
+          <img src="../assets/imgs/prof_pic/default_profpic.png">
+        </ion-thumbnail>
+        <span ion-text text-wrap>{{notif.message}}</span>
+      </ion-item>
+    </ion-list>
+  </div>
 </ion-content>

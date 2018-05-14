@@ -14,6 +14,8 @@ import { MessagesPage } from '../pages/messages/messages';
 import { UserProvider } from '../providers/user/user';
 import { Events } from 'ionic-angular';
 import { HomeAdminPage } from '../pages/admin/home-admin/home-admin';
+import { FriendsProvider } from '../providers/friends/friends';
+
 
 
 @Component({
@@ -26,10 +28,12 @@ export class MyApp {
   user:any;
   userId:string;
   showInfo:boolean = false;
+  notifs:any;
 
   pages: Array<{title: string, component: any}>;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private afAuth: AngularFireAuth, private alertCtrl: AlertController, private menuCtrl: MenuController, private backgroundMode: BackgroundMode, private userProvider: UserProvider, public events: Events) {
+  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private afAuth: AngularFireAuth, private alertCtrl: AlertController, private menuCtrl: MenuController,
+     private backgroundMode: BackgroundMode, private userProvider: UserProvider, public events: Events, private friendsProvider: FriendsProvider) {
     
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
@@ -42,8 +46,6 @@ export class MyApp {
     events.subscribe('user:login', () => {
       this.getUserInfo();
     });
-
-    
     
   }
 
@@ -56,19 +58,18 @@ export class MyApp {
         { title: 'Home', component: HomeAdminPage },
         { title: 'Profile', component: ProfilePage},
         { title: 'Manage Courts', component: DiscoverPage},
-        { title: 'Messages', component: MessagesPage},
+        // { title: 'Messages', component: MessagesPage},
       ];
     }
     else {
+      this.getNotifs();
       this.pages = [
         { title: 'Home', component: HomePage },
         { title: 'Profile', component: ProfilePage},
         { title: 'Discover Courts', component: DiscoverPage},
-        { title: 'Messages', component: MessagesPage},
         { title: 'Friends', component: FriendsPage}
       ];
     }
-    // alert(this.user.username);
   }
 
   openPage(page){
@@ -81,6 +82,10 @@ export class MyApp {
     else{
       this.nav.push(page.component);
     }
+  }
+
+  getNotifs(){
+    this.notifs = this.friendsProvider.countNotifs(this.userProvider.retrieveUserID());
   }
 
   confirmLogout(){

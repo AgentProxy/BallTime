@@ -33,6 +33,11 @@ import { DiscoverFriendsPage } from '../pages/discover-friends/discover-friends'
 import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
 import { HTTP } from '@ionic-native/http';
 import { GamePage } from '../pages/game/game';
+import 'rxjs/Rx'
+import { WaitingPage } from '../pages/modals/waiting/waiting';
+import { LocationProvider } from '../providers/location/location';
+import { PopoverSettingsComponent } from '../components/popover-settings/popover-settings';
+
 
 
 @NgModule({
@@ -49,12 +54,13 @@ import { GamePage } from '../pages/game/game';
     ProfileViewerModalPage,
     DiscoverFriendsPage,
     GamePage,
+    WaitingPage,
   ],
   imports: [
     BrowserModule,
     HomePageModule,
     LandingPageModule,
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp ,{ mode: 'ios' }),
     AngularFireModule.initializeApp(FIREBASE_CONFIG),
     HttpClientModule,
     IonPullupModule,
@@ -73,6 +79,8 @@ import { GamePage } from '../pages/game/game';
     ProfileViewerModalPage,
     DiscoverFriendsPage,
     GamePage,
+    WaitingPage,
+    PopoverSettingsComponent,
   ],
   providers: [
     StatusBar,
@@ -89,6 +97,7 @@ import { GamePage } from '../pages/game/game';
     ChatProvider,
     BackgroundGeolocation,
     HTTP,
+    LocationProvider,
     
   ]
 })

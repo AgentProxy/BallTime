@@ -33,7 +33,7 @@ export class RegisterPage {
     longitude: '',
     penalty: 0,
     reputation_points: 0,
-    reputation_level: 1,
+    reputation_level: 0,
   };
   
   constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider) {

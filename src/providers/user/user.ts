@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '../../models/user/user.model';
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from 'angularfire2/firestore';
-import { Observable } from 'rxjs/Observable';
 import { AngularFireAuth } from 'angularfire2/auth';
+import { AlertController } from 'ionic-angular';
 
 @Injectable()
 export class UserProvider {
@@ -11,10 +11,10 @@ export class UserProvider {
     private userDoc: AngularFirestoreDocument<User>;
     private userCollection: AngularFirestoreCollection<User>;
     userInfo: any;
-    users: Observable<User>;
+    users: any;
     // uid: any;
 
-    constructor(private db: AngularFirestore, private afAuth: AngularFireAuth,){
+    constructor(private db: AngularFirestore, private afAuth: AngularFireAuth, private alertCtrl: AlertController){
         // this.uid = this.retrieveUserID();
     }
     existingUserId : string;
@@ -45,6 +45,20 @@ export class UserProvider {
             uid: userId,
             registered: false,
         });
+    }
+
+    async penalizeUser(userId){
+        let penalty = await this.retrieveUserObject(userId);
+        this.db.collection('users').doc(userId).set({penalty: (penalty.penalty+1)}, {merge: true});
+        if(penalty>=3){
+        let alert = this.alertCtrl.create({
+            title: 'Account Banned!',
+            subTitle: 'You have accumulated 3 penalties! Please contact the administrator',
+            buttons: ['OK']
+        });
+        alert.present();
+        return false;
+        }
     }
 
     retrieveUserID(){
@@ -90,8 +104,13 @@ export class UserProvider {
         return userObj.data().role;
     }
 
-    updateUserLocation(position){
-        this.db.collection('users').doc(this.retrieveUserID()).update({longitude: position.coords.longitude.toString(), latitude: position.coords.latitude.toString()})
+    updateUserLocation(position,type){
+        if(type=='discover'){
+            this.db.collection('users').doc(this.retrieveUserID()).update({longitude: position.longitude.toString(), latitude: position.latitude.toString()})
+        }
+        else{
+            this.db.collection('users').doc(this.retrieveUserID()).update({longitude: position.coords.longitude.toString(), latitude: position.coords.latitude.toString()})
+        }
     }
 
     async retrieveUserLocation(){

@@ -89,9 +89,10 @@ page-profile {
 
     #grey_layer{
         background-color: rgba(29, 29, 29, 0.685);
-        height: 100%;
-        width: 100%;
-        position: fixed;
+        // height: 100%;
+        // width: 100%;
+        // position: fixed;
+        background-size: auto;
     }
 
     .scroll-content {

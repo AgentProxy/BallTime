@@ -5,11 +5,10 @@
   Ionic pages and navigation.
 -->
 
-<ion-content padding>
-  <video muted loop autoplay src="assets/video/BallTimeIntro.mp4" type='video/mp4;'>
-  </video>
-  <div id="logo">
-      
+<ion-content id='landingPage'>
+  <!-- <video muted loop autoplay src="assets/video/BallTimeIntro.mp4" type='video/mp4;'>
+  </video> -->
+  <div id="logo">   
     <h1 id="ball_text"> BALL TIME </h1>
     <img id="ball_logo" alt="Logo" class="logo" src="assets/imgs/logobasketball.png"/>
   </div>
@@ -35,7 +34,6 @@
   <div *ngIf="showLogin">  
       <ion-icon name="arrow-round-back" (click)="login_clicked()" style="position:relative; color:white; font-size:40px"></ion-icon>
       <login></login>
-    <!-- <button style="display:hidden"></button> --> 
   </div>
   <div *ngIf="showRegister">
     <ion-icon name="arrow-round-back" (click)="register_clicked()" style="position:relative; color:white; font-size:40px"></ion-icon>

@@ -13,15 +13,33 @@
   </ion-navbar>
 </ion-header>
 
+
+   
+  
+
 <ion-content padding>
-  <ion-card *ngFor='let court of courts'>
-    <ion-card-header>
-      {{court.data.name}}
-      <button ion-button float-right (click)="manageCourt(court)"> Manage </button>
-    </ion-card-header>
-    <ion-card-content>
-      <h1> </h1>
-    </ion-card-content>
-  </ion-card>
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content> </ion-refresher-content>
+    </ion-refresher> 
+      <!-- <div> -->
+        <ion-card *ngFor='let court of courts'>
+          <ion-card-header>
+            <ion-item>
+              <!-- {{court.name}}
+              Hello -->
+                <ion-toggle float-right checked="true"  (ionChange)="changeStatus(court.id, 'Offline', court.current_admin)" *ngIf="court.status != 'Offline'"></ion-toggle>
+                <ion-toggle float-right  checked="false" (ionChange)="changeStatus(court.id, 'Online')" *ngIf="court.status=='Offline'"></ion-toggle>
+                
+            </ion-item>
+            <span ion-text float-left>{{court.name}}</span>
+          
+            
+            
+          </ion-card-header>
+          <ion-card-content text-center>
+              <button ion-button  (click)="manageCourt(court)"> Manage </button>
+          </ion-card-content>
+       </ion-card>
+      
 
 </ion-content>

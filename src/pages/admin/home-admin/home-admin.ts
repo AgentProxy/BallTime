@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, AlertController } from 'ionic-angular';
 import { CourtProvider } from '../../../providers/court/court';
 import { UserProvider } from '../../../providers/user/user';
 import { JoinCourtModalPage } from '../../modals/join-court-modal/join-court-modal';
@@ -18,35 +18,62 @@ import { MenuController } from 'ionic-angular';
   templateUrl: 'home-admin.html',
 })
 export class HomeAdminPage {
-  courts = [];
+  courts: any;
   courtsArray = [];
+  status: boolean=true;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private courtProvider: CourtProvider, private userProvider: UserProvider, private modalCtrl: ModalController, private menuCtrl: MenuController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController, private courtProvider: CourtProvider, private userProvider: UserProvider, private modalCtrl: ModalController, private menuCtrl: MenuController) {
     // alert(this.courts);
-    this.getCourts();
+   
     this.menuCtrl.enable(true);
   }
 
   ionViewDidLoad() {
-
+    this.getCourts();
     console.log('ionViewDidLoad HomeAdminPage');
   }
 
   async getCourts(){
+  
     this.courts=[];
     this.courts = await this.courtProvider.retrieveCourtsUnderAdmin(this.userProvider.retrieveUserID());
+  
   }
 
   manageCourt(court){
   
     let data = {
       Role: 'Administrator',
-      Court: court.data,
+      Court: court,
     }
 
     this.navCtrl.push(JoinCourtModalPage,data);
-    // let modal = this.modalCtrl.create(JoinCourtModalPage, data);
-    // modal.present();
+  }
+
+  changeStatus(courtId, status, courtAdmin?){
+    if(status=='Offline'){
+      if(courtAdmin==''){
+        this.courtProvider.changeCourtStatus(courtId, 'Offline');
+      }
+      else{
+        let alert = this.alertCtrl.create({
+          title: 'Admin Inside!',
+          subTitle: 'Cannot change court to status if there is an admin inside',
+          buttons: ['OK']
+        });
+        alert.present();
+        this.status = true;
+      }
+      
+    }
+    else{
+      this.courtProvider.changeCourtStatus(courtId, 'Online');
+    }
+  }
+
+  doRefresh(refresher){
+    this.getCourts();
+    refresher.complete();
   }
 
 }
