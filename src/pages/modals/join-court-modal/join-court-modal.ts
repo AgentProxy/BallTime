@@ -34,7 +34,9 @@ export class JoinCourtModalPage {
   players: any;
   view: String = 'court';
   waitlisted: any;
+  playersAllowed: any;
   playersCount: any;
+  startTime: any;
   // showSpinner:boolean = true;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private db: AngularFirestore, private courtProvider: CourtProvider, private viewCtrl: ViewController, 
@@ -45,8 +47,8 @@ export class JoinCourtModalPage {
     this.role = this.navParams.get('Role');
     this.messages = this.db.collection('courts/' + this.court.id + "/chat",ref => ref.orderBy('timestamp','asc').limit(20)).valueChanges();
     this.notifs = this.courtProvider.retrieveWaitlisted(this.court.id);
-    this.playerCountChanges();
-    // this.navCtrl.setRoot('HomePage');
+    this.courtChanges();
+
 
     this.courtProvider.retrieveCourtSnapshot(this.court.id).subscribe(async ()=>{
       let court = await this.courtProvider.courtStatusChanges(this.court.id);
@@ -68,7 +70,6 @@ export class JoinCourtModalPage {
           subTitle: 'The court is offline! Please try again later',
           buttons: ['OK']
         });
-        // this.courtProvider.removePlayer(this.userProvider.retrieveUserID(), this.court.id,this.court.players_count);
         alertNotif.present().then(()=>{
           this.navCtrl.popToRoot();
         });
@@ -84,58 +85,28 @@ export class JoinCourtModalPage {
             subTitle: 'You have been kicked by the admin!',
             buttons: ['OK']
           });
-          this.courtProvider.removePlayer(this.userProvider.retrieveUserID(), this.court.id,this.court.players_count);
           alertNotif.present().then(()=>{
-            
             this.navCtrl.popToRoot();
           });
         }
         else{}
       });
-
     })
   }
 
   async ionViewDidEnter() {
     this.status = '';
     this.courtStatus = 'Online';
-    // this.court.status = ''
-    if (this.role=='Administrator'){
-        if(await this.adminExists()==false){
-          this.courtProvider.addAdminToCourt(this.userProvider.retrieveUserObject(this.userProvider.retrieveUserID()),this.court.id);
-        }
-        else{
-          let alertNotif = this.alertCtrl.create({
-            title: 'Multiple Admins!',
-            subTitle: 'There can be only one admin on each court!',
-            buttons: ['OK']
-          });
-          alertNotif.present().then(()=>{
-            this.viewCtrl.dismiss();
-          });
-        }
-    }
-    else if(this.role=='Baller'){
+
+    if(this.role=='Baller'){
       this.courtProvider.addUserToCourt2(this.userProvider.retrieveUserInfo(),this.court.id, this.court.players_count);
     }
     else{}
-
     this.retrieveAdmin();
     this.players = this.courtProvider.retrievePlayers(this.court.id);
   }
 
-  async adminExists(){
-    let adminId = await this.courtProvider.currentAdminExists(this.court.id);
-    if(adminId == ""){
-      return false;
-    }
-    else{
-      return true;
-    }
-  }
-
   acceptPlayer(userId){
-    // this.courtProvider.addUserToCourt2(this.userProvider.retrieveUserInfo(),this.court.id, this.court.players_count);
     this.courtProvider.changePlayerStatus(userId, this.court.id, 'Accepted');
   }
 
@@ -147,34 +118,19 @@ export class JoinCourtModalPage {
     this.courtStatus = courtStatus;
   }
 
-  displayPopover(myEvent){
-    let popoover = this.popoverCtrl.create(PopoverSettingsComponent);
-    popoover.present({
-      ev: myEvent
+  async courtChanges(){
+    this.db.doc('courts/'+this.court.id).valueChanges().subscribe(async x => {
+      let courtObj =  await this.courtProvider.retrieveCourtObject(this.court.id);
+      this.courtDetails(courtObj);
     })
   }
 
-  kickPlayer(playerId, playerUsername){
-    let confirm = this.alertCtrl.create({
-      title: 'Kick ' + playerUsername +'?', 
-      message: "Do you really want to kick " + playerUsername + '?',
-      buttons: [
-        {
-          text: 'Kick',
-          handler: () => {    
-            this.courtProvider.kickPlayer(playerId, this.court.id);
-          }
-        },
-        {
-          text: 'Cancel',
-          handler: () => {
-          }
-        }
-    ]
-    });
-    confirm.present();
-  
-  };
+  courtDetails(courtObj){
+    this.playersAllowed = (courtObj.players_allowed-2);
+    this.playersCount = courtObj.players_count;
+    this.startTime = courtObj.start_time;
+    this.startTime = this.courtProvider.parseStartTime(this.startTime);
+  }
 
   leaveCourt(){
     let confirm = this.alertCtrl.create({
@@ -187,9 +143,6 @@ export class JoinCourtModalPage {
             this.navCtrl.popToRoot().then(()=>{
               if(this.role=="Baller"){
                 this.courtProvider.removePlayer(this.userProvider.retrieveUserID(), this.court.id,this.court.players_count);
-              }
-              else if(this.role=='Administrator'){
-                this.courtProvider.removeAdminFromCourt(this.court.id, this.userProvider.retrieveUserID());
               }
               else{}
             });
@@ -205,53 +158,20 @@ export class JoinCourtModalPage {
     confirm.present();
   }
 
-  playerCountChanges(){
-    this.db.doc('courts/'+this.court.id).valueChanges().subscribe(async x => {
-      this.playersCount =  await this.courtProvider.retrieveCourtPlayersCount(this.court.id);
-    })
-  }
-
-  async readyCourt(){
-    let limit = 1;            //THIS IS THE LIMIT FOR THE PLAYERS ON COURT
-    let wait = await this.courtProvider.readyCourt(this.court.id, limit);
-    if(wait==true){
-      let confirm = this.alertCtrl.create({
-        title: 'Ready Court',
-        message: "Are you sure that the court is ready?",
-        buttons: [
-          {
-            text: 'Yes',
-            handler: () => {    
-              this.changeCourtStatus('Waiting');
-            }
-          },
-          {
-            text: 'Cancel',
-            handler: () => {
-            }
-          }
-        ]
-    });
-      confirm.present();
-    }
-    else{
-      let alertNotif = this.alertCtrl.create({
-        title: 'Players are not ready!',
-        subTitle: 'Wait for the players to be ready!',
-        buttons: ['OK']
-      });
-      alertNotif.present().then(()=>{
-      });
-    }  
-  }
+  // parseTime(startTime){
+  //   let time = startTime.split(':');
+  //   let hour = parseInt(time[0]);
+  //   let suffix = " AM";
+  //   if(hour > 12){
+  //     hour = hour - 12;
+  //     suffix = " PM";
+  //   }
+  //   this.startTime = hour.toString() + ':' + time[1] + suffix;
+  // }
 
   readyPlayer(){
     this.status = 'Ready';
     this.courtProvider.updatePlayerStatus(this.userProvider.retrieveUserID(), this.court.id, 'Ready');
-  }
-
-  rejectPlayer(userId){
-    this.courtProvider.changePlayerStatus(userId, this.court.id, 'Rejected');
   }
 
   retrieveAdmin(){
@@ -260,31 +180,6 @@ export class JoinCourtModalPage {
 
   retrieveWaitlisted(){
     this.waitlisted = this.courtProvider.retrieveWaitlisted(this.court.id);
-  }
-
-  async startGame(){
-    let data = {
-      Role: 'Administrator',
-      Court: this.court,
-      Status: 'In Game',
-    }
-    let start = await this.courtProvider.checkPlayersInCourt(this.court.id);
-    if(start==true){
-      this.courtProvider.changeCourtStatus(this.court.id,'In Game');
-      // this.courtProvider.startCourtGame(this.court.id);
-      start=false;
-      let modal = this.modalCtrl.create(GamePage,data);
-      modal.present();
-     
-    }
-    else{
-      let alertNotif = this.alertCtrl.create({
-        title: 'Players Not Complete!',
-        subTitle: 'All players are not yet complete!',
-        buttons: ['OK']
-      });
-      alertNotif.present();
-    }
   }
 
   async sendMessage(){
@@ -307,6 +202,4 @@ export class JoinCourtModalPage {
     this.status = '';
     this.courtProvider.updatePlayerStatus(this.userProvider.retrieveUserID(), this.court.id, '');
   }
-
-
 }

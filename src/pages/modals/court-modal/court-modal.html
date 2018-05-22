@@ -17,19 +17,21 @@
 
 <ion-content id="modal" padding>
   <div id="modal_content">
-    <h1 text-center> {{court.name}} </h1>
-    <!-- <h2 text-center>Distance:  {{courtDistance}} km </h2> -->
+    <h1 text-center> {{courtName}} </h1>
+    <h2 text-center>Status:  {{courtStatus}} </h2>
+    <h2 text-center>Distance: {{courtDistance}} km</h2>
+    <h2 text-center>Start Time: {{startTime}}</h2>
     <div id="courtpic_div" text-center>
-        <img id="court_pic" src="../assets/imgs/RegisterBackground4.jpg" />
+        <img id="court_pic" src="assets/imgs/Court_Pic.jpg" />
     </div>
     <div text-center>
-      <h2> Players: {{playersCount}}/10 </h2>
+      <h2> Players: {{playersCount}}/{{playersAllowed}} </h2>
       <button ion-button color="ball" (click)="joinCourt(court)">
         Join Court
       </button>
       <button ion-button color="primary" (click)="showDirection(court)">
         Get Directions
-    </button>
+      </button>
     </div>
   </div>
 </ion-content>

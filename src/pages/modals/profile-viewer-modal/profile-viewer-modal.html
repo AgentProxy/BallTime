@@ -24,7 +24,7 @@
         <h1 id="title">{{(userInfo|async)?.role}}</h1>
       </header>
       <div id="profile_header">
-        <img id="prof_pic" src="../assets/imgs/RegisterBackground2.jpg" />
+        <img id="prof_pic" src="assets/imgs/RegisterBackground2.jpg" />
         <h1 text-center> {{(userInfo|async)?.firstname}} {{(userInfo|async)?.lastname}} </h1>
         <h3 text-center>@{{(userInfo|async)?.username}}</h3>
          <button ion-button *ngIf="!sameUser && status=='' && role=='Baller'" (click)="addFriend()" > Add Friend </button>

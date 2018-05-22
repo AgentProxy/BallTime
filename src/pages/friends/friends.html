@@ -44,7 +44,7 @@
       <ion-spinner *ngIf="showSpinner"></ion-spinner>
       <ion-item *ngFor="let user of filteredUsers" (click) = "openProfile(user)">
         <ion-thumbnail item-start>
-          <img src="../assets/imgs/prof_pic/default_profpic.png">
+          <img src="assets/imgs/prof_pic/default_profpic2.png">
         </ion-thumbnail>
         <h1> {{user.username}} </h1>
       </ion-item>
@@ -55,7 +55,7 @@
       <ion-spinner *ngIf="showSpinner"></ion-spinner>
       <ion-item *ngFor="let notif of notifs | async " (click) = "openProfileNotif(notif.from_userId)">
         <ion-thumbnail item-start>
-          <img src="../assets/imgs/prof_pic/default_profpic.png">
+          <img src="assets/imgs/prof_pic/default_profpic2.png">
         </ion-thumbnail>
         <span ion-text text-wrap>{{notif.message}}</span>
       </ion-item>

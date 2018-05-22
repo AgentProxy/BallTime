@@ -8,11 +8,11 @@
     <loading *ngIf="showLoading"></loading>
     <ion-icon name="menu" id="menu_button" float-start menuToggle></ion-icon>
     <button ion-button float-right id="edit" color="ball"> 
-      <img src="../assets/imgs/profile_edit.png" id="edit_profile">
+      <img src="assets/imgs/profile_edit.png" id="edit_profile">
     </button>
     <header id="profile_header">
-      <img src="../assets/imgs/RegisterBackground4.jpg" id="cover_pic" alt="cover_photo">
-      <img id="prof_pic" src="../assets/imgs/RegisterBackground2.jpg" />
+      <img src="assets/imgs/RegisterBackground4.jpg" id="cover_pic" alt="cover_photo">
+      <img id="prof_pic" src="assets/imgs/RegisterBackground2.jpg" />
       <h1> {{(userInfo|async)?.firstname}} {{(userInfo|async)?.lastname}} </h1>
       <h3>@{{(userInfo|async)?.username}}</h3>
       

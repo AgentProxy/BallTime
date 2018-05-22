@@ -42,8 +42,9 @@ export class HomePage {
           // this.currentLocation = this.locationProvider.getUpdatedLocation();
           this.platform = platform;
           google.maps.event.trigger(this.map, 'resize');
-          
-          this.showMapAndLocation();
+          this.platform.ready().then(() => {
+            this.showMapAndLocation();
+          });      
     }
 
   ionViewCanEnter(){
@@ -118,7 +119,9 @@ export class HomePage {
                   Page: "home",
                 };
     let modal = this.modalCtrl.create(CourtModalPage, data);
-    modal.present();
+    modal.present().then(()=>{
+      this.subscription.unsubscribe();
+    });
   }
 
   ionViewDidLeave(){

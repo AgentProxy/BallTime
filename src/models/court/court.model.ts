@@ -8,4 +8,5 @@ export interface Court{
     status: string;
     duration: any;
     id: string,
+    start_time: string;
 }

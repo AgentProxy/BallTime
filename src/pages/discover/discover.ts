@@ -20,6 +20,7 @@ interface CourtObject {
   category: string,
   status: string,
   duration: any,
+  start_time: any;
 }
 
 @IonicPage()
@@ -82,6 +83,7 @@ export class DiscoverPage {
         )/1000;
         if(distance<=preferredDistance){ 
           let duration = this.routeInfo(court);
+          court.start_time = this.courtProvider.parseStartTime(court.start_time);
           this.nearestCourts.push(court);
         }
       });
@@ -110,12 +112,6 @@ export class DiscoverPage {
         // passResults(response);
       }
     })
-    // alert(duration);
-    // return await duration;
-    // function passResults(response){
-    //   duration = response.routes[0].legs[0].duration.text;
-    // }
-    // return duration;
   }
 
   retrieveClosestCourtsInfo(courts){
@@ -134,7 +130,6 @@ export class DiscoverPage {
         }
       });
     });
-    // google.maps.DirectionService().route();
   }
 
   openCourt(court){
@@ -144,34 +139,5 @@ export class DiscoverPage {
       Mode: this.selectedMode,
     };
     this.navCtrl.push(CourtModalPage, data);
-    // modal.present();
   }
-  
-  // compare(a,b) {
-  //   if (a.distance < b.distance)
-  //     return -1;
-  //   if (a.distance > b.distance)
-  //     return 1;
-  //   return 0;
-  // }
-  
- 
-
-    // Set destination, origin and travel mode.
-    // var request = {
-    //   destination: preferredDistance,
-    //   origin: chicago,
-    //   travelMode: 'WALKING'
-    // };
-
-    // // Pass the directions request to the directions service.
-    // var directionsService = new google.maps.DirectionsService();
-    // directionsService.route(request, function(response, status) {
-    //   if (status == 'OK') {
-    //     // Display the route on the map.
-    //     directionsDisplay.setDirections(response);
-    //   }
-    // });
-  
-
 }

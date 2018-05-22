@@ -69,8 +69,14 @@ page-landing {
     }
 
     #landingPage{
-        background-image: url('../assets/imgs/Landing_Background.png');
+        background-image: url('../assets/imgs/Landing_Background2.jpg');
         background-size: cover;
+        background-position: center;
+        background-color: black;
+    }
+
+    #land_buttons > button{
+        margin-bottom: 10px;
     }
 
 }

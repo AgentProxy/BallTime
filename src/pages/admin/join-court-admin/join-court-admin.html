@@ -1,18 +1,111 @@
-<!--
-  Generated template for the JoinCourtAdminPage page.
 
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-
-  <ion-navbar>
-    <ion-title>JoinCourtAdmin</ion-title>
+  <ion-navbar hideBackButton color="nav">
+    <ion-buttons start clear-right>
+        <button ion-button (click)="leaveCourt()" *ngIf="courtStatus!='Waiting'">
+         <span ion-text>Leave Court </span>
+        </button>
+    </ion-buttons>
+    <ion-buttons *ngIf="courtStatus=='Online'" end>
+      <button ion-button icon-only (click)='displayPopover($event)'>
+        <ion-icon name="more" ></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
 
-<ion-content padding>
+<!-- 
+  Set if 3v3 or 5v5 before starting game
+  if in game, can only switch from 3v3 to 5v5
+  fix number of players on court
+  set status to '' or offline
+  only show courts that are '' or waiting
+  player requesting
+  ion segment for players and request
+  view player modal
+  footer for chat and players in court
+ -->
+  
+<ion-content id='join-court' >
+    <div id="grey_layer">
 
-</ion-content>
+      <ion-segment color='ball'  [(ngModel)]="view" >
+        <ion-segment-button value='court' selected>
+            Court
+          </ion-segment-button>
+          <ion-segment-button value='waitlist' (click)='retrieveWaitlisted()'>
+            Waitlist <ion-badge>{{(notifs|async)?.length}}</ion-badge>  
+          </ion-segment-button>
+      </ion-segment>
+
+      <div [ngSwitch]="view">
+        <div *ngSwitchCase="'court'">
+          <h1> {{court.name}}</h1>
+          <h1>Start Time: {{startTime}}</h1>
+          <h1>Admin: </h1>
+          <ion-list>
+            <ion-item class='itemList' *ngFor="let administrator of admin | async">
+                <ion-avatar item-start>
+                    <img src="assets/imgs/prof_pic/default_profpic2.png">
+                  </ion-avatar>
+              {{ administrator.user.username }}
+            </ion-item>
+          </ion-list>
+          <h1>Players in this court ({{playersCount}}/{{playersAllowed}}): </h1>
+          <ion-list>
+            <ion-item class='itemList' *ngFor="let player of players | async">
+                <ion-avatar item-start>
+                    <img src="assets/imgs/prof_pic/default_profpic2.png">
+                  </ion-avatar>
+              {{ player.user.username}} {{player.status}}
+              <div text-left>
+                <button ion-button color="primary" *ngIf="player.status=='Arrived'" (click)='confirmPlayer(player.user.uid)'>Confirm</button>
+                <button ion-button color="danger" (click)="kickPlayer(player.user.uid, player.user.username)">Kick</button>
+              </div>
+            </ion-item>
+          </ion-list>
+          <h3>Chatbox</h3>
+          <div id="chatbox">
+            <ion-list>
+              <ion-item *ngFor="let item of messages | async" text-wrap>
+                  <strong>{{item.sender_username}}</strong>:
+                  {{ item.message }}
+              </ion-item>
+            </ion-list>
+          </div>
+          <ion-item id='message_input'>
+            <ion-input type="text" maxlength="100" placeholder="Enter your message" [(ngModel)]="message"></ion-input>
+            <button ion-button (click)="sendMessage()" clear item-right color='ball'> Send </button>
+          </ion-item>
+          <ion-buttons id='buttons'>
+            <button ion-button color="secondary" *ngIf="courtStatus=='Online'" (click)="readyCourt()">Ready Court</button>
+            <button ion-button color="ball" *ngIf="courtStatus=='Waiting'" (click)='startGame()'>Start Game</button>
+            <button ion-button color="danger" *ngIf="courtStatus=='In Game'" (click)='endGame()'>End Game</button>
+          </ion-buttons>
+        </div>
+
+        <div *ngSwitchCase="'waitlist'">
+            <h1>Players Waitlisted: </h1>
+            <ion-list>
+              <ion-item class='itemList' *ngFor='let player of waitlisted | async'>
+                  <ion-avatar item-start>
+                      <img src="assets/imgs/prof_pic/default_profpic2.png">
+                    </ion-avatar>
+                    <div float-left>
+                      {{player.user.username}}
+                      <h3>Rep Lvl:  {{player.user.reputation_level}}</h3>
+                      <h3>Distance to Court: {{player.distance}} km</h3>
+                      <!-- <h3>Travel Time to Court: </h3> -->
+                    </div>
+                    <div float-right>
+                      <button class='waitlistButtons' clear ion-button (click)='acceptPlayer(player.user.uid)'><ion-icon color='primary' name='checkmark-circle' style='font-size: 28px;'></ion-icon></button>
+                      <button class='waitlistButtons' clear ion-button (click)='rejectPlayer(player.user.uid)'><ion-icon color='danger' name='close-circle' style='font-size: 28px;'></ion-icon></button>
+                    </div>
+              </ion-item>
+            </ion-list>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+

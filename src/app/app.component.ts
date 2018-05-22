@@ -15,6 +15,7 @@ import { UserProvider } from '../providers/user/user';
 import { Events } from 'ionic-angular';
 import { HomeAdminPage } from '../pages/admin/home-admin/home-admin';
 import { FriendsProvider } from '../providers/friends/friends';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
 
 
 
@@ -33,12 +34,17 @@ export class MyApp {
   pages: Array<{title: string, component: any}>;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private afAuth: AngularFireAuth, private alertCtrl: AlertController, private menuCtrl: MenuController,
-     private backgroundMode: BackgroundMode, private userProvider: UserProvider, public events: Events, private friendsProvider: FriendsProvider) {
+     private backgroundMode: BackgroundMode, private userProvider: UserProvider, public events: Events, private friendsProvider: FriendsProvider, private screenOrientation: ScreenOrientation) {
     
+    this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
+    
+      
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
-      statusBar.styleDefault();
+      // statusBar.styleDefault();
+      // statusBar.overlaysWebView(true);
+      // statusBar.backgroundColorByHexString('#333333');
       splashScreen.hide();
       this.backgroundMode.enable(); // Enable Running in Background Mode
     });
@@ -58,7 +64,7 @@ export class MyApp {
         { title: 'Home', component: HomeAdminPage },
         { title: 'Profile', component: ProfilePage},
         { title: 'Manage Courts', component: DiscoverPage},
-        // { title: 'Messages', component: MessagesPage},
+        { title: 'Friends', component: FriendsPage},
       ];
     }
     else {

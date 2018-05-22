@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, ModalController, ViewController } from 'ionic-angular';
 import { CourtProvider } from '../../../providers/court/court';
 import { UserProvider } from '../../../providers/user/user';
 import { AngularFirestore } from 'angularfire2/firestore';
@@ -21,11 +21,13 @@ export class WaitingPage {
 
   court: any;
   userId: any;
+  index: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private db: AngularFirestore, private alertCtrl: AlertController, private courtProvider : CourtProvider, private userProvider: UserProvider, private modalCtrl: ModalController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private db: AngularFirestore, private alertCtrl: AlertController, private courtProvider : CourtProvider, private userProvider: UserProvider, private modalCtrl: ModalController, private viewCtrl: ViewController) {
     this.userId = this.userProvider.retrieveUserID();
     this.court = navParams.get('Court');
     this.addToWaitlist();
+    this.index = this.viewCtrl.index;
 
     let subscription = this.courtProvider.retrieveWaitlistedUser(this.userId,this.court.id).subscribe(async () => {
       let status = await this.courtProvider.retrieveWaitlistedUserStatus(this.userId, this.court.id);
@@ -38,10 +40,8 @@ export class WaitingPage {
         subscription.unsubscribe();
       }
       else{
-
       }
     });
-
   }
 
   ionViewDidLoad() {
@@ -54,9 +54,10 @@ export class WaitingPage {
       Role: 'Baller',
       Court: this.court,
     }
+
+    this.navCtrl.remove(this.index)
     this.navCtrl.push(JoinCourtModalPage, data);
   }
-    
   
   addToWaitlist(){
     this.courtProvider.addUserToWaitlist(this.userProvider.retrieveUserInfo(), this.court.id);
@@ -70,11 +71,9 @@ export class WaitingPage {
         {
           text: 'Yes',
           handler: () => {    
-           this.navCtrl.setRoot('HomePage').then(()=>{
-            this.navCtrl.popToRoot().then(()=>{
-              this.removeFromWaitlist();
-            });
-           })
+          this.navCtrl.popToRoot().then(()=>{
+            this.removeFromWaitlist();
+          });
           }
         },
         {
@@ -92,18 +91,14 @@ export class WaitingPage {
   }
 
   rejected(){
-    
-    this.courtProvider.removeUserFromWaitlist(this.userId, this.court.id);
-    this.navCtrl.setRoot('HomePage');
+    // this.courtProvider.removeUserFromWaitlist(this.userId, this.court.id);
     this.navCtrl.popToRoot();
     let alertNotif = this.alertCtrl.create({
       title: 'Rejected!',
       subTitle: 'You have been rejected on joining the court the admin!',
       buttons: ['OK']
     });
-    // this.courtProvider.removePlayer(this.userProvider.retrieveUserID(), this.court.id,this.court.players_count);
     alertNotif.present().then(()=>{
-     
     });
   }
 

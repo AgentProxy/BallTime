@@ -22,21 +22,64 @@
     <h1 text-center *ngIf="status=='In Game'"> GAME IN PROGRESS </h1>
     <h1 text-center *ngIf="status=='Confirmed'"> WAITING FOR OTHER PLAYERS </h1>
     <!-- <court-timer></court-timer> -->
-    <div text-center id="ball-animation"><img id="ball" src="../../assets/imgs/logobasketball.png"></div>
-
-    <button ion-button block color="danger" *ngIf="role=='Administrator'" id='button-end' (click)='endGame()'> End Game</button>
+    <div text-center id="ball-animation"><img id="ball" src="assets/imgs/logobasketball_safe.png"></div>
+<!-- 
+    <button ion-button block color="danger" *ngIf="role=='Administrator'" id='button-end' (click)='endGame()'> End Game</button> -->
     <button ion-button block color="danger" *ngIf="role=='Baller' && status=='In Game'" id='button-end' (click)="quitGame('Quit')"> Quit Game</button>
     <button ion-button block color="danger" *ngIf="role=='Baller' && status=='Confirmed'" id='button-end' (click)="quitGame('Cancel')"> Cancel </button>
   </div>
   <div *ngIf="status!='In Game'">
       <h1 text-center *ngIf="status=='Coming'"> GO TO COURT </h1>
+      <h1 text-center *ngIf="status=='Coming'"> PLEASE ARRIVE BEFORE: {{startTime}} </h1>
       <h1 text-center *ngIf="status=='Waiting'"> WAITING FOR CONFIRMATION </h1>
       
       <div id="ball-animation" text-center>
-          <img id="court_pic" src="../assets/imgs/RegisterBackground4.jpg" />
       </div>
       <!-- <button ion-button block color="danger" *ngIf="role=='Administrator'" id='button-end'></button> -->
       <button ion-button block color="primary" *ngIf="role=='Baller' && status!='Waiting'" id='button-end' (click)='arrivedCourt()'> Arrived </button> 
       <button ion-button block color="danger" *ngIf="role=='Baller'" id='button-end' (click)="quitGame('Cancel Coming')"> Cancel </button>
   </div>
+
+  <ion-pullup (onExpand)="footerExpanded()" (onCollapse)="footerCollapsed()" [(state)]="footerState">
+      <ion-pullup-tab id="pullup-tab" (tap)="toggleFooter()">
+        <ion-icon name="arrow-up" *ngIf="footerState == 0"></ion-icon><ion-icon name="arrow-down" *ngIf="footerState == 1"></ion-icon>
+      </ion-pullup-tab>
+      <ion-toolbar color="nav" (tap)="toggleFooter()">
+        <ion-title>{{this.court.name}}</ion-title>
+      </ion-toolbar>
+      <ion-content id='pullup-content'>
+        <h1>Admin: </h1>
+        <ion-list class='ionList'>
+          <ion-item class='itemList' *ngFor="let administrator of admin | async">
+              <ion-avatar item-start>
+                  <img src="assets/imgs/prof_pic/default_profpic2.png">
+                </ion-avatar>
+            {{ administrator.user.username }}
+          </ion-item>
+        </ion-list>
+        <h1>Players in this court ({{playersCount}}/{{playersAllowed}}): </h1>
+        <ion-list class='ionList'>
+          <ion-item class='itemList' *ngFor="let player of players | async">
+              <ion-avatar item-start>
+                  <img src="assets/imgs/prof_pic/default_profpic2.png">
+                </ion-avatar>
+            {{ player.user.username}} {{player.status}}
+          </ion-item>
+        </ion-list>
+        <h3>Chatbox</h3>
+        <div id="chatbox">
+          <ion-list>
+            <ion-item *ngFor="let item of messages | async" text-wrap>
+                <strong>{{item.sender_username}}</strong>:
+                {{ item.message }}
+            </ion-item>
+          </ion-list>
+        </div>
+        <ion-item id='message_input'>
+          <ion-input type="text" maxlength="100" placeholder="Enter your message" [(ngModel)]="message"></ion-input>
+          <button ion-button (click)="sendMessage()" clear item-right color='ball'> Send </button>
+        </ion-item>
+      </ion-content>
+    </ion-pullup>
+
 </ion-content>

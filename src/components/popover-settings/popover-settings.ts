@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { CourtProvider } from '../../providers/court/court';
+import { NavParams, AlertController } from 'ionic-angular';
 
 /**
  * Generated class for the PopoverSettingsComponent component.
@@ -13,10 +15,22 @@ import { Component } from '@angular/core';
 export class PopoverSettingsComponent {
 
   text: string;
+  value: any;
+  courtId: any;
+  startTime: any;
 
-  constructor() {
-    console.log('Hello PopoverSettingsComponent Component');
-    this.text = 'Hello World';
+  constructor(private courtProvider: CourtProvider, private navParams: NavParams, private alertCtrl: AlertController) {
+    this.courtId = this.navParams.get('courtId');
+  }
+
+  changePlayersAllowed(){
+    this.courtProvider.changePlayersAllowed(this.value, this.courtId);
+  }
+
+  changeStartTime(){
+    this.changePlayersAllowed();
+    this.startTime;
+    this.courtProvider.changeStartTime(this.startTime, this.courtId);
   }
 
 }

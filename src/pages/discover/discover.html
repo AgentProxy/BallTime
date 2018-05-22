@@ -15,35 +15,37 @@
 
 <ion-content id='discover'>
   <div id="grey_layer">
-  <ion-segment id='modes' [(ngModel)]="selectedMode" color="ball">
-      <ion-segment-button value='WALKING' selected>
-        <ion-icon name="walk"></ion-icon>
-      </ion-segment-button>
-      <ion-segment-button value='BICYCLING'>
-          <ion-icon name="bicycle"></ion-icon>
+    <h1 text-center> Mode of Transportation</h1>
+    <ion-segment id='modes' [(ngModel)]="selectedMode" color="ball">
+        <ion-segment-button value='WALKING' selected>
+          <ion-icon name="walk"></ion-icon>
         </ion-segment-button>
-      <ion-segment-button value='DRIVING'>
-        <ion-icon name="car"></ion-icon>
-      </ion-segment-button>
-    </ion-segment>
-    <h1>Maximum Distance: {{preferredDistance}} KM</h1>
-    <ion-range min="1" max="20" [(ngModel)]="preferredDistance">
-      <ion-label range-left>1 KM</ion-label>
-      <ion-label range-right>20 KM</ion-label>
-    </ion-range>
-    <div class='center'>
-      <button id="findButton" color='ball' ion-button round (click)="retrieveClosestCourts(preferredDistance)"> Find </button>
-    </div>  
-    <h1 text-center> Results </h1>
-    <ion-spinner *ngIf="showSpinner"></ion-spinner>
-    <ion-list>
-      <ion-item class='item' *ngFor="let court of nearestCourts" (click)="openCourt(court)">
-        <h2 text-wrap>{{ court.name }}</h2>
-        <h3>Distance: <span id={{court.name}}distance></span></h3>
-        <h3>Travel Time: <span id={{court.name}}time></span></h3>
-        <h3>Players: {{court.players_count}}</h3>
-        <h3>Status: {{court.status}}</h3>
-      </ion-item>
-    </ion-list>
+        <ion-segment-button value='BICYCLING'>
+            <ion-icon name="bicycle"></ion-icon>
+          </ion-segment-button>
+        <ion-segment-button value='DRIVING'>
+          <ion-icon name="car"></ion-icon>
+        </ion-segment-button>
+      </ion-segment>
+      <h1 text-center>Maximum Distance: {{preferredDistance}} KM</h1>
+      <ion-range min="1" max="20" [(ngModel)]="preferredDistance">
+        <ion-label range-left>1 KM</ion-label>
+        <ion-label range-right>20 KM</ion-label>
+      </ion-range>
+      <div class='center'>
+        <button id="findButton" color='ball' ion-button round (click)="retrieveClosestCourts(preferredDistance)"> Find </button>
+      </div>  
+      <h1 text-center> Results </h1>
+      <ion-spinner *ngIf="showSpinner"></ion-spinner>
+      <ion-list>
+        <ion-item class='item' *ngFor="let court of nearestCourts" (click)="openCourt(court)">
+          <h2 text-wrap>{{ court.name }}</h2>
+          <h3>Distance: <span id={{court.name}}distance></span></h3>
+          <h3>Travel Time: <span id={{court.name}}time></span></h3>
+          <h3>Players: {{court.players_count}}/{{court.players_allowed-2}}</h3>
+          <h3>Status: {{court.status}}</h3>
+          <h3>Start Time: {{court.start_time}}</h3>
+        </ion-item>
+      </ion-list>
     </div>
 </ion-content>

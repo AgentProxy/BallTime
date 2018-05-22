@@ -17,9 +17,11 @@ page-join-court-modal {
     }
 
     #join-court{
-        background-image: url('../assets/imgs/ProfPageBackground.jpg');
+        background-image: url('../assets/imgs/ProfPageBackground2_safe.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: left;
         color: white;
-        background-position: center bottom; 
     }
 
     #grey_layer{

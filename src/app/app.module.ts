@@ -14,7 +14,6 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { LocationServiceProvider } from '../providers/location-service/location-service';
 import { Geolocation } from '@ionic-native/geolocation';
 import { HttpClientModule } from '@angular/common/http';
-import { BackgroundMode } from '@ionic-native/background-mode';
 import { ProfilePage } from '../pages/profile/profile';
 import { CourtProvider } from '../providers/court/court';
 import { DiscoverPage } from '../pages/discover/discover';
@@ -35,8 +34,11 @@ import { HTTP } from '@ionic-native/http';
 import { GamePage } from '../pages/game/game';
 import 'rxjs/Rx'
 import { WaitingPage } from '../pages/modals/waiting/waiting';
-import { LocationProvider } from '../providers/location/location';
 import { PopoverSettingsComponent } from '../components/popover-settings/popover-settings';
+import { JoinCourtAdminPage } from '../pages/admin/join-court-admin/join-court-admin';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
+import { BackgroundMode } from '@ionic-native/background-mode';
+import { EditProfilePage } from '../pages/edit-profile/edit-profile';
 
 
 
@@ -55,6 +57,8 @@ import { PopoverSettingsComponent } from '../components/popover-settings/popover
     DiscoverFriendsPage,
     GamePage,
     WaitingPage,
+    JoinCourtAdminPage,
+    EditProfilePage
   ],
   imports: [
     BrowserModule,
@@ -81,6 +85,8 @@ import { PopoverSettingsComponent } from '../components/popover-settings/popover
     GamePage,
     WaitingPage,
     PopoverSettingsComponent,
+    JoinCourtAdminPage,
+    EditProfilePage,
   ],
   providers: [
     StatusBar,
@@ -97,7 +103,7 @@ import { PopoverSettingsComponent } from '../components/popover-settings/popover
     ChatProvider,
     BackgroundGeolocation,
     HTTP,
-    LocationProvider,
+    ScreenOrientation,
     
   ]
 })

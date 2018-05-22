@@ -64,9 +64,11 @@ page-profile-viewer-modal {
 
     #profile_info{
         // background-color: white;
-        background-image: url('../assets/imgs/ProfPageBackground.jpg');
+        background-image: url('../assets/imgs/ProfPageBackground2_safe.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
         color: white;
-        background-position: center bottom; 
+        background-position: left;
         margin-top: -6%;
     }
 

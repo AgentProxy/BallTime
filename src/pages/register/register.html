@@ -10,77 +10,90 @@
   </ion-navbar>
 </ion-header> -->
 
-<ion-content class="content" padding>
-  <ion-slides id="register_steps" shouldLockSwipes="true">
-    <ion-slide>
-      <div id = "header" style="text-align:center; color: white">
-        <h1> Personal Info </h1>
-      </div>
-      <ion-list inset>
-        <form>
-          <ion-item>
-            <ion-label>
-              <ion-icon name="mail"></ion-icon>  
-            </ion-label>
-            <ion-input name="firstname" [(ngModel)]="userInfo.firstname" placeholder="First Name" type="text" required round></ion-input>
-          </ion-item>
-          <ion-item>  
-            <ion-label>
-              <ion-icon name="contact"></ion-icon>
-            </ion-label>
-            <ion-input  name="middle_initial" [(ngModel)]="userInfo.middle_initial" placeholder="Middle Initial" required  type="text" round></ion-input>
-          </ion-item>
-          <ion-item>  
-            <ion-label>
-              <ion-icon name="contact"></ion-icon>
-            </ion-label>
-            <ion-input name="lastname" [(ngModel)]="userInfo.lastname" placeholder="Last Name" type="text" required  round></ion-input>
-          </ion-item>
-          <ion-item>  
-            <ion-label>
-              <ion-icon name="lock"></ion-icon>
-            </ion-label>
-            <ion-input name="username" [(ngModel)]="userInfo.username" placeholder="Username" type="text" round></ion-input>
-          </ion-item>
-        </form>
-      </ion-list>
-      <button color="ball" ion-button full round type="button" style="position: relative" (click)='nextSlide()' >Next<ion-icon id="arrow_proceed" name="arrow-round-forward"></ion-icon></button>
-    </ion-slide>
-    <ion-slide>
-      <button ion-button clear float-left>
-        <ion-icon name="arrow-round-back" (click)="prevSlide()" style="position:relative; color:white; font-size:40px"></ion-icon> 
-      </button>
-      <ion-item>
-        <button>
+<ion-content class="content">
+  <div id='grey_layer'>
+    <ion-slides id="register_steps" shouldLockSwipes="true">
+      <ion-slide>
+        <div id = "header" style="text-align:center; color: white">
+          <h1> Personal Info </h1>
+        </div>
+        <ion-list inset>
+          <form>
+            <ion-item>
+              <ion-label>
+                <ion-icon name="mail"></ion-icon>  
+              </ion-label>
+              <ion-input name="firstname" [(ngModel)]="userInfo.firstname" placeholder="First Name" type="text" required round></ion-input>
+            </ion-item>
+            <ion-item>  
+              <ion-label>
+                <ion-icon name="contact"></ion-icon>
+              </ion-label>
+              <ion-input  name="middle_initial" [(ngModel)]="userInfo.middle_initial" placeholder="Middle Initial" required  type="text" round></ion-input>
+            </ion-item>
+            <ion-item>  
+              <ion-label>
+                <ion-icon name="contact"></ion-icon>
+              </ion-label>
+              <ion-input name="lastname" [(ngModel)]="userInfo.lastname" placeholder="Last Name" type="text" required  round></ion-input>
+            </ion-item>
+            <ion-item>  
+              <ion-label>
+                <ion-icon name="lock"></ion-icon>
+              </ion-label>
+              <ion-input name="username" [(ngModel)]="userInfo.username" placeholder="Username" type="text" round></ion-input>
+            </ion-item>
+          </form>
+        </ion-list>
+        <button color="ball" ion-button full round type="button" style="position: relative" (click)='nextSlide()' >Next<ion-icon id="arrow_proceed" name="arrow-round-forward"></ion-icon></button>
+      </ion-slide>
+      <ion-slide>
+        <div id = "header" style="text-align:center; color: white">
+          <h1> Biometrics </h1>
+        </div>
+        <button ion-button clear float-left>
           <ion-icon name="arrow-round-back" (click)="prevSlide()" style="position:relative; color:white; font-size:40px"></ion-icon> 
         </button>
-        <ion-label>
-          <ion-icon name="lock"></ion-icon>
-        </ion-label>
-        <ion-input name="age" [(ngModel)]="userInfo.age" placeholder="Age" type="number" round></ion-input>
-      </ion-item>
-      <ion-item>  
-        <ion-label>
-          <ion-icon name="lock"></ion-icon>
-        </ion-label>
-        <ion-input name="height" [(ngModel)]="userInfo.height" placeholder="Height" type="string" round></ion-input>
-      </ion-item>
-      <ion-item>  
-        <ion-label>
-          <ion-icon name="lock"></ion-icon>
-        </ion-label>
-        <ion-input name="weight" [(ngModel)]="userInfo.weight" placeholder="Weight" type="number" round></ion-input>
-      </ion-item>
-      <button color="ball" ion-button full round type="button" style="position: relative" (click)='nextSlide()'>Next<ion-icon id="arrow_proceed" name="arrow-round-forward"></ion-icon></button>
-    </ion-slide>
-    <ion-slide>
-      <button ion-button clear float-left>
-        <ion-icon name="arrow-round-back" (click)="prevSlide()" style="position:relative; color:white; font-size:40px"></ion-icon> 
-      </button>
-      <div id = "header" style="text-align:center; color: white">
-      <h1> Add Profile Pic </h1>
-      </div>
-      <button color="ball" ion-button full round type="button" style="position: relative" (click)=addUser(userInfo) >Finish</button>
-    </ion-slide>
-  </ion-slides>
+        <ion-item>
+          <button>
+            <ion-icon name="arrow-round-back" (click)="prevSlide()" style="position:relative; color:white; font-size:40px"></ion-icon> 
+          </button>
+          <ion-label>
+            <ion-icon name="lock"></ion-icon>
+          </ion-label>
+          <ion-input name="age" [(ngModel)]="userInfo.age" placeholder="Age" type="number" round></ion-input>
+        </ion-item>
+        <ion-item>  
+          <ion-label>
+            <ion-icon name="lock"></ion-icon>
+          </ion-label>
+          <ion-input name="height" [(ngModel)]="userInfo.height" placeholder="Height" type="string" round></ion-input>
+        </ion-item>
+        <ion-item>  
+          <ion-label>
+            <ion-icon name="lock"></ion-icon>
+          </ion-label>
+          <ion-input name="weight" [(ngModel)]="userInfo.weight" placeholder="Weight" type="number" round></ion-input>
+        </ion-item>
+        <button color="ball" ion-button full round type="button" style="position: relative" (click)='nextSlide()'>Next<ion-icon id="arrow_proceed" name="arrow-round-forward"></ion-icon></button>
+      </ion-slide>
+      <ion-slide>
+        <div id = "header" style="text-align:center; color: white">
+          <h1>Add Profile Pic </h1>
+        </div>
+        <div>
+          <button ion-button clear float-left style='clear: right; display:block'>
+            <ion-icon name="arrow-round-back" (click)="prevSlide()" style="position:relative; color:white; font-size:40px"></ion-icon> 
+          </button>
+        </div>
+        <button ion-button color='ball' round style='margin-left:-50px;'>
+          <ion-icon name='camera'></ion-icon>
+        </button>
+        <div>
+          <img id="prof_pic" src="assets/imgs/RegisterBackground2.jpg" />
+        </div>
+        <button color="ball" ion-button full round type="button" style="position: relative" (click)=addUser(userInfo) >Finish</button>
+      </ion-slide>
+    </ion-slides>
+  </div>
 </ion-content>

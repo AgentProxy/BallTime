@@ -4,6 +4,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { User } from '../../models/user/user.model';
 import { UserProvider } from '../../providers/user/user';
 import { CourtProvider } from '../../providers/court/court';
+import { EditProfilePage } from '../edit-profile/edit-profile';
 /**
  * Generated class for the ProfilePage page.
  *
@@ -26,6 +27,7 @@ export class ProfilePage {
   showLoading: boolean = true;
   role: any;
   courts:any = [];
+  
   constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider : UserProvider, private courtProvider: CourtProvider) {
     this.userId = this.userProvider.retrieveUserID();
   }
@@ -54,6 +56,10 @@ export class ProfilePage {
 
     
     console.log('ionViewDidLoad ProfilePage');
+  }
+
+  showEdit(){
+    this.navCtrl.push(EditProfilePage);
   }
 
 }

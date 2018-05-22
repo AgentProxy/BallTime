@@ -7,7 +7,6 @@ import { UserProvider } from '../user/user';
 import { User } from '../../models/user/user.model';
 import { LocationServiceProvider } from '../location-service/location-service';
 import { ChatProvider } from '../chat/chat';
-import { LocationProvider } from '../location/location';
 
 
 declare var google: any;
@@ -103,13 +102,26 @@ export class CourtProvider {
     return true;
   }
 
+  changePlayersAllowed(value,courtId){
+    this.db.collection('courts').doc(courtId).set({players_allowed: value},{merge: true});
+  }
+
   changePlayerStatus(userId, courtId, status ){
     if(status=='Accepted'||status=='Rejected'){
-      this.db.collection('courts').doc(courtId).collection('waitlist').doc(userId).set({status: status}, {merge: true});
+      this.db.collection('courts').doc(courtId).collection('waitlist').doc(userId).set({status: status}, {merge: true}).then(()=>{
+        if(status=='Rejected'){
+          this.removeUserFromWaitlist(userId, courtId);
+        }
+      });
+      
     }
     else{
       this.db.collection('courts').doc(courtId).collection('players').doc(userId).set({status: status}, {merge: true});
     }
+  }
+
+  changeStartTime(startTime,courtId){
+    this.db.collection('courts').doc(courtId).set({start_time: startTime},{merge: true});
   }
 
   checkPlayersInCourt(courtId){
@@ -156,7 +168,27 @@ export class CourtProvider {
   }
 
   kickPlayer(playerId, courtId){
-    this.db.collection('courts').doc(courtId).collection('players').doc(playerId).set({status: 'Kicked'}, {merge: true});
+    let query = this.db.collection('courts').doc(courtId).ref.get().then((snapShot)=>{
+       let playersCount = snapShot.data().players_count;
+       this.db.collection('courts').doc(courtId).collection('players').doc(playerId).set({status: 'Kicked'}, {merge: true}).then(()=>{
+        this.removePlayer(playerId,courtId,playersCount);
+      });
+    }); 
+  }
+
+  parseStartTime(startTime){
+    if(startTime==''){
+      return '';
+    }
+    let time = startTime.split(':');
+    let hour = parseInt(time[0]);
+    let suffix = " AM";
+    if(hour > 12){
+      hour = hour - 12;
+      suffix = " PM";
+    }
+   startTime = hour.toString() + ':' + time[1] + suffix;
+   return startTime;
   }
 
   retrieveCourts(){

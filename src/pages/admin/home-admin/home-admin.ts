@@ -4,6 +4,7 @@ import { CourtProvider } from '../../../providers/court/court';
 import { UserProvider } from '../../../providers/user/user';
 import { JoinCourtModalPage } from '../../modals/join-court-modal/join-court-modal';
 import { MenuController } from 'ionic-angular';
+import { JoinCourtAdminPage } from '../join-court-admin/join-court-admin';
 
 /**
  * Generated class for the HomeAdminPage page.
@@ -47,7 +48,7 @@ export class HomeAdminPage {
       Court: court,
     }
 
-    this.navCtrl.push(JoinCourtModalPage,data);
+    this.navCtrl.push(JoinCourtAdminPage,data);
   }
 
   changeStatus(courtId, status, courtAdmin?){

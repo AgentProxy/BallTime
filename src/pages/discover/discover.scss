@@ -16,7 +16,8 @@ page-discover {
     }
 
     #discover{
-        background-image: url('../assets/imgs/RegisterBackground3.jpg');
+        background-image: url('../assets/imgs/DiscoverBackground.jpg');
+        background-size: cover;
         color: white;
     }
 
@@ -27,9 +28,13 @@ page-discover {
 
     #grey_layer{
         background-color: rgba(29, 29, 29, 0.685);
-        height: 100%;
         width: 100%;
-        position: absolute;
+        height: 100%;
+        position: fixed;
+        // background-size: cover;
+        // background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
 
     .options{

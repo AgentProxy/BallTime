@@ -59,9 +59,11 @@ page-profile {
 
     #profile_info{
         // background-color: white;
-        background-image: url('../assets/imgs/ProfPageBackground.jpg');
         color: white;
-        background-position: center bottom; 
+        background-image: url('../assets/imgs/ProfPageBackground2_safe.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: left; 
         margin-top: -6%;
     }
 
@@ -92,6 +94,7 @@ page-profile {
         // height: 100%;
         // width: 100%;
         // position: fixed;
+        // position: absolute;
         background-size: auto;
     }
 

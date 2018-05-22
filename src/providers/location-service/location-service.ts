@@ -20,14 +20,17 @@ export class LocationServiceProvider {
   userLatitude: any;
   userLongitude: any;
   userLocation: any;
+  maps: any;
+  
   constructor( private geolocation: Geolocation) {  
+    this.maps = google.maps;
   }
 
   getUpdatedLocation(){
     let watchOptions: {
       enableHighAccuracy: true;
       maximumAge: 0,
-      // timeout: 1000,
+      timeout: 5000,
     };
     return this.geolocation.watchPosition(watchOptions).filter((position) => position.coords !== undefined); 
   }
@@ -36,7 +39,7 @@ export class LocationServiceProvider {
     let watchOptions: {
       enableHighAccuracy: true;
       maximumAge: 0,
-      // timeout: 1000,
+      timeout: 5000,
     };
     let location;
     location = await this.geolocation.getCurrentPosition(watchOptions).then((resp)=>{
@@ -50,13 +53,19 @@ export class LocationServiceProvider {
   }
 
   async getDistanceAndTravelTime(userObj, courtObj){
+
     let userObject = await userObj;
     let courtObject = await courtObj;
-    let distance = google.maps.geometry.spherical.computeDistanceBetween(
-      new google.maps.LatLng(userObject.latitude, userObject.longitude),new google.maps.LatLng(courtObject.latitude, courtObject.longitude)
+    let distance = this.maps.geometry.spherical.computeDistanceBetween(
+      new this.maps.LatLng(userObject.latitude, userObject.longitude),new this.maps.LatLng(courtObject.latitude, courtObject.longitude)
     )/1000;
 
-    return Math.round(distance * 100)/100;
+    let returnDistance = Math.round(distance * 100)/100;
+    if(Number.isNaN(returnDistance)){
+      returnDistance = 0;
+    }
+    
+    return returnDistance;
 
   }
 
