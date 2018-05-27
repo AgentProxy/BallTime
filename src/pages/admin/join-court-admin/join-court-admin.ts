@@ -6,6 +6,7 @@ import { UserProvider } from '../../../providers/user/user';
 import { User } from '../../../models/user/user.model';
 import { ChatProvider } from '../../../providers/chat/chat';
 import { PopoverSettingsComponent } from '../../../components/popover-settings/popover-settings';
+import { ProfileViewerModalPage } from '../../modals/profile-viewer-modal/profile-viewer-modal';
 
 
 /**
@@ -42,7 +43,7 @@ export class JoinCourtAdminPage {
     this.courtStatus='Online';
     this.court = this.navParams.get('Court');
     this.role = this.navParams.get('Role');
-    this.messages = this.db.collection('courts/' + this.court.id + "/chat",ref => ref.orderBy('timestamp','asc').limit(20)).valueChanges();
+    this.messages = this.db.collection('courts/' + this.court.id + "/chat",ref => ref.orderBy('timestamp','asc')).valueChanges();
     this.notifs = this.courtProvider.retrieveWaitlisted(this.court.id);
     this.courtChanges();
   }
@@ -60,7 +61,7 @@ export class JoinCourtAdminPage {
     else{
       let alertNotif = this.alertCtrl.create({
         title: 'Multiple Admins!',
-        subTitle: 'There can be only one admin on each court!',
+        subTitle: 'There can only be one admin on each court!',
         buttons: ['OK']
       });
       alertNotif.present().then(()=>{
@@ -195,6 +196,36 @@ export class JoinCourtAdminPage {
     confirm.present();
   }
 
+  openProfile(user){
+    let data = {
+      Id: user.id,
+    }
+    
+    let modal = this.modalCtrl.create(ProfileViewerModalPage, data);
+    modal.present();
+  }
+
+  penalizePlayer(userId, username){
+    let confirm = this.alertCtrl.create({
+      title: 'Penalize' + " " + username,
+      message: "Are you sure you want to penalize this player? (Only penalize players who are acting inappropriately)",
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => {    
+            this.userProvider.penalizeUser(userId);
+          }
+        },
+        {
+          text: 'Cancel',
+          handler: () => {
+          }
+        }
+      ]
+  });
+    confirm.present();
+  }
+
   async readyCourt(){
     let limit = 1;            //THIS IS THE LIMIT FOR THE PLAYERS ON COURT
     let wait = await this.courtProvider.readyCourt(this.court.id, limit);
@@ -265,6 +296,9 @@ export class JoinCourtAdminPage {
   }
 
   async sendMessage(){
+    if(this.message.trim().length == 0){
+      return false;
+    }
     let userId = this.userProvider.retrieveUserID();
     let user = await this.userProvider.retrieveUserObject(userId);
     this.chatProvider.addCourtChat(this.court.id, this.message, user);

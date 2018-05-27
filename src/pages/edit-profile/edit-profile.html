@@ -53,8 +53,8 @@
         <ion-label stacked>Confirm Password</ion-label>
         <ion-input type="password"></ion-input>
       </ion-item>
-
-      <h1> Biometrics </h1>
+      <div *ngIf="role=='Baller'">
+        <h1> Biometrics </h1>
         <ion-item>
           <ion-label stacked>Height</ion-label>
           <ion-input type="password"></ion-input>
@@ -67,9 +67,9 @@
 
         <ion-item>
           <ion-label stacked>Age</ion-label>
-          <ion-input name="age" placeholder="Age" type="number" round></ion-input>
+          <ion-input name="age" type="number" round></ion-input>
         </ion-item>
-      
+      </div>
     
     </ion-list>
     <div text-center>

@@ -24,8 +24,6 @@ export class HomeAdminPage {
   status: boolean=true;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController, private courtProvider: CourtProvider, private userProvider: UserProvider, private modalCtrl: ModalController, private menuCtrl: MenuController) {
-    // alert(this.courts);
-   
     this.menuCtrl.enable(true);
   }
 

@@ -34,7 +34,7 @@ export class UserProvider {
             registered: user.registered,   
             longitude: '',
             latitude: '',
-            role: 'baller',
+            role: 'Baller',
         });
         
         // return this.UserCol.push(user);
@@ -50,12 +50,13 @@ export class UserProvider {
     async penalizeUser(userId){
         let penalty = await this.retrieveUserObject(userId);
         this.db.collection('users').doc(userId).set({penalty: (penalty.penalty+1)}, {merge: true});
-        if(penalty>=3){
+        if(penalty>=5){
         let alert = this.alertCtrl.create({
             title: 'Account Banned!',
-            subTitle: 'You have accumulated 3 penalties! Please contact the administrator',
+            subTitle: 'You have accumulated 5 penalties! Please contact the administrator',
             buttons: ['OK']
         });
+        this.db.collection('penalties').doc(userId).set({user_id: userId, status: 'Blocked'}, {merge: true});
         alert.present();
         return false;
         }

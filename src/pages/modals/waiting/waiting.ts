@@ -95,7 +95,7 @@ export class WaitingPage {
     this.navCtrl.popToRoot();
     let alertNotif = this.alertCtrl.create({
       title: 'Rejected!',
-      subTitle: 'You have been rejected on joining the court the admin!',
+      subTitle: 'You have been rejected on joining the court!',
       buttons: ['OK']
     });
     alertNotif.present().then(()=>{

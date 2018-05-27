@@ -43,6 +43,7 @@ export class EditProfilePage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider) {
     this.userId = this.userProvider.retrieveUserID();
+    this.retrieveRole();
   }
 
   ionViewDidLoad() {

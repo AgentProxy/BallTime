@@ -26,6 +26,10 @@ page-game {
 
       }
 
+      #button-end{
+        margin-top: 20px;
+      }
+
       #ball-animation{
           margin-top: 20%;
           margin-bottom: 20%;
@@ -94,6 +98,10 @@ page-game {
     background-color: rgb(245,245,245);
     overflow: scroll;
     padding-bottom: 5%; 
+  }
+
+  .button-end{
+    margin-bottom: 50px;
   }
       
 }

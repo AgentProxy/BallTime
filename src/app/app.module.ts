@@ -39,6 +39,7 @@ import { JoinCourtAdminPage } from '../pages/admin/join-court-admin/join-court-a
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import { EditProfilePage } from '../pages/edit-profile/edit-profile';
+import { ImagePicker } from '@ionic-native/image-picker';
 
 
 
@@ -104,6 +105,7 @@ import { EditProfilePage } from '../pages/edit-profile/edit-profile';
     BackgroundGeolocation,
     HTTP,
     ScreenOrientation,
+    ImagePicker,
     
   ]
 })

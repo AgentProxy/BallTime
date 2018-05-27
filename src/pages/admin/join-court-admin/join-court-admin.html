@@ -54,7 +54,7 @@
           </ion-list>
           <h1>Players in this court ({{playersCount}}/{{playersAllowed}}): </h1>
           <ion-list>
-            <ion-item class='itemList' *ngFor="let player of players | async">
+            <ion-item class='itemList' *ngFor="let player of players | async" (click)='openProfile(player.user.uid)'>
                 <ion-avatar item-start>
                     <img src="assets/imgs/prof_pic/default_profpic2.png">
                   </ion-avatar>
@@ -62,6 +62,7 @@
               <div text-left>
                 <button ion-button color="primary" *ngIf="player.status=='Arrived'" (click)='confirmPlayer(player.user.uid)'>Confirm</button>
                 <button ion-button color="danger" (click)="kickPlayer(player.user.uid, player.user.username)">Kick</button>
+                <button ion-button color="danger" (click)="penalizePlayer(player.user.uid, player.user.username)">Penalize</button>
               </div>
             </ion-item>
           </ion-list>

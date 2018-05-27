@@ -60,10 +60,10 @@ export class MyApp {
     this.user = await this.userProvider.retrieveUserObject(this.userProvider.retrieveUserID()); 
     this.showInfo = true;
     if(this.user.role=='Administrator'){
+      this.getNotifs();
       this.pages = [
         { title: 'Home', component: HomeAdminPage },
         { title: 'Profile', component: ProfilePage},
-        { title: 'Manage Courts', component: DiscoverPage},
         { title: 'Friends', component: FriendsPage},
       ];
     }

@@ -29,7 +29,9 @@ export class LoginComponent {
   async login(){
     
     try{
+      
       const result = await this.afAuth.auth.signInWithEmailAndPassword(this.account.email, this.account.password).then(()=>{
+        
         this.afAuth.auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
         this.loggedIn(); 
       });
@@ -47,6 +49,7 @@ export class LoginComponent {
 
 
   async loggedIn(){
+    console.log('logging');
     let role = await this.userProvider.retrieveRole(this.userProvider.retrieveUserID());
     let penalties = await this.userProvider.retrieveUserObject(this.userProvider.retrieveUserID());
     let penalty = penalties.penalty;
@@ -54,7 +57,7 @@ export class LoginComponent {
       if(penalty>=5){
         let alert = this.alertCtrl.create({
           title: 'Account Banned!',
-          subTitle: 'You have accumulated 3 penalties! Please contact the administrator',
+          subTitle: 'You have accumulated 5 penalties! Please contact the administrator',
           buttons: ['OK']
         });
         alert.present();

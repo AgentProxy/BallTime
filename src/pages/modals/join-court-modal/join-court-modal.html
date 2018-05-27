@@ -51,7 +51,7 @@
           </ion-list>
           <h1>Players in this court ({{playersCount}}/{{playersAllowed}}): </h1>
           <ion-list>
-            <ion-item class='itemList' *ngFor="let player of players | async">
+            <ion-item class='itemList' *ngFor="let player of players | async" (click)='openProfile(player)'>
                 <ion-avatar item-start>
                     <img src="assets/imgs/prof_pic/default_profpic2.png">
                   </ion-avatar>

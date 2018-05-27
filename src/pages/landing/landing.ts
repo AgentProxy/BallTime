@@ -21,6 +21,7 @@ export class LandingPage {
   private showRegister: boolean = false;
 
   constructor(private navCtrl: NavController, public navParams: NavParams, private modal: ModalController, private menu: MenuController) {
+  
   }
 
   ionViewDidLoad() {

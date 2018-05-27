@@ -8,6 +8,7 @@ import { ChatProvider } from '../../../providers/chat/chat';
 import { MapModalPage } from '../map-modal/map-modal';
 import { GamePage } from '../../game/game';
 import { PopoverSettingsComponent } from '../../../components/popover-settings/popover-settings';
+import { ProfileViewerModalPage } from '../profile-viewer-modal/profile-viewer-modal';
 
 
 /**
@@ -45,7 +46,7 @@ export class JoinCourtModalPage {
     this.courtStatus='Online';
     this.court = this.navParams.get('Court');
     this.role = this.navParams.get('Role');
-    this.messages = this.db.collection('courts/' + this.court.id + "/chat",ref => ref.orderBy('timestamp','asc').limit(20)).valueChanges();
+    this.messages = this.db.collection('courts/' + this.court.id + "/chat",ref => ref.orderBy('timestamp','asc')).valueChanges();
     this.notifs = this.courtProvider.retrieveWaitlisted(this.court.id);
     this.courtChanges();
 
@@ -158,16 +159,14 @@ export class JoinCourtModalPage {
     confirm.present();
   }
 
-  // parseTime(startTime){
-  //   let time = startTime.split(':');
-  //   let hour = parseInt(time[0]);
-  //   let suffix = " AM";
-  //   if(hour > 12){
-  //     hour = hour - 12;
-  //     suffix = " PM";
-  //   }
-  //   this.startTime = hour.toString() + ':' + time[1] + suffix;
-  // }
+  openProfile(user){
+    let data = {
+      Id: user.id,
+    }
+    
+    let modal = this.modalCtrl.create(ProfileViewerModalPage, data);
+    modal.present();
+  }
 
   readyPlayer(){
     this.status = 'Ready';

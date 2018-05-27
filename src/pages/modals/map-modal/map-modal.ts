@@ -123,9 +123,9 @@ export class MapModalPage {
     }
 
     var request = {
-      origin: new google.maps.LatLng(this.userLocation.latitude, this.userLocation.longitude),        //TO CHANGE
+      origin: new google.maps.LatLng(this.userLocation.latitude, this.userLocation.longitude),        
       destination: new google.maps.LatLng(court.latitude, court.longitude),
-      travelMode: google.maps.TravelMode[this.mode],                          //TO CHANGE
+      travelMode: google.maps.TravelMode[this.mode],                          
     };
 
     directionsService.route(request, function(result, status) {

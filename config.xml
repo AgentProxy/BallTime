@@ -94,4 +94,7 @@
     <plugin name="cordova-plugin-background-mode" spec="^0.7.2" />
     <allow-navigation href="http://192.168.56.1:8100" />
     <engine name="android" spec="7.0.0" />
+    <plugin name="com.synconset.imagepicker" spec="~2.1.10">
+        <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="your usage message" />
+    </plugin>
 </widget>

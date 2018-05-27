@@ -43,7 +43,6 @@ export class DiscoverPage {
   subscription: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private courtProvider: CourtProvider, private modalCtrl: ModalController, private location: LocationServiceProvider, private userProvider: UserProvider, private alertCtrl: AlertController) {
-    // this.courtProvider.retrieveClosestCourts(this.preferredDistance);
   }
 
   ionViewDidLoad() {
@@ -51,6 +50,7 @@ export class DiscoverPage {
   }
 
   async retrieveClosestCourts(preferredDistance){
+    this.nearestCourts = [];
     if(this.selectedMode==''){
       let alert = this.alertCtrl.create({
         title: 'No Mode of Transportation Selected!',
@@ -103,32 +103,11 @@ export class DiscoverPage {
     this.directionsService.route(request,  function(response, status) {
       if (status == 'OK') {
         var route = response.routes[0];
-        console.log(route);
-        // alert(route.legs[0].duration.text);
         document.getElementById(court.name+"time").innerHTML=" ";
         document.getElementById(court.name+"time").innerHTML=route.legs[0].duration.text;
         document.getElementById(court.name+"distance").innerHTML=" ";
         document.getElementById(court.name+"distance").innerHTML=route.legs[0].distance.text;
-        // passResults(response);
       }
-    })
-  }
-
-  retrieveClosestCourtsInfo(courts){
-
-    courts.forEach(court => {
-      let courtCoords = new google.maps.LatLng(court.latitude,court.longitude);
-      let userCoords = new google.maps.LatLng(this.userLocation.latitude,this.userLocation.longitude);
-      var request = {
-        origin: userCoords,
-        destination: courtCoords,
-        travelMode: google.maps.TravelMode[this.selectedMode]
-      };
-      this.directionsService.route(request, function(response, status) {
-        if (status == 'OK') {
-          console.log(response);
-        }
-      });
     });
   }
 

@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, Slides } from 'ionic-angular';
 import { User } from '../../models/user/user.model';
 import { UserProvider } from '../../providers/user/user';
+import { ImagePicker } from '@ionic-native/image-picker';
 
 /**
  * Generated class for the RegisterPage page.
@@ -28,7 +29,7 @@ export class RegisterPage {
     weight: undefined,
     profile_pic: "",
     registered: true,
-    role: 'baller',
+    role: 'Baller',
     latitude: '',
     longitude: '',
     penalty: 0,
@@ -36,7 +37,7 @@ export class RegisterPage {
     reputation_level: 0,
   };
   
-  constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider, private imgPicker: ImagePicker) {
   }
 
   ionViewDidLoad() {
@@ -46,7 +47,7 @@ export class RegisterPage {
   addUser(userInfo: User){
     userInfo.registered = true;
     this.userProvider.addUserInfo(userInfo);
-    this.navCtrl.setRoot('HomePage');               //should put try catch for errors
+    this.navCtrl.setRoot('LandingPage');               //should put try catch for errors
     
   }
 
@@ -56,6 +57,14 @@ export class RegisterPage {
 
   prevSlide(){
     this.slides.slidePrev();
+  }
+
+  uploadPP(){
+    let options = {
+      maximumImagesCount: 1,
+    }
+    console.log('ImagePicker');
+    this.imgPicker.getPictures(options)
   }
 
 }

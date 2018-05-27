@@ -27,11 +27,12 @@
         <img id="prof_pic" src="assets/imgs/RegisterBackground2.jpg" />
         <h1 text-center> {{(userInfo|async)?.firstname}} {{(userInfo|async)?.lastname}} </h1>
         <h3 text-center>@{{(userInfo|async)?.username}}</h3>
-         <button ion-button *ngIf="!sameUser && status=='' && role=='Baller'" (click)="addFriend()" > Add Friend </button>
-        <button ion-button *ngIf="!sameUser && status=='Pending' && role=='Baller'" (click)="cancelRequest()" > Pending Friend Request </button>
-        <button ion-button *ngIf="!sameUser && status=='Accept Request' && role=='Baller'" (click)="confirmFriend()" > Confirm Friend Request </button>
-        <button ion-button *ngIf="!sameUser && status=='Friends' && role=='Baller'" (click)="cancelRequest()" > Friends </button>
-        <button ion-button *ngIf="!sameUser && status=='Friends' && role=='Administrator'" color="dark" > Admin </button>
+         <button ion-button *ngIf="!sameUser && status=='' " (click)="addFriend()" > Add Friend </button>
+        <button ion-button *ngIf="!sameUser && status=='Pending' " (click)="cancelRequest()" > Pending Friend Request </button>
+        <button ion-button *ngIf="!sameUser && status=='Accept Request' " (click)="confirmFriend()" > Confirm Friend Request </button>
+        <button ion-button *ngIf="!sameUser && status=='Friends' " (click)="cancelRequest()" > Friends </button>
+        <button ion-button *ngIf="!sameUser && viewerRole=='Administrator'" color="danger" (click)='penalizeUser()'> Penalize </button>
+        <!-- <button ion-button *ngIf="!sameUser && status=='Friends' && role=='Administrator'" color="dark" > Admin </button> -->
       </div>
       <hr id="separator">
       <div id="feats" *ngIf="role=='Baller'">

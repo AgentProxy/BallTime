@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar color='nav'>
-    <ion-title>GamePage</ion-title>
+    <ion-title>Game</ion-title>
       <ion-buttons *ngIf="status=='Coming'" end>
         <button ion-button *ngIf="role=='Baller'" (click)="showDirection()">
           Directions
@@ -25,8 +25,8 @@
     <div text-center id="ball-animation"><img id="ball" src="assets/imgs/logobasketball_safe.png"></div>
 <!-- 
     <button ion-button block color="danger" *ngIf="role=='Administrator'" id='button-end' (click)='endGame()'> End Game</button> -->
-    <button ion-button block color="danger" *ngIf="role=='Baller' && status=='In Game'" id='button-end' (click)="quitGame('Quit')"> Quit Game</button>
-    <button ion-button block color="danger" *ngIf="role=='Baller' && status=='Confirmed'" id='button-end' (click)="quitGame('Cancel')"> Cancel </button>
+    <button ion-button block color="danger" *ngIf="role=='Baller' && status=='In Game'" class='button-end' (click)="quitGame('Quit')"> Quit Game</button>
+    <button ion-button block color="danger" *ngIf="role=='Baller' && status=='Confirmed'" class='button-end' (click)="quitGame('Cancel')"> Cancel </button>
   </div>
   <div *ngIf="status!='In Game'">
       <h1 text-center *ngIf="status=='Coming'"> GO TO COURT </h1>
@@ -34,10 +34,11 @@
       <h1 text-center *ngIf="status=='Waiting'"> WAITING FOR CONFIRMATION </h1>
       
       <div id="ball-animation" text-center>
+          <img id="ball" src="assets/imgs/logobasketball_safe.png">
       </div>
       <!-- <button ion-button block color="danger" *ngIf="role=='Administrator'" id='button-end'></button> -->
-      <button ion-button block color="primary" *ngIf="role=='Baller' && status!='Waiting'" id='button-end' (click)='arrivedCourt()'> Arrived </button> 
-      <button ion-button block color="danger" *ngIf="role=='Baller'" id='button-end' (click)="quitGame('Cancel Coming')"> Cancel </button>
+      <button ion-button block color="primary" *ngIf="role=='Baller' && status!='Waiting'" class='button-end' (click)='arrivedCourt()'> Arrived </button> 
+      <button ion-button block color="danger" *ngIf="role=='Baller'" class='button-end' (click)="quitGame('Cancel Coming')"> Cancel </button>
   </div>
 
   <ion-pullup (onExpand)="footerExpanded()" (onCollapse)="footerCollapsed()" [(state)]="footerState">

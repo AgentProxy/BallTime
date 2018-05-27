@@ -28,6 +28,7 @@ export class ProfileViewerModalPage {
   status: String = '';
   role: any;
   courts: any = [];
+  viewerRole: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider, private viewCtrl: ViewController, 
     private friendsProvider: FriendsProvider, private alertCtrl: AlertController, private db: AngularFirestore, private courtProvider: CourtProvider,
@@ -49,6 +50,7 @@ export class ProfileViewerModalPage {
   }
 
   async retrieveUserInfo(){
+    this.viewerRole = await this.userProvider.retrieveRole(this.userProvider.retrieveUserID());
     this.role = await this.userProvider.retrieveRole(this.userId);
     if(this.role=='Administrator'){
       this.courts = await this.courtProvider.retrieveCourtsUnderAdmin(this.userId);
@@ -135,6 +137,27 @@ export class ProfileViewerModalPage {
 
   dismiss(){
     this.viewCtrl.dismiss();
+  }
+
+  penalizeUser( username){
+    let confirm = this.alertCtrl.create({
+      title: 'Penalize',
+      message: "Are you sure you want to penalize this player? (Only penalize players who are acting inappropriately)",
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => {    
+            this.userProvider.penalizeUser(this.userId);
+          }
+        },
+        {
+          text: 'Cancel',
+          handler: () => {
+          }
+        }
+      ]
+  });
+    confirm.present();
   }
 
   showFriends(){
