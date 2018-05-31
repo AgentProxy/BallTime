@@ -71,7 +71,7 @@ export class WaitingPage {
         {
           text: 'Yes',
           handler: () => {    
-          this.navCtrl.popToRoot().then(()=>{
+          this.viewCtrl.dismiss().then(()=>{
             this.removeFromWaitlist();
           });
           }
@@ -92,7 +92,7 @@ export class WaitingPage {
 
   rejected(){
     // this.courtProvider.removeUserFromWaitlist(this.userId, this.court.id);
-    this.navCtrl.popToRoot();
+    this.viewCtrl.dismiss();
     let alertNotif = this.alertCtrl.create({
       title: 'Rejected!',
       subTitle: 'You have been rejected on joining the court!',

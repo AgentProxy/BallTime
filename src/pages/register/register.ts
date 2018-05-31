@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, Slides } from 'ionic-angular';
 import { User } from '../../models/user/user.model';
 import { UserProvider } from '../../providers/user/user';
 import { ImagePicker } from '@ionic-native/image-picker';
+import { storage } from 'firebase';
 
 /**
  * Generated class for the RegisterPage page.
@@ -35,6 +36,7 @@ export class RegisterPage {
     penalty: 0,
     reputation_points: 0,
     reputation_level: 0,
+    games_played: 0,
   };
   
   constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider, private imgPicker: ImagePicker) {
@@ -46,6 +48,7 @@ export class RegisterPage {
 
   addUser(userInfo: User){
     userInfo.registered = true;
+    userInfo.middle_initial = userInfo.middle_initial.toUpperCase();
     this.userProvider.addUserInfo(userInfo);
     this.navCtrl.setRoot('LandingPage');               //should put try catch for errors
     
@@ -59,12 +62,15 @@ export class RegisterPage {
     this.slides.slidePrev();
   }
 
-  uploadPP(){
+  async uploadPP(){
     let options = {
       maximumImagesCount: 1,
     }
     console.log('ImagePicker');
-    this.imgPicker.getPictures(options)
+    let image = await this.imgPicker.getPictures(options);
+    let result = 'data:image/jpeg;base64,'+image;
+    let pictures = storage().ref('pp/'+ this.userInfo.uid);
+    pictures.putString(image)
   }
 
 }

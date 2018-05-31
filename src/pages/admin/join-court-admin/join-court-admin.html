@@ -2,8 +2,8 @@
 <ion-header>
   <ion-navbar hideBackButton color="nav">
     <ion-buttons start clear-right>
-        <button ion-button (click)="leaveCourt()" *ngIf="courtStatus!='Waiting'">
-         <span ion-text>Leave Court </span>
+        <button ion-button (click)="leaveCourt()" *ngIf="courtStatus=='Online'">
+          <span ion-text>Leave Court </span>
         </button>
     </ion-buttons>
     <ion-buttons *ngIf="courtStatus=='Online'" end>
@@ -45,7 +45,7 @@
           <h1>Start Time: {{startTime}}</h1>
           <h1>Admin: </h1>
           <ion-list>
-            <ion-item class='itemList' *ngFor="let administrator of admin | async">
+            <ion-item class='itemList'  *ngFor="let administrator of admin | async">
                 <ion-avatar item-start>
                     <img src="assets/imgs/prof_pic/default_profpic2.png">
                   </ion-avatar>
@@ -54,7 +54,7 @@
           </ion-list>
           <h1>Players in this court ({{playersCount}}/{{playersAllowed}}): </h1>
           <ion-list>
-            <ion-item class='itemList' *ngFor="let player of players | async" (click)='openProfile(player.user.uid)'>
+            <ion-item class='itemList' *ngFor="let player of players | async">
                 <ion-avatar item-start>
                     <img src="assets/imgs/prof_pic/default_profpic2.png">
                   </ion-avatar>
@@ -63,6 +63,7 @@
                 <button ion-button color="primary" *ngIf="player.status=='Arrived'" (click)='confirmPlayer(player.user.uid)'>Confirm</button>
                 <button ion-button color="danger" (click)="kickPlayer(player.user.uid, player.user.username)">Kick</button>
                 <button ion-button color="danger" (click)="penalizePlayer(player.user.uid, player.user.username)">Penalize</button>
+                <button ion-button color="primary" (click)='openProfile(player.user.uid)'>View Profile</button>
               </div>
             </ion-item>
           </ion-list>

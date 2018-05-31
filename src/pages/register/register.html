@@ -17,7 +17,7 @@
               <ion-input name="firstname" [(ngModel)]="userInfo.firstname" placeholder="First Name" type="text" required round></ion-input>
             </ion-item>
             <ion-item>  
-              <ion-input  name="middle_initial" [(ngModel)]="userInfo.middle_initial" placeholder="Middle Initial" required  type="text" round></ion-input>
+              <ion-input  maxlength='1' name="middle_initial" [(ngModel)]="userInfo.middle_initial" placeholder="Middle Initial" required  type="text" round></ion-input>
             </ion-item>
             <ion-item>  
               <ion-input name="lastname" [(ngModel)]="userInfo.lastname" placeholder="Last Name" type="text" required  round></ion-input>
@@ -43,10 +43,10 @@
           <ion-input name="age" [(ngModel)]="userInfo.age" placeholder="Age" type="number" round></ion-input>
         </ion-item>
         <ion-item>  
-          <ion-input name="height" [(ngModel)]="userInfo.height" placeholder="Height" type="string" round></ion-input>
+          <ion-input name="height" [(ngModel)]="userInfo.height" placeholder="Height (e.g. 5'10) " type="string" round></ion-input>
         </ion-item>
         <ion-item>  
-          <ion-input name="weight" [(ngModel)]="userInfo.weight" placeholder="Weight" type="number" round></ion-input>
+          <ion-input name="weight" [(ngModel)]="userInfo.weight" placeholder="Weight in KG" type="number" round><p>kg</p></ion-input>
         </ion-item>
         <button color="ball" ion-button full round type="button" style="position: relative" (click)='nextSlide()'>Next<ion-icon id="arrow_proceed" name="arrow-round-forward"></ion-icon></button>
       </ion-slide>

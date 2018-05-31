@@ -68,6 +68,9 @@ export class LoginComponent {
     else if(role=='Administrator'){
       this.navCtrl.setRoot('HomeAdminPage');
     }
+    else{
+        this.navCtrl.push('RegisterPage');
+    }
     this.events.publish('user:login');
   }
 

@@ -196,9 +196,9 @@ export class JoinCourtAdminPage {
     confirm.present();
   }
 
-  openProfile(user){
+  openProfile(userId){
     let data = {
-      Id: user.id,
+      Id: userId,
     }
     
     let modal = this.modalCtrl.create(ProfileViewerModalPage, data);
@@ -227,7 +227,9 @@ export class JoinCourtAdminPage {
   }
 
   async readyCourt(){
-    let limit = 1;            //THIS IS THE LIMIT FOR THE PLAYERS ON COURT
+    // let limit = 1;            //THIS IS THE LIMIT FOR THE PLAYERS ON COURT
+    let limit = this.playersAllowed; 
+    //
     let wait = await this.courtProvider.readyCourt(this.court.id, limit);
     if(wait==true){
       let confirm = this.alertCtrl.create({
@@ -278,7 +280,7 @@ export class JoinCourtAdminPage {
       Court: this.court,
       Status: 'In Game',
     }
-    let start = await this.courtProvider.checkPlayersInCourt(this.court.id);
+    let start = await this.courtProvider.checkPlayersInCourt(this.court.id, this.playersAllowed);
     if(start==true){
       this.courtProvider.changeCourtStatus(this.court.id,'In Game');
       this.changeCourtStatus('In Game');

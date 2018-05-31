@@ -8,11 +8,6 @@
       <ion-title>
         {{court.name}}
       </ion-title>
-      <ion-buttons end>
-          <button ion-button icon-only >
-            <ion-icon name="more"></ion-icon>
-          </button>
-        </ion-buttons>
   </ion-toolbar>
     
 </ion-header>
@@ -27,10 +22,6 @@
         <button ion-fab color="ball" (click)="changeMode('DRIVING', 'car', fab)"><ion-icon name="car"></ion-icon></button>  
       </ion-fab-list>
     </ion-fab>
-
-    <button id="joinButton" (click)='joinCourt(court)' ion-button color="ball" *ngIf="showJoin">
-      Join Court
-    </button>
 
     <div #map id="map">
     </div>

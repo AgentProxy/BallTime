@@ -3,9 +3,13 @@
     <ion-datetime id='picker' #picker pickerFormat="hh:mm A" [(ngModel)]='startTime' (ionChange)="changeStartTime()"></ion-datetime>
     <ion-list-header color="danger">Court Mode</ion-list-header>
     <ion-item>
-    <ion-label> 3 vs 3 </ion-label>  
-        <ion-radio value=8 (click)='picker.open()'></ion-radio>
+        <ion-label> 1 vs 1 </ion-label>  
+        <ion-radio value=4 (click)='picker.open()'></ion-radio>
     </ion-item>
+    <ion-item>
+            <ion-label> 3 vs 3 </ion-label>  
+            <ion-radio value=8 (click)='picker.open()'></ion-radio>
+        </ion-item>
     <ion-item>
     <ion-label> 5 vs 5 </ion-label>
         <ion-radio value=12 (click)='picker.open()'></ion-radio>

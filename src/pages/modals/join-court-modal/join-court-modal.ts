@@ -100,7 +100,7 @@ export class JoinCourtModalPage {
     this.courtStatus = 'Online';
 
     if(this.role=='Baller'){
-      this.courtProvider.addUserToCourt2(this.userProvider.retrieveUserInfo(),this.court.id, this.court.players_count);
+      this.courtProvider.addUserToCourt2(this.userProvider.retrieveUserInfo(),this.court.id, this.playersCount);
     }
     else{}
     this.retrieveAdmin();
@@ -140,12 +140,14 @@ export class JoinCourtModalPage {
       buttons: [
         {
           text: 'Leave',
-          handler: () => {    
+          handler: () => {  
+            if(this.role=="Baller"){
+              this.courtProvider.removePlayer(this.userProvider.retrieveUserID(), this.court.id,this.court.players_count);
+            }  
+          
             this.navCtrl.popToRoot().then(()=>{
-              if(this.role=="Baller"){
-                this.courtProvider.removePlayer(this.userProvider.retrieveUserID(), this.court.id,this.court.players_count);
-              }
-              else{}
+             
+              // else{}
             });
           }
         },
@@ -159,9 +161,9 @@ export class JoinCourtModalPage {
     confirm.present();
   }
 
-  openProfile(user){
+  openProfile(userId){
     let data = {
-      Id: user.id,
+      Id: userId,
     }
     
     let modal = this.modalCtrl.create(ProfileViewerModalPage, data);

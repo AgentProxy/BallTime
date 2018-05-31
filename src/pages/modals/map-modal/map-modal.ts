@@ -168,43 +168,6 @@ export class MapModalPage {
 
   }
 
-  joinCourt(court){
-    let confirm = this.alertCtrl.create({
-      title: 'Confirm Join Court',
-      message: "Do you want to join this court?",
-      buttons: [
-        {
-          text: 'Join',
-          handler: () => {
-            let data = {
-              Role: 'Baller',
-              Court: court,
-            }
-            //ADD USER TO COURT VIA COURT PROVIDER      
-            if(court.players_count <10 ){
-              let modal = this.modalCtrl.create(JoinCourtModalPage, data);
-              modal.present();
-            }
-            else{
-                let alert = this.alertCtrl.create({
-                  title: 'Court is Full!',
-                  subTitle: 'Sorry! The court is currently full. Go find other courts!',
-                  buttons: ['OK']
-                });
-                alert.present();
-            }
-          }
-        },
-        {
-          text: 'Cancel',
-          handler: () => {
-          }
-        }
-    ]
-    });
-    confirm.present();
-  }
-
   dismiss(){
     this.viewCtrl.dismiss();
   }

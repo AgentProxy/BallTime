@@ -46,8 +46,6 @@ export class GamePage {
     this.players = this.courtProvider.retrievePlayers(this.court.id);
     this.courtChanges();
     
-
-    alert(this.status);
     if(this.role == 'Baller'){
       this.courtProvider.retrieveCourtSnapshot(this.court.id).subscribe(async ()=>{
         let court = await this.courtProvider.courtStatusChanges(this.court.id);
@@ -66,11 +64,8 @@ export class GamePage {
             if(this.role=='Baller'){
               this.courtProvider.rewardPlayers(this.userProvider.retrieveUserID());
             }
-            this.navCtrl.popToRoot();
+            this.viewCtrl.dismiss();
           });
-          //ADD TO PLAYERS' RECORD IF GAME IS DONE
-          //PROMPT IF END GAME (3 tries to click yes)
-         
         }
       });
 
@@ -140,6 +135,7 @@ export class GamePage {
             handler: () => {    
               // this.courtProvider.removePlayer(this.court.id, this.role, this.court.players_count, type);
               this.navCtrl.popToRoot().then(()=>{
+                
               });
             }
           },

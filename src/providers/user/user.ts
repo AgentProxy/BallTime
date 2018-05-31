@@ -32,9 +32,13 @@ export class UserProvider {
             weight: user.weight,
             profile_pic: user.profile_pic,
             registered: user.registered,   
-            longitude: '',
-            latitude: '',
             role: 'Baller',
+            latitude: '',
+            longitude: '',
+            penalty: 0,
+            reputation_points: 0,
+            reputation_level: 0,
+            games_played: 0,
         });
         
         // return this.UserCol.push(user);

@@ -51,12 +51,15 @@
           </ion-list>
           <h1>Players in this court ({{playersCount}}/{{playersAllowed}}): </h1>
           <ion-list>
-            <ion-item class='itemList' *ngFor="let player of players | async" (click)='openProfile(player)'>
+            <ion-item class='itemList' *ngFor="let player of players | async" (click)='openProfile(player.user.uid)'>
                 <ion-avatar item-start>
                     <img src="assets/imgs/prof_pic/default_profpic2.png">
                   </ion-avatar>
               {{ player.user.username}} 
               <span ion-text>{{player.status}}</span>
+              <div text-left>
+                <button ion-button color="primary" (click)='openProfile(player.user.uid)'>View Profile</button>
+              </div> 
             </ion-item>
           </ion-list>
           <h3>Chatbox</h3>

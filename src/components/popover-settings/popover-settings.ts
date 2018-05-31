@@ -15,7 +15,7 @@ import { NavParams, AlertController } from 'ionic-angular';
 export class PopoverSettingsComponent {
 
   text: string;
-  value: any;
+  value: Number;
   courtId: any;
   startTime: any;
 

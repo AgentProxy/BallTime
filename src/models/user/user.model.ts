@@ -15,4 +15,5 @@ export interface User{
     penalty: number,
     reputation_level: number;
     reputation_points: number;
+    games_played: number;
 }

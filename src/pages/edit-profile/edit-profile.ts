@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { UserProvider } from '../../providers/user/user';
 import { User } from '../../models/user/user.model';
+import { ImagePicker } from '@ionic-native/image-picker';
+import { storage } from 'firebase';
 
 /**
  * Generated class for the EditProfilePage page.
@@ -39,9 +41,10 @@ export class EditProfilePage {
     penalty: 0,
     reputation_points: 0,
     reputation_level: 0,
+    games_played: 0,
   };
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider, private imgPicker: ImagePicker) {
     this.userId = this.userProvider.retrieveUserID();
     this.retrieveRole();
   }
@@ -59,6 +62,17 @@ export class EditProfilePage {
 
   async retrieveRole(){
     this.role = await this.userProvider.retrieveRole(this.userId);
+  }
+
+  async uploadPP(){
+    let options = {
+      maximumImagesCount: 1,
+    }
+    console.log('ImagePicker');
+    let image = await this.imgPicker.getPictures(options);
+    let result = 'data:image/jpeg;base64,'+image;
+    let pictures = storage().ref('pp/'+ this.userInfo.uid);
+    pictures.putString(image)
   }
 
 }

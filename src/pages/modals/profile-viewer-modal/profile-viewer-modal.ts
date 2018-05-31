@@ -22,7 +22,7 @@ export class ProfileViewerModalPage {
 
   userInfo:any;
   userId: any;
-  showLoading:any;
+  showLoading: boolean = true;
   user:any;
   sameUser: boolean = false;
   status: String = '';

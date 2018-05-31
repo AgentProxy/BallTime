@@ -142,12 +142,6 @@ export class CourtModalPage {
     confirm.present();
   }
 
-  // playerCountChanges(){
-  //   this.db.doc('courts/'+this.court.id).valueChanges().subscribe(async x => {
-  //     this.playersCount =  await this.courtProvider.retrieveCourtPlayersCount(this.court.id);
-  //   })
-  // }
-
   dismiss(){
     this.viewCtrl.dismiss();
   }

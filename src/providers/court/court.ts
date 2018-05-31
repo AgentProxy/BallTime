@@ -70,21 +70,21 @@ export class CourtProvider {
   }
 
   addUserToWaitlist(user, courtId){
-    user.subscribe(async action => {
+    let subscription = user.subscribe(async action => {
       const id = action.payload.id;
       const data = action.payload.data();
       let distance = await this.locationProvider.getDistanceAndTravelTime(this.userProvider.retrieveUserObject(id),this.retrieveCourtObject(courtId));
       this.db.doc('courts/' + courtId + '/waitlist/' + id ).set({user: data, status: '', distance: distance}).then(async result => {
+        subscription.unsubscribe();
       });
     });
-    // user.unsubscribe();
+    
   }
 
   changeCourtStatus(courtId, status){
     this.db.collection('courts').doc(courtId).set({status: status}, {merge: true});
 
     if(status == 'In Game'){
-      alert('CourtProvider: ' + status);
       this.db.collection('courts').doc(courtId).set({players_confirmed: 0},{merge: true})
       // .then(()=>{
       //   this.courtCol.doc(courtId).collection('players').snapshotChanges().subscribe(snapshots=>{
@@ -124,9 +124,14 @@ export class CourtProvider {
     this.db.collection('courts').doc(courtId).set({start_time: startTime},{merge: true});
   }
 
-  checkPlayersInCourt(courtId){
+  checkPlayersInCourt(courtId, playersAllowed?){
     let query = this.db.collection('courts').doc(courtId).ref.get().then((snapShot)=>{
-      if(snapShot.data().players_confirmed == snapShot.data().players_count){
+      let limit = playersAllowed
+      if(limit == 4){
+        limit=2
+      }
+      
+      if(snapShot.data().players_confirmed >= snapShot.data().players_count){
         return true;
       }
       else{
@@ -164,13 +169,14 @@ export class CourtProvider {
           }); 
         });
       });
+      this.db.collection('courts').doc(courtId).set({players_confirmed: 0, players_ready: 0},{merge: true});
     }  
   }
 
   kickPlayer(playerId, courtId){
     let query = this.db.collection('courts').doc(courtId).ref.get().then((snapShot)=>{
        let playersCount = snapShot.data().players_count;
-       this.db.collection('courts').doc(courtId).collection('players').doc(playerId).set({status: 'Kicked'}, {merge: true}).then(()=>{
+       this.db.collection('courts').doc(courtId).collection('players').doc(playerId).set({status: 'Kicked'}, {merge: true}).then(() =>{
         this.removePlayer(playerId,courtId,playersCount);
       });
     }); 
@@ -267,10 +273,12 @@ export class CourtProvider {
 
 
   removePlayer(playerId, courtId, playersCount, type?){
-    playersCount = playersCount--;
+    playersCount = playersCount-1;
+    if(playersCount < 0){
+      playersCount = 0
+    }
 
     if(type=='Quit'){
-      // this.courtCol.doc(courtId).collection('players').doc(playerId).set({players_confirmed: })
     }
 
     else if (type=='Cancel'||type=='Cancel Coming'){
@@ -307,8 +315,7 @@ export class CourtProvider {
 
     court = await this.db.collection('courts').doc(courtId).ref.get();
     count = court.data().players_ready;
-     if(count==limit){
-       alert(true);
+     if(count>=limit){
         this.db.collection('courts').doc(courtId).set({status: 'Waiting'}, {merge: true}).then(()=>{
           this.db.collection('courts').doc(courtId).set({players_ready: 0}, {merge: true});
         });
@@ -357,7 +364,6 @@ export class CourtProvider {
     return query;
   }
 
-  //FOR CHECKING
   rewardPlayers(userId){
     this.db.collection('users').doc(userId).ref.get().then(snap => {
       let reputation_points = snap.data().reputation_points + 150;
@@ -385,13 +391,11 @@ export class CourtProvider {
           return;
         }
         else if(status==''){
-          alert('minus players');
           let players_ready_count = snap.data().players_ready - 1;
           this.db.doc('courts/' + courtId).update({players_ready: players_ready_count});
           return;
         }
         else if(status=='Confirmed'){
-          alert('hi')
           // let players_ready_count = snap.data().players_ready - 1;
           this.db.doc('courts/' + courtId).update({players_confirmed: (snap.data().players_confirmed + 1)});
           return;
@@ -404,7 +408,7 @@ export class CourtProvider {
 
 
   unreadyCourt(courtId){
-    this.db.collection('courts').doc(courtId).set({status: 'Waiting'}, {merge: true});
+    this.db.collection('courts').doc(courtId).set({status: 'Online'}, {merge: true});
   }
 
 }
