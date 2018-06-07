@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar color='nav'>
-    <ion-title>EditProfile</ion-title>
+    <ion-title>Edit Profile</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -26,53 +26,53 @@
       <h1> Basic Info </h1>
       <ion-item>
         <ion-label stacked>Username</ion-label>
-        <ion-input type="text"></ion-input>
+        <ion-input [(ngModel)]='userInfo.username' placeholder='Username' type="text"></ion-input>
       </ion-item>
 
       <ion-item>
         <ion-label stacked>Firstname</ion-label>
-        <ion-input type="text"></ion-input>
+        <ion-input [(ngModel)]='userInfo.firstname' type="text"></ion-input>
       </ion-item>
 
       <ion-item>
         <ion-label stacked>Middle Initial</ion-label>
-        <ion-input type="text"></ion-input>
+        <ion-input [(ngModel)]='userInfo.middle_initial' type="text"></ion-input>
       </ion-item>
 
       <ion-item>
         <ion-label stacked>Lastname</ion-label>
-        <ion-input type="text"></ion-input>
+        <ion-input [(ngModel)]='userInfo.lastname' type="text"></ion-input>
       </ion-item>
     
       <ion-item>
-        <ion-label stacked>Password</ion-label>
-        <ion-input type="password"></ion-input>
+        <ion-label stacked>New Password</ion-label>
+        <ion-input placeholder='(blank to leave old password unchanged)' [(ngModel)]='new_password' type="password"></ion-input>
       </ion-item>
 
       <ion-item>
         <ion-label stacked>Confirm Password</ion-label>
-        <ion-input type="password"></ion-input>
+        <ion-input [(ngModel)]='confirm_password' type="password"></ion-input>
       </ion-item>
       <div *ngIf="role=='Baller'">
         <h1> Biometrics </h1>
         <ion-item>
           <ion-label stacked>Height</ion-label>
-          <ion-input type="password"></ion-input>
+          <ion-input [(ngModel)]='userInfo.height' type="text"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label stacked>Weight</ion-label>
-          <ion-input type="password"></ion-input>
+          <ion-input [(ngModel)]='userInfo.weight' type="number"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label stacked>Age</ion-label>
-          <ion-input name="age" type="number" round></ion-input>
+          <ion-input name="age" [(ngModel)]='userInfo.age' type="number" round></ion-input>
         </ion-item>
       </div>
     
     </ion-list>
     <div text-center>
-      <button color='ball' ion-button>Done</button>
+      <button color='ball' (click)='editDone()' ion-button>Done</button>
     </div>
     </ion-content>

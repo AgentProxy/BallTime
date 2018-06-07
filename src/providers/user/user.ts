@@ -67,8 +67,15 @@ export class UserProvider {
     }
 
     retrieveUserID(){
-        // this.uid = this.afAuth.auth.currentUser.uid;
-        return this.afAuth.auth.currentUser.uid; 
+        let uid = this.afAuth.auth.currentUser.uid;
+        if (uid){
+            return this.afAuth.auth.currentUser.uid; 
+        }
+        else{
+            this.retrieveUserID();
+            // return false;
+        }
+
     }
 
     retrieveUserInfo(){
@@ -116,6 +123,19 @@ export class UserProvider {
         else{
             this.db.collection('users').doc(this.retrieveUserID()).update({longitude: position.coords.longitude.toString(), latitude: position.coords.latitude.toString()})
         }
+    }
+
+
+    updateUserProfile(userObj, userId){
+        this.db.doc('users/' + userId).update({
+            username: userObj.username,
+            firstname: userObj.firstname,
+            lastname: userObj.lastname,
+            middle_initial: userObj.middle_initial,
+            age: userObj.age,
+            height: userObj.height,
+            weight: userObj.weight,
+        });
     }
 
     async retrieveUserLocation(){

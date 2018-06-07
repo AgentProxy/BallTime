@@ -40,6 +40,8 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import { EditProfilePage } from '../pages/edit-profile/edit-profile';
 import { ImagePicker } from '@ionic-native/image-picker';
+import { ErrorPage } from '../pages/error/error';
+import { Network } from '@ionic-native/network';
 
 
 
@@ -51,7 +53,6 @@ import { ImagePicker } from '@ionic-native/image-picker';
     FriendsPage,
     CourtModalPage,
     MessagesPage,
-    // ProfileViewerModalComponent,
     MapModalPage,
     JoinCourtModalPage,
     ProfileViewerModalPage,
@@ -59,7 +60,8 @@ import { ImagePicker } from '@ionic-native/image-picker';
     GamePage,
     WaitingPage,
     JoinCourtAdminPage,
-    EditProfilePage
+    EditProfilePage,
+    ErrorPage,
   ],
   imports: [
     BrowserModule,
@@ -74,7 +76,7 @@ import { ImagePicker } from '@ionic-native/image-picker';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    ProfilePage,     //TO BE DELETED
+    ProfilePage,    
     DiscoverPage,
     FriendsPage,
     CourtModalPage,
@@ -88,6 +90,7 @@ import { ImagePicker } from '@ionic-native/image-picker';
     PopoverSettingsComponent,
     JoinCourtAdminPage,
     EditProfilePage,
+    ErrorPage,
   ],
   providers: [
     StatusBar,
@@ -106,6 +109,7 @@ import { ImagePicker } from '@ionic-native/image-picker';
     HTTP,
     ScreenOrientation,
     ImagePicker,
+    Network,
     
   ]
 })

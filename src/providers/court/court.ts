@@ -33,8 +33,8 @@ export class CourtProvider {
   async addAdminToCourt(user,courtId){
     let userObj = await user;
     let adminId = userObj.uid;
-    this.db.collection('courts').doc(courtId).collection('admin').doc(adminId).set({user: userObj}, {merge: true}).then( ()=>{
-      this.db.collection('courts').doc(courtId).set({current_admin: adminId},{merge: true});
+    this.db.collection('courts').doc(courtId).set({current_admin: adminId},{merge: true}).then(()=>{
+      this.db.collection('courts').doc(courtId).collection('admin').doc(adminId).set({user: userObj}, {merge: true})
     });
   }
 

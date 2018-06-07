@@ -1,35 +1,22 @@
 
 <ion-header>
   <ion-navbar hideBackButton color="nav">
+    <ion-title *ngIf="role=='Spectator'">Spectator</ion-title>
     <ion-buttons start clear-right>
-        <button ion-button (click)="leaveCourt()" *ngIf="courtStatus=='Online'">
+        <button ion-button (click)="leaveCourt()" *ngIf="courtStatus=='Online'||role=='Spectator'">
           <span ion-text>Leave Court </span>
         </button>
     </ion-buttons>
-    <ion-buttons *ngIf="courtStatus=='Online'" end>
+    <ion-buttons *ngIf="courtStatus=='Online'&&role!='Spectator'" end>
       <button ion-button icon-only (click)='displayPopover($event)'>
         <ion-icon name="more" ></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
-
-
-<!-- 
-  Set if 3v3 or 5v5 before starting game
-  if in game, can only switch from 3v3 to 5v5
-  fix number of players on court
-  set status to '' or offline
-  only show courts that are '' or waiting
-  player requesting
-  ion segment for players and request
-  view player modal
-  footer for chat and players in court
- -->
   
-<ion-content id='join-court' >
+<ion-content id='join-court'>
     <div id="grey_layer">
-
       <ion-segment color='ball'  [(ngModel)]="view" >
         <ion-segment-button value='court' selected>
             Court
@@ -38,10 +25,10 @@
             Waitlist <ion-badge>{{(notifs|async)?.length}}</ion-badge>  
           </ion-segment-button>
       </ion-segment>
-
       <div [ngSwitch]="view">
         <div *ngSwitchCase="'court'">
-          <h1> {{court.name}}</h1>
+          <h1> {{court.name}} </h1>
+          <h1>Status: {{courtStatus}}</h1>
           <h1>Start Time: {{startTime}}</h1>
           <h1>Admin: </h1>
           <ion-list>
@@ -60,8 +47,8 @@
                   </ion-avatar>
               {{ player.user.username}} {{player.status}}
               <div text-left>
-                <button ion-button color="primary" *ngIf="player.status=='Arrived'" (click)='confirmPlayer(player.user.uid)'>Confirm</button>
-                <button ion-button color="danger" (click)="kickPlayer(player.user.uid, player.user.username)">Kick</button>
+                <button ion-button color="primary" *ngIf="player.status=='Arrived'&&role!='Spectator'" (click)='confirmPlayer(player.user.uid)'>Confirm</button>
+                <button ion-button color="danger" *ngIf="role!='Spectator'" (click)="kickPlayer(player.user.uid, player.user.username)">Kick</button>
                 <button ion-button color="danger" (click)="penalizePlayer(player.user.uid, player.user.username)">Penalize</button>
                 <button ion-button color="primary" (click)='openProfile(player.user.uid)'>View Profile</button>
               </div>
@@ -80,7 +67,7 @@
             <ion-input type="text" maxlength="100" placeholder="Enter your message" [(ngModel)]="message"></ion-input>
             <button ion-button (click)="sendMessage()" clear item-right color='ball'> Send </button>
           </ion-item>
-          <ion-buttons id='buttons'>
+          <ion-buttons id='buttons' *ngIf="role!='Spectator'">
             <button ion-button color="secondary" *ngIf="courtStatus=='Online'" (click)="readyCourt()">Ready Court</button>
             <button ion-button color="ball" *ngIf="courtStatus=='Waiting'" (click)='startGame()'>Start Game</button>
             <button ion-button color="danger" *ngIf="courtStatus=='In Game'" (click)='endGame()'>End Game</button>
@@ -100,7 +87,7 @@
                       <h3>Distance to Court: {{player.distance}} km</h3>
                       <!-- <h3>Travel Time to Court: </h3> -->
                     </div>
-                    <div float-right>
+                    <div float-right *ngIf="role!='Spectator'">
                       <button class='waitlistButtons' clear ion-button (click)='acceptPlayer(player.user.uid)'><ion-icon color='primary' name='checkmark-circle' style='font-size: 28px;'></ion-icon></button>
                       <button class='waitlistButtons' clear ion-button (click)='rejectPlayer(player.user.uid)'><ion-icon color='danger' name='close-circle' style='font-size: 28px;'></ion-icon></button>
                     </div>

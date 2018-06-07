@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform } from 'ionic-angular';
+import { Nav, Platform, ModalController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { HomePage } from '../pages/home/home'; 
@@ -16,6 +16,8 @@ import { Events } from 'ionic-angular';
 import { HomeAdminPage } from '../pages/admin/home-admin/home-admin';
 import { FriendsProvider } from '../providers/friends/friends';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
+import { Network } from '@ionic-native/network';
+import { ErrorPage } from '../pages/error/error';
 
 
 
@@ -34,7 +36,8 @@ export class MyApp {
   pages: Array<{title: string, component: any}>;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private afAuth: AngularFireAuth, private alertCtrl: AlertController, private menuCtrl: MenuController,
-     private backgroundMode: BackgroundMode, private userProvider: UserProvider, public events: Events, private friendsProvider: FriendsProvider, private screenOrientation: ScreenOrientation) {
+     private backgroundMode: BackgroundMode, private userProvider: UserProvider, public events: Events, private friendsProvider: FriendsProvider, private screenOrientation: ScreenOrientation,
+      private network: Network, private modalCtrl: ModalController) {
     
     this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
     
@@ -51,6 +54,11 @@ export class MyApp {
 
     events.subscribe('user:login', () => {
       this.getUserInfo();
+    });
+
+    let disconnectSubscription = this.network.onDisconnect().subscribe(() => {
+      let modal = this.modalCtrl.create(ErrorPage);
+      modal.present();
     });
     
   }

@@ -31,6 +31,7 @@
     "@ionic-native/google-maps": "^4.5.3",
     "@ionic-native/http": "^4.7.0",
     "@ionic-native/image-picker": "^4.7.0",
+    "@ionic-native/network": "^4.7.0",
     "@ionic-native/screen-orientation": "^4.7.0",
     "@ionic-native/splash-screen": "4.4.0",
     "@ionic-native/status-bar": "4.4.0",
@@ -48,6 +49,7 @@
     "cordova-plugin-ionic-keyboard": "^2.0.5",
     "cordova-plugin-ionic-webview": "^1.1.16",
     "cordova-plugin-mauron85-background-geolocation": "^2.3.5",
+    "cordova-plugin-network-information": "^2.0.1",
     "cordova-plugin-screen-orientation": "^3.0.1",
     "cordova-plugin-splashscreen": "^5.0.2",
     "cordova-plugin-telerik-imagepicker": "^2.1.10",
@@ -87,7 +89,8 @@
       "cordova-plugin-screen-orientation": {},
       "com.synconset.imagepicker": {
         "PHOTO_LIBRARY_USAGE_DESCRIPTION": "your usage message"
-      }
+      },
+      "cordova-plugin-network-information": {}
     },
     "platforms": [
       "android"

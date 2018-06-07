@@ -40,13 +40,11 @@ export class HomeAdminPage {
   }
 
   manageCourt(court){
-  
     let data = {
       Role: 'Administrator',
       Court: court,
     }
-
-    this.navCtrl.push(JoinCourtAdminPage,data);
+    this.navCtrl.push(JoinCourtAdminPage, data);
   }
 
   changeStatus(courtId, status, courtAdmin?){
@@ -55,15 +53,7 @@ export class HomeAdminPage {
         this.courtProvider.changeCourtStatus(courtId, 'Offline');
       }
       else{
-        let alert = this.alertCtrl.create({
-          title: 'Admin Inside!',
-          subTitle: 'Cannot change court to status if there is an admin inside',
-          buttons: ['OK']
-        });
-        alert.present();
-        this.status = true;
       }
-      
     }
     else{
       this.courtProvider.changeCourtStatus(courtId, 'Online');

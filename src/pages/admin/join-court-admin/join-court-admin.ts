@@ -25,6 +25,7 @@ export class JoinCourtAdminPage {
   admin: any;
   court: any;
   courtStatus: String;
+  currentAdmin: String;
   message: String = ""; 
   messages: any;
   notifs: any;
@@ -55,37 +56,18 @@ export class JoinCourtAdminPage {
   async ionViewDidEnter(){
     this.status = '';
     this.courtStatus = 'Online';
-    if(await this.adminExists()==false){
+    if(this.currentAdmin==''){
       this.courtProvider.addAdminToCourt(this.userProvider.retrieveUserObject(this.userProvider.retrieveUserID()),this.court.id);
     }
     else{
-      let alertNotif = this.alertCtrl.create({
-        title: 'Multiple Admins!',
-        subTitle: 'There can only be one admin on each court!',
-        buttons: ['OK']
-      });
-      alertNotif.present().then(()=>{
-        this.viewCtrl.dismiss();
-      });
+      this.role = 'Spectator';
     }
     this.retrieveAdmin();
     this.players = this.courtProvider.retrievePlayers(this.court.id);
 
   } 
 
-
-  async adminExists(){
-    let adminId = await this.courtProvider.currentAdminExists(this.court.id);
-    if(adminId == ""){
-      return false;
-    }
-    else{
-      return true;
-    }
-  }
-
   acceptPlayer(userId){
-    // this.courtProvider.addUserToCourt2(this.userProvider.retrieveUserInfo(),this.court.id, this.court.players_count);
     this.courtProvider.changePlayerStatus(userId, this.court.id, 'Accepted');
   }
 
@@ -109,6 +91,7 @@ export class JoinCourtAdminPage {
     this.playersCount = courtObj.players_count;
     this.startTime = courtObj.start_time;
     this.startTime = this.courtProvider.parseStartTime(this.startTime);
+    this.currentAdmin = courtObj.current_admin
   }
 
   displayPopover(myEvent){

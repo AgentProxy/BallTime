@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { UserProvider } from '../../providers/user/user';
 import { User } from '../../models/user/user.model';
 import { ImagePicker } from '@ionic-native/image-picker';
@@ -19,12 +19,15 @@ import { storage } from 'firebase';
 })
 export class EditProfilePage {
   role: any;
-  userInfo: any;
+  // userInfo: any;
+  new_password: any;
+  confirm_password: any;
   showLoading: boolean = true;
   userId;
   username: String;
+  userObj: any;
 
-  user: User = {
+  userInfo: User = {
     uid: undefined,
     username: "",
     firstname: "",
@@ -44,20 +47,55 @@ export class EditProfilePage {
     games_played: 0,
   };
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider, private imgPicker: ImagePicker) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider, private imgPicker: ImagePicker, private alertCtrl: AlertController) {
     this.userId = this.userProvider.retrieveUserID();
+    this.retrieveUserInfo()
     this.retrieveRole();
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad EditProfilePage');
+  
+  }
+
+  editDone(){
+    if(this.new_password!=''||this.confirm_password!=''){
+      if(this.new_password!=this.confirm_password&&this.new_password.length<6){
+        let alert = this.alertCtrl.create({
+          title: 'Password',
+          subTitle: "Passwords don't match or password is less than 6 characters",
+          buttons: ['OK']
+        });
+        alert.present();
+        return false;
+      }
+      else{
+       
+      }
+
+      // let alert = this.alertCtrl.create({
+      //   title: 'Password',
+      //   subTitle: "You're account details has been update",
+      //   buttons: ['OK']
+      // });
+      // alert.present();
+      // return false;
+    }
+
+    this.userProvider.updateUserProfile(this.userInfo, this.userId);
+    let alert = this.alertCtrl.create({
+      title: 'Account Updated',
+      subTitle: "You're account details has been update",
+      buttons: ['OK']
+    });
+    alert.present();
   }
 
   async retrieveUserInfo(){
-    this.role = await this.userProvider.retrieveRole(this.userId);
-
-    this.userInfo =  await this.userProvider.retrieveUserObject(this.userId);
-    this.username = this.userInfo.username;
+    // this.role = await this.userProvider.retrieveRole(this.userId);
+    // this.userInfo = this.userProvider.retrieveUserInfoValue(this.userId);
+    this.userObj =  await this.userProvider.retrieveUserObject(this.userId);
+    this.userInfo = this.userObj;
   }
 
   async retrieveRole(){
