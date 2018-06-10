@@ -22,12 +22,14 @@ export class WaitingPage {
   court: any;
   userId: any;
   index: any;
+  playersCount: number;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private db: AngularFirestore, private alertCtrl: AlertController, private courtProvider : CourtProvider, private userProvider: UserProvider, private modalCtrl: ModalController, private viewCtrl: ViewController) {
     this.userId = this.userProvider.retrieveUserID();
     this.court = navParams.get('Court');
     this.addToWaitlist();
     this.index = this.viewCtrl.index;
+    this.courtChanges();
 
     let subscription = this.courtProvider.retrieveWaitlistedUser(this.userId,this.court.id).subscribe(async () => {
       let status = await this.courtProvider.retrieveWaitlistedUserStatus(this.userId, this.court.id);
@@ -55,7 +57,10 @@ export class WaitingPage {
       Court: this.court,
     }
 
-    this.navCtrl.remove(this.index)
+    this.navCtrl.remove(this.index);
+
+    this.courtProvider.addUserToCourt2(this.userProvider.retrieveUserInfo(),this.court.id, this.playersCount);
+
     this.navCtrl.push(JoinCourtModalPage, data);
   }
   
@@ -84,6 +89,17 @@ export class WaitingPage {
     ]
     });
     confirm.present();
+  }
+
+  async courtChanges(){
+    this.db.doc('courts/'+this.court.id).valueChanges().subscribe(async x => {
+      let courtObj =  await this.courtProvider.retrieveCourtObject(this.court.id);
+      this.courtDetails(courtObj);
+    })
+  }
+
+  courtDetails(courtObj){
+    this.playersCount = courtObj.players_count;
   }
 
   removeFromWaitlist(){

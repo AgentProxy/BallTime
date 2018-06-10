@@ -99,10 +99,10 @@ export class JoinCourtModalPage {
     this.status = '';
     this.courtStatus = 'Online';
 
-    if(this.role=='Baller'){
-      this.courtProvider.addUserToCourt2(this.userProvider.retrieveUserInfo(),this.court.id, this.playersCount);
-    }
-    else{}
+    // if(this.role=='Baller'){
+    //   this.courtProvider.addUserToCourt2(this.userProvider.retrieveUserInfo(),this.court.id, this.playersCount);
+    // }
+    // else{}
     this.retrieveAdmin();
     this.players = this.courtProvider.retrievePlayers(this.court.id);
   }
