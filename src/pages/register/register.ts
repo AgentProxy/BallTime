@@ -70,7 +70,7 @@ export class RegisterPage {
     let image = await this.imgPicker.getPictures(options);
     let result = 'data:image/jpeg;base64,'+image;
     let pictures = storage().ref('pp/'+ this.userInfo.uid);
-    pictures.putString(image)
+    pictures.putString(result);
   }
 
 }

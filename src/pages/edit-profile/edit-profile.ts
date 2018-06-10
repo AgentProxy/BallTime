@@ -70,7 +70,13 @@ export class EditProfilePage {
         return false;
       }
       else{
-       
+        var user = firebase.auth().currentUser;
+        
+        user.updatePassword(this.new_password).then(function() {
+          // Update successful.
+        }).catch(function(error) {
+          // An error happened.
+        });
       }
 
       // let alert = this.alertCtrl.create({
@@ -110,7 +116,7 @@ export class EditProfilePage {
     let image = await this.imgPicker.getPictures(options);
     let result = 'data:image/jpeg;base64,'+image;
     let pictures = storage().ref('pp/'+ this.userInfo.uid);
-    pictures.putString(image)
+    pictures.putString(result);
   }
 
 }
