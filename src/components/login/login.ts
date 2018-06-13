@@ -5,6 +5,7 @@ import { NavController, Events, AlertController } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
 import * as firebase from 'firebase/app';
 import { UserProvider } from '../../providers/user/user';
+import { RegisterPage } from '../../pages/register/register';
 
 
 
@@ -51,9 +52,10 @@ export class LoginComponent {
   async loggedIn(){
     console.log('logging');
     let role = await this.userProvider.retrieveRole(this.userProvider.retrieveUserID());
+    let registered = await this.userProvider.retrieveRegistered(this.userProvider.retrieveUserID());
     let penalties = await this.userProvider.retrieveUserObject(this.userProvider.retrieveUserID());
     let penalty = penalties.penalty;
-    if(role=='Baller'){
+    if(role=='Baller' && registered==true){
       if(penalty>=5){
         let alert = this.alertCtrl.create({
           title: 'Account Banned!',
@@ -65,12 +67,16 @@ export class LoginComponent {
       }
       this.navCtrl.setRoot('HomePage');
     }
-    else if(role=='Administrator'){
-      this.navCtrl.setRoot('HomeAdminPage');
-    }
-    else{
-        this.navCtrl.push('RegisterPage');
-    }
+  else if(role=='Administrator'){
+    this.navCtrl.setRoot('HomeAdminPage');
+  }
+  else if(role=='Baller' && registered==false){
+    this.navCtrl.push(RegisterPage);
+    return;
+  }
+  else{
+    
+  }
     this.events.publish('user:login');
   }
 

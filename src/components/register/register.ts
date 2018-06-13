@@ -4,6 +4,7 @@ import { Account } from '../../models/account/account.model';
 import { ToastController, ViewController } from 'ionic-angular';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { UserProvider } from '../../providers/user/user';
+import { RegisterPage } from '../../pages/register/register';
 
 /**
  * Generated class for the RegisterComponent component.
@@ -36,7 +37,7 @@ export class RegisterComponent {
         }).present();
         this.userId = this.afAuth.auth.currentUser.uid;
         this.userProvider.createUser(this.userId);
-        this.navCtrl.push('RegisterPage');        
+        this.navCtrl.push(RegisterPage);        
       }
       catch(e){
         console.error(e);

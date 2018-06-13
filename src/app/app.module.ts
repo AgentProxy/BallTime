@@ -42,6 +42,7 @@ import { EditProfilePage } from '../pages/edit-profile/edit-profile';
 import { ImagePicker } from '@ionic-native/image-picker';
 import { ErrorPage } from '../pages/error/error';
 import { Network } from '@ionic-native/network';
+import { RegisterPage } from '../pages/register/register';
 
 
 
@@ -62,6 +63,7 @@ import { Network } from '@ionic-native/network';
     JoinCourtAdminPage,
     EditProfilePage,
     ErrorPage,
+    RegisterPage,
   ],
   imports: [
     BrowserModule,
@@ -91,6 +93,7 @@ import { Network } from '@ionic-native/network';
     JoinCourtAdminPage,
     EditProfilePage,
     ErrorPage,
+    RegisterPage,
   ],
   providers: [
     StatusBar,

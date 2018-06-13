@@ -38,7 +38,9 @@ export class RegisterPage {
     reputation_level: 0,
     games_played: 0,
   };
-  
+  default_url: String = "assets/imgs/RegisterBackground2.jpg"
+
+
   constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider, private imgPicker: ImagePicker) {
   }
 
@@ -69,8 +71,13 @@ export class RegisterPage {
     console.log('ImagePicker');
     let image = await this.imgPicker.getPictures(options);
     let result = 'data:image/jpeg;base64,'+image;
-    let pictures = storage().ref('pp/'+ this.userInfo.uid);
+    let pictures = storage().ref('pp/'+ this.userProvider.retrieveUserID());
     pictures.putString(result);
+
+    let storageRef = storage().ref('pp/'+ this.userProvider.retrieveUserID()).getDownloadURL().then(function(url){
+      // let img = document.getElementById('prof_pic');
+      this.default_url = url;
+    })    
   }
 
 }

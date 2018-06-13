@@ -142,7 +142,7 @@ export class JoinCourtModalPage {
           text: 'Leave',
           handler: () => {  
             if(this.role=="Baller"){
-              this.courtProvider.removePlayer(this.userProvider.retrieveUserID(), this.court.id,this.court.players_count);
+              this.courtProvider.removePlayer(this.userProvider.retrieveUserID(), this.court.id,this.playersCount);
             }  
           
             this.navCtrl.popToRoot().then(()=>{
